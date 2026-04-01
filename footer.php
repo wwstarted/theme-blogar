@@ -1,202 +1,126 @@
-</div><!-- /.main-content  (opened in header.php) -->
+<?php
+if (! defined('ABSPATH')) {
+    exit;
+}
 
+$logo_dark = get_template_directory_uri() . '/images/logo/logo.png';
 
-<!-- ============================================================
-     INSTAGRAM SECTION
-     Note: Uses "Smash Balloon Social Photo Feed" plugin.
-     Drop the shortcode or widget block here in production.
-============================================================ -->
-<?php if (is_active_widget(false, false, 'null-instagram-feed', true) || shortcode_exists('instagram-feed')): ?>
-    <section class="axil-instagram-area axil-section-gap bg-color-grey"
-        aria-label="<?php esc_attr_e('Instagram Feed', 'blogar'); ?>">
-        <div class="blg-container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-title text-center mb--30">
-                        <h2 class="title"><?php esc_html_e('Instagram', 'blogar'); ?></h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt--30">
-                <div class="col-lg-12">
-                    <?php echo do_shortcode('[instagram-feed num=6 cols=6 showheader=false showbutton=false showfollow=false]'); ?>
-                </div>
-            </div>
-        </div>
-    </section>
-<?php endif; ?>
-<!-- End Instagram Area -->
+$footer_columns = array(
+    'World' => array('U.N.', 'Conflicts', 'Terrorism', 'Disasters', 'Global Economy', 'Environment', 'Religion', 'Scandals'),
+    'Politics' => array('Executive', 'Senate', 'House', 'Judiciary', 'Global Economy', 'Foreign policy', 'Polls', 'Elections'),
+    'Entertainment' => array('Celebrity News', 'Movies', 'TV News', 'Disasters', 'Music News', 'Environment', 'Style News', 'Entertainment Video'),
+    'Business' => array('Environment', 'Conflicts', 'Terrorism', 'Disasters', 'Global Economy', 'Environment', 'Religion', 'Scandals'),
+    'Health' => array('Movies', 'Conflicts', 'Terrorism', 'Disasters', 'Global Economy', 'Global Economy', 'Environment', 'Religion', 'Scandals'),
+    'About' => array('U.N.', 'Conflicts', 'Terrorism', 'Disasters', 'Global Economy', 'Environment', 'Religion', 'Scandals'),
+);
 
+$social_links = array(
+    array(
+        'label' => 'Facebook',
+        'url'   => 'https://www.facebook.com/',
+        'icon'  => '<path d="M14 8h2V4h-2.5C10.9 4 10 5.6 10 8.1V10H8v4h2v6h4v-6h2.7l.3-4H14V8z"></path>',
+    ),
+    array(
+        'label' => 'Twitter',
+        'url'   => 'https://twitter.com/',
+        'icon'  => '<path d="M20 7.4c-.6.3-1.3.5-2 .6.7-.4 1.2-1 1.5-1.8-.7.4-1.5.7-2.3.9A3.5 3.5 0 0 0 11.3 10c0 .3 0 .5.1.8-2.9-.1-5.5-1.5-7.2-3.7-.3.5-.5 1-.5 1.7 0 1.2.6 2.2 1.5 2.8-.6 0-1.1-.2-1.6-.4 0 1.7 1.2 3 2.8 3.4-.3.1-.6.1-1 .1-.2 0-.5 0-.7-.1.5 1.4 1.8 2.4 3.4 2.4A7 7 0 0 1 4 18.3 10 10 0 0 0 9.4 20c6.5 0 10.1-5.4 10.1-10.1v-.5c.7-.5 1.3-1.1 1.8-1.9-.6.3-1.2.5-1.9.6.7-.4 1.2-1 1.5-1.7-.6.4-1.3.7-2 .9z"></path>',
+    ),
+    array(
+        'label' => 'LinkedIn',
+        'url'   => 'https://linkedin.com/',
+        'icon'  => '<path d="M6.5 8.5A1.5 1.5 0 1 1 6.5 5a1.5 1.5 0 0 1 0 3.5zM5 10h3v9H5zm5 0h2.9v1.3h.1c.4-.8 1.4-1.6 2.9-1.6 3.1 0 3.6 2 3.6 4.7V19h-3v-4c0-1 0-2.4-1.5-2.4s-1.7 1.1-1.7 2.3V19h-3z"></path>',
+    ),
+    array(
+        'label' => 'Instagram',
+        'url'   => 'https://instagram.com/',
+        'icon'  => '<path d="M12 7.2A4.8 4.8 0 1 0 16.8 12 4.8 4.8 0 0 0 12 7.2zm0 7.9A3.1 3.1 0 1 1 15.1 12 3.1 3.1 0 0 1 12 15.1zm5.2-8.1a1.1 1.1 0 1 1-1.1-1.1 1.1 1.1 0 0 1 1.1 1.1zm3 1.1c-.1-1.3-.4-2.4-1.3-3.3s-2-1.2-3.3-1.3C14.2 3.4 9.8 3.4 8.4 3.5 7 3.6 5.9 4 5 4.8S3.8 6.8 3.7 8.1C3.6 9.5 3.6 13.9 3.7 15.3c.1 1.3.4 2.4 1.3 3.3S7 19.8 8.4 19.9c1.4.1 5.8.1 7.2 0 1.3-.1 2.4-.4 3.3-1.3s1.2-2 1.3-3.3c.1-1.4.1-5.8 0-7.2zm-2 8.7c-.3.8-.9 1.4-1.7 1.7-1.2.5-4 .4-5.3.4s-4.1.1-5.3-.4c-.8-.3-1.4-.9-1.7-1.7-.5-1.2-.4-4-.4-5.3s-.1-4.1.4-5.3c.3-.8.9-1.4 1.7-1.7 1.2-.5 4-.4 5.3-.4s4.1-.1 5.3.4c.8.3 1.4.9 1.7 1.7.5 1.2.4 4 .4 5.3s.1 4.1-.4 5.3z"></path>',
+    ),
+);
 
-<!-- ============================================================
-     FOOTER
-============================================================ -->
-<footer class="axil-footer-area axil-default-footer" role="contentinfo">
-
-    <!-- Footer Top: Widget Columns -->
+$bottom_links = array('Contact Us', 'Terms of Use', 'Advertise with Us', 'Blogar Store');
+?>
+<footer class="axil-footer-area axil-default-footer axil-footer-var-1 footer-menu-active">
     <div class="footer-mainmenu">
-        <div class="container">
-            <div class="row">
-
-                <!-- Col 1 -->
-                <div class="col-lg-2 col-md-6 col-sm-6 col-12">
-                    <div class="footer-widget-item axil-border-right">
-                        <?php if (is_active_sidebar('blg-footer-col-1')):
-                            dynamic_sidebar('blg-footer-col-1');
-                        else: ?>
-                            <h5 class="widget-title"><?php esc_html_e('World', 'blogar'); ?></h5>
-                            <ul class="menu">
-                                <li><a href="#"><?php esc_html_e('U.N.', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Conflicts', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Terrorism', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Disasters', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Global Economy', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Environment', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Religion', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Scandals', 'blogar'); ?></a></li>
-                            </ul>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <!-- Col 2 -->
-                <div class="col-lg-2 col-md-6 col-sm-6 col-12">
-                    <div class="footer-widget-item">
-                        <?php if (is_active_sidebar('blg-footer-col-2')):
-                            dynamic_sidebar('blg-footer-col-2');
-                        else: ?>
-                            <h5 class="widget-title"><?php esc_html_e('Politics', 'blogar'); ?></h5>
-                            <ul class="menu">
-                                <li><a href="#"><?php esc_html_e('Executive', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Senate', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('House', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Judiciary', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Global Economy', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Foreign policy', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Polls', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Elections', 'blogar'); ?></a></li>
-                            </ul>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <!-- Col 3 -->
-                <div class="col-lg-2 col-md-6 col-sm-6 col-12">
-                    <div class="footer-widget-item">
-                        <?php if (is_active_sidebar('blg-footer-col-3')):
-                            dynamic_sidebar('blg-footer-col-3');
-                        else: ?>
-                            <h5 class="widget-title"><?php esc_html_e('Entertainment', 'blogar'); ?></h5>
-                            <ul class="menu">
-                                <li><a href="#"><?php esc_html_e('Celebrity News', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Movies', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('TV', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Music', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Reviews', 'blogar'); ?></a></li>
-                            </ul>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <!-- Col 4 -->
-                <div class="col-lg-2 col-md-6 col-sm-6 col-12">
-                    <div class="footer-widget-item">
-                        <?php if (is_active_sidebar('blg-footer-col-4')):
-                            dynamic_sidebar('blg-footer-col-4');
-                        else: ?>
-                            <h5 class="widget-title"><?php esc_html_e('Health', 'blogar'); ?></h5>
-                            <ul class="menu">
-                                <li><a href="#"><?php esc_html_e('Body', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Mind & Body', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Fitness', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Nutrition', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Weight Loss', 'blogar'); ?></a></li>
-                            </ul>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <!-- Col 5 -->
-                <div class="col-lg-2 col-md-6 col-sm-6 col-12">
-                    <div class="footer-widget-item">
-                        <?php if (is_active_sidebar('blg-footer-col-5')):
-                            dynamic_sidebar('blg-footer-col-5');
-                        else: ?>
-                            <h5 class="widget-title"><?php esc_html_e('Science', 'blogar'); ?></h5>
-                            <ul class="menu">
-                                <li><a href="#"><?php esc_html_e('Space', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Environment', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Origins', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Physics', 'blogar'); ?></a></li>
-                                <li><a href="#"><?php esc_html_e('Animals', 'blogar'); ?></a></li>
-                            </ul>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-            </div><!-- /.row -->
-        </div><!-- /.container -->
-    </div>
-    <!-- End Footer Top -->
-
-
-    <!-- Footer Bottom -->
-    <div class="footer-bottom">
-        <div class="container">
-
-            <!-- Logo -->
-            <div class="footer-logo">
-                <a href="<?php echo esc_url(home_url('/')); ?>">
-                    <?php if (has_custom_logo()):
-                        $logo_id = get_theme_mod('custom_logo');
-                        $logo_url = wp_get_attachment_image_url($logo_id, 'full');
-                        ?>
-                        <img src="<?php echo esc_url($logo_url); ?>" alt="<?php bloginfo('name'); ?>">
-                    <?php else: ?>
-                        <img src="<?php echo esc_url(get_template_directory_uri() . '/images/logo/logo.png'); ?>"
-                            alt="<?php bloginfo('name'); ?>">
-                    <?php endif; ?>
-                </a>
-            </div>
-
-            <!-- Bottom Nav -->
-            <?php
-            wp_nav_menu([
-                'theme_location' => 'footer',
-                'container' => false,
-                'menu_class' => 'footer-bottom-nav',
-                'items_wrap' => '<ul class="%2$s">%3$s</ul>',
-                'depth' => 1,
-                'fallback_cb' => false,
-            ]);
-            ?>
-
-            <!-- Copyright -->
-            <div class="copyright-right text-left text-lg-right">
-                <p>
-                    &copy; <?php echo esc_html(gmdate('Y')); ?>.
-                    <?php
-                    printf(
-                        /* translators: %s: site name */
-                        esc_html__('All rights reserved by %s.', 'blogar'),
-                        '<a href="' . esc_url(home_url('/')) . '">' . esc_html(get_bloginfo('name')) . '</a>'
-                    );
+        <div class="footer-container">
+            <div class="footer-grid">
+                <?php
+                $index = 0;
+                foreach ($footer_columns as $title => $links) :
+                    $index++;
                     ?>
-                </p>
+                    <div class="footer-grid-col">
+                        <div class="footer-widget-item<?php echo 1 === $index ? ' axil-border-right' : ''; ?><?php echo $index >= 4 ? ' widget-last' : ''; ?>">
+                            <section class="footer-widget-item widget widget_nav_menu" aria-label="<?php echo esc_attr($title); ?>">
+                                <h5 class="widget-title"><?php echo esc_html($title); ?></h5>
+                                <ul class="menu">
+                                    <?php foreach ($links as $link) : ?>
+                                        <li class="menu-item">
+                                            <a href="#"><?php echo esc_html($link); ?></a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </section>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             </div>
-
         </div>
     </div>
-    <!-- End Footer Bottom -->
 
+    <div class="footer-top">
+        <div class="footer-container">
+            <div class="footer-top-row">
+                <div class="footer-top-brand">
+                    <div class="logo">
+                        <a href="<?php echo esc_url(home_url('/')); ?>" rel="home" aria-label="<?php echo esc_attr(get_bloginfo('name')); ?>">
+                            <img class="dark-logo" src="<?php echo esc_url($logo_dark); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>">
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-top-social">
+                    <div class="footer-social-wrap">
+                        <h5 class="follow-title">Follow us</h5>
+                        <ul class="social-icon color-tertiary md-size justify-content-start">
+                            <?php foreach ($social_links as $social) : ?>
+                                <li>
+                                    <a class="social-icon-link" href="<?php echo esc_url($social['url']); ?>" title="<?php echo esc_attr($social['label']); ?>" target="_blank" rel="noopener">
+                                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                            <?php echo $social['icon']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                                        </svg>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="copyright-area">
+        <div class="footer-container">
+            <div class="copyright-row">
+                <div class="copyright-left">
+                    <ul class="mainmenu justify-content-start">
+                        <?php foreach ($bottom_links as $link) : ?>
+                            <li class="menu-item">
+                                <a href="#"><?php echo esc_html($link); ?></a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+
+                <div class="copyright-right">
+                    <p>&copy; 2022. All rights reserved by <a href="https://themeforest.net/user/axilthemes/portfolio" target="_blank" rel="noopener">Axilthemes.</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
 </footer>
-<!-- End Footer -->
 
-
-<!-- Back To Top -->
-<a id="backto-top" href="#" aria-label="<?php esc_attr_e('Back to top', 'blogar'); ?>"></a>
+</div>
 
 <?php wp_footer(); ?>
 </body>
-
 </html>

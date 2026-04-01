@@ -1,163 +1,228 @@
 <?php
-/**
- * Blogar — functions.php
- * Theme prefix: blg_
- */
-
-add_filter('show_admin_bar', '__return_false');
-
-if (!defined('ABSPATH'))
+if (!defined('ABSPATH')) {
     exit;
+}
 
-// ============================================================
-// 1. INCLUDE FILES
-// ============================================================
-require_once get_template_directory() . '/inc/theme-setup.php';
-require_once get_template_directory() . '/inc/header-setup.php';
-require_once get_template_directory() . '/inc/footer-setup.php';
-
-
-// ============================================================
-// 2. ENQUEUE ASSETS
-// ============================================================
-function blg_enqueue_scripts()
+function blogar_theme_setup()
 {
-    $ver = '1.0.0';
-    $theme = get_template_directory_uri();
-
-    // ── Vendor ────────────────────────────────────────────────
-    wp_enqueue_style(
-        'blg-font-awesome',
-        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css',
-        [],
-        '6.5.0'
-    );
-    wp_enqueue_style(
-        'blg-bootstrap',
-        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css',
-        [],
-        '4.6.2'
-    );
-    wp_enqueue_style(
-        'blg-slick',
-        $theme . '/css/vendor/slick.css',
-        [],
-        $ver
-    );
-    wp_enqueue_style(
-        'blg-slick-theme',
-        $theme . '/css/vendor/slick-theme.css',
-        [],
-        $ver
+    register_nav_menus(
+        array(
+            'primary' => __('Primary Menu', 'blogar'),
+        )
     );
 
-    // ── Global / Base ──────────────────────────────────────────
-    wp_enqueue_style('blg-style', get_stylesheet_uri(), [], $ver);
+    add_theme_support(
+        'custom-logo',
+        array(
+            'height' => 37,
+            'width' => 158,
+            'flex-height' => true,
+            'flex-width' => true,
+        )
+    );
+}
+add_action('after_setup_theme', 'blogar_theme_setup');
 
-    // ── Header (every page) ───────────────────────────────────
-    wp_enqueue_style('blg-header', $theme . '/css/header.css', [], $ver);
+function blogar_asset_version($relative_path)
+{
+    $path = get_template_directory() . '/' . ltrim($relative_path, '/');
 
-    // ── Footer (every page) ───────────────────────────────────
-    wp_enqueue_style('blg-footer', $theme . '/css/footer.css', [], $ver);
-
-    // ── Homepage ──────────────────────────────────────────────
-    if (is_front_page()) {
-        wp_enqueue_style('blg-frontpage', $theme . '/css/frontpage.css', [], $ver);
+    if (file_exists($path)) {
+        return (string) filemtime($path);
     }
 
-    // ── JS Vendor ─────────────────────────────────────────────
-    wp_enqueue_script('jquery');
+    return wp_get_theme()->get('Version');
+}
 
-    wp_enqueue_script(
-        'blg-bootstrap-js',
-        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js',
-        ['jquery'],
-        '4.6.2',
-        true
-    );
-    wp_enqueue_script(
-        'blg-slick-js',
-        $theme . '/js/vendor/slick.min.js',
-        ['jquery'],
-        $ver,
-        true
+function blogar_enqueue_assets()
+{
+    wp_enqueue_style(
+        'blogar-fonts',
+        'https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;700;900&display=swap',
+        array(),
+        null
     );
 
-    // ── Header JS (every page) ────────────────────────────────
-    wp_enqueue_script(
-        'blg-header-js',
-        $theme . '/js/header.js',
-        ['jquery'],
-        $ver,
-        true
+    wp_enqueue_style(
+        'blogar-global',
+        get_template_directory_uri() . '/css/style.css',
+        array('blogar-fonts'),
+        blogar_asset_version('css/style.css')
     );
 
-    // ── Footer JS (every page) ────────────────────────────────
-    wp_enqueue_script(
-        'blg-footer-js',
-        $theme . '/js/footer.js',
-        ['jquery'],
-        $ver,
-        true
+    wp_enqueue_style(
+        'blogar-header',
+        get_template_directory_uri() . '/css/header.css',
+        array('blogar-global'),
+        blogar_asset_version('css/header.css')
     );
 
-    // ── Homepage JS ───────────────────────────────────────────
+    wp_enqueue_style(
+        'blogar-footer',
+        get_template_directory_uri() . '/css/footer.css',
+        array('blogar-global'),
+        blogar_asset_version('css/footer.css')
+    );
+
     if (is_front_page()) {
-        wp_enqueue_script(
-            'blg-frontpage-js',
-            $theme . '/js/frontpage.js',
-            ['jquery', 'blg-slick-js'],
-            $ver,
-            true
+        wp_enqueue_style(
+            'blogar-frontpage',
+            get_template_directory_uri() . '/css/frontpage.css',
+            array('blogar-global'),
+            blogar_asset_version('css/frontpage.css')
         );
     }
 
-    // ── Pass data to JS ───────────────────────────────────────
-    wp_localize_script('blg-header-js', 'blgConfig', [
-        'homeUrl' => esc_url(home_url('/')),
-        'themeUrl' => esc_url($theme),
-    ]);
+    wp_enqueue_script(
+        'blogar-header',
+        get_template_directory_uri() . '/js/header.js',
+        array(),
+        blogar_asset_version('js/header.js'),
+        true
+    );
+
+    wp_enqueue_script(
+        'blogar-footer',
+        get_template_directory_uri() . '/js/footer.js',
+        array(),
+        blogar_asset_version('js/footer.js'),
+        true
+    );
+
+    if (is_front_page()) {
+        wp_enqueue_script(
+            'blogar-frontpage',
+            get_template_directory_uri() . '/js/frontpage.js',
+            array('jquery'),
+            blogar_asset_version('js/frontpage.js'),
+            true
+        );
+    }
 }
-add_action('wp_enqueue_scripts', 'blg_enqueue_scripts');
+add_action('wp_enqueue_scripts', 'blogar_enqueue_assets');
 
-
-// ============================================================
-// 3. UTILITY HELPERS
-// ============================================================
-
-/**
- * Get reading time estimate (minutes)
- */
-function blg_reading_time($post_id = null)
+function blogar_primary_menu_fallback($args)
 {
-    $content = get_post_field('post_content', $post_id);
-    $word_count = str_word_count(strip_tags($content));
-    $minutes = max(1, (int) ceil($word_count / 200));
-    return $minutes . ' ' . __('min read', 'blogar');
+    $menu_class = isset($args['menu_class']) ? $args['menu_class'] : 'mainmenu';
+
+    $items = array(
+        array(
+            'label' => __('Home', 'blogar'),
+            'url' => home_url('/'),
+            'current' => is_front_page() || is_home(),
+            'children' => array(
+                array(
+                    'label' => __('Home Default', 'blogar'),
+                    'url' => home_url('/'),
+                    'current' => is_front_page() || is_home(),
+                ),
+            ),
+        ),
+        array(
+            'label' => __('Posts', 'blogar'),
+            'url' => home_url('/'),
+            'children' => array(
+                array(
+                    'label' => __('Latest Posts', 'blogar'),
+                    'url' => home_url('/'),
+                ),
+            ),
+        ),
+        array(
+            'label' => __('Pages', 'blogar'),
+            'url' => '#',
+            'children' => array(
+                array(
+                    'label' => __('About Us', 'blogar'),
+                    'url' => '#',
+                ),
+                array(
+                    'label' => __('Contact Us', 'blogar'),
+                    'url' => '#',
+                ),
+            ),
+        ),
+        array(
+            'label' => __('Lifestyle', 'blogar'),
+            'url' => '#',
+        ),
+        array(
+            'label' => __('Technology', 'blogar'),
+            'url' => '#',
+        ),
+        array(
+            'label' => __('Shop', 'blogar'),
+            'url' => '#',
+            'children' => array(
+                array(
+                    'label' => __('Shop', 'blogar'),
+                    'url' => '#',
+                ),
+                array(
+                    'label' => __('Cart', 'blogar'),
+                    'url' => '#',
+                ),
+                array(
+                    'label' => __('Checkout', 'blogar'),
+                    'url' => '#',
+                ),
+            ),
+        ),
+    );
+
+    $output = '<ul class="' . esc_attr($menu_class) . '">';
+
+    foreach ($items as $item) {
+        $classes = array('menu-item');
+
+        if (!empty($item['children'])) {
+            $classes[] = 'menu-item-has-children';
+        }
+
+        if (!empty($item['current'])) {
+            $classes[] = 'current-menu-item';
+            $classes[] = 'current_page_item';
+        }
+
+        $output .= '<li class="' . esc_attr(implode(' ', $classes)) . '">';
+        $output .= '<a href="' . esc_url($item['url']) . '"' . (!empty($item['current']) ? ' aria-current="page"' : '') . '>' . esc_html($item['label']) . '</a>';
+
+        if (!empty($item['children'])) {
+            $output .= '<ul class="sub-menu">';
+
+            foreach ($item['children'] as $child) {
+                $child_classes = array('menu-item');
+
+                if (!empty($child['current'])) {
+                    $child_classes[] = 'current-menu-item';
+                    $child_classes[] = 'current_page_item';
+                }
+
+                $output .= '<li class="' . esc_attr(implode(' ', $child_classes)) . '">';
+                $output .= '<a href="' . esc_url($child['url']) . '"' . (!empty($child['current']) ? ' aria-current="page"' : '') . '>' . esc_html($child['label']) . '</a>';
+                $output .= '</li>';
+            }
+
+            $output .= '</ul>';
+        }
+
+        $output .= '</li>';
+    }
+
+    $output .= '</ul>';
+
+    if (!empty($args['echo'])) {
+        echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    }
+
+    return $output;
 }
 
-/**
- * Nav menu fallback
- */
-function blg_nav_fallback()
+function blogar_get_cart_count()
 {
-    echo '<li><a href="' . esc_url(home_url('/')) . '">' . __('Home', 'blogar') . '</a></li>';
-}
+    if (class_exists('WooCommerce') && function_exists('WC') && WC()->cart) {
+        return WC()->cart->get_cart_contents_count();
+    }
 
-/**
- * Custom excerpt length
- */
-function blg_excerpt_length($length)
-{
-    return 18;
+    return 0;
 }
-add_filter('excerpt_length', 'blg_excerpt_length', 999);
-
-/**
- * Excerpt more string
- */
-function blg_excerpt_more($more)
-{
-    return '&hellip;';
-}
-add_filter('excerpt_more', 'blg_excerpt_more');

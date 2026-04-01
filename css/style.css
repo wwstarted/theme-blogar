@@ -1,0 +1,49 @@
+:root {
+  --color-primary: #3858f6;
+  --color-heading: #000000;
+  --color-gray: #65676b;
+  --color-midgray: #878787;
+  --color-lightest: #f0f2f5;
+  --color-lighter: #ced0d4;
+  --color-white: #ffffff;
+  --shadow-primary: 0 4px 10px rgba(37, 47, 63, 0.1);
+  --font-primary: "Red Hat Display", sans-serif;
+  --font-size-b2: 16px;
+  --font-size-b3: 14px;
+  --line-height-b2: 1.5;
+  --radius: 10px;
+  --p-medium: 500;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-primary);
+  color: var(--color-heading);
+  background: var(--color-white);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+}
