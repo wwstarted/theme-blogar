@@ -93,7 +93,7 @@ function blogar_enqueue_assets()
         wp_enqueue_script(
             'blogar-frontpage',
             get_template_directory_uri() . '/js/frontpage.js',
-            array('jquery'),
+            array(),
             blogar_asset_version('js/frontpage.js'),
             true
         );
