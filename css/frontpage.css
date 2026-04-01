@@ -1,0 +1,1005 @@
+/* ============================================================
+   Blogar — frontpage.css
+   Sections: Hero Slider | Sidebar Grid | Ad Banner |
+             Innovation Tab | Trending Categories |
+             Trending Posts | Social Bar | Most Popular |
+             Lifestyle Grid
+============================================================ */
+
+/* ============================================================
+   1. HERO SLIDER
+============================================================ */
+.slider-area {
+  background: var(--blg-grey);
+}
+
+.axil-slide.slider-style-1 {
+  padding: 0;
+}
+
+/* Slick track override for hero */
+.slider-activation .slick-slide {
+  position: relative;
+  overflow: hidden;
+}
+
+.slider-activation .content-block {
+  position: relative;
+}
+
+/* Hero thumbnail */
+.slider-activation .post-thumbnail {
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.slider-activation .post-thumbnail img {
+  width: 100%;
+  max-height: 615px;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.slider-activation .slick-active .post-thumbnail img {
+  transform: scale(1.03);
+}
+
+/* Overlay content */
+.slider-activation .post-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 50px 50px 40px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+  z-index: 2;
+}
+
+.slider-activation .post-content .post-cat-list a {
+  color: #fff;
+  background: var(--blg-primary);
+  padding: 4px 12px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.slider-activation .post-content .post-cat-list a:hover {
+  background: var(--blg-secondary);
+  color: #fff;
+}
+
+/* Slide H1 — only on front-page hero */
+.slider-activation .post-content .title {
+  font-size: 38px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.25;
+  margin: 12px 0 20px;
+}
+
+.slider-activation .post-content .title a {
+  color: #fff;
+  transition: var(--blg-transition-fast);
+}
+
+.slider-activation .post-content .title a:hover {
+  color: var(--blg-primary);
+  text-decoration: none;
+}
+
+/* Hero post meta */
+.slider-activation .post-meta-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.slider-activation .post-meta-wrapper .post-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slider-activation .post-author-avatar img {
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.slider-activation .post-author-name a,
+.slider-activation .post-meta-list li {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Read more button */
+.slider-activation .axil-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: var(--blg-primary);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 4px;
+  transition: var(--blg-transition-fast);
+}
+
+.slider-activation .axil-button:hover {
+  background: var(--blg-secondary);
+  color: #fff;
+}
+
+/* Slick arrows (hero) */
+.axil-slick-arrow .slick-prev,
+.axil-slick-arrow .slick-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--blg-transition-fast);
+  font-size: 0;
+}
+
+.axil-slick-arrow .slick-prev {
+  left: 20px;
+}
+.axil-slick-arrow .slick-next {
+  right: 20px;
+}
+
+.axil-slick-arrow .slick-prev::before,
+.axil-slick-arrow .slick-next::before {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 18px;
+  color: #fff;
+}
+
+.axil-slick-arrow .slick-prev::before {
+  content: "\f053";
+}
+.axil-slick-arrow .slick-next::before {
+  content: "\f054";
+}
+
+.axil-slick-arrow .slick-prev:hover,
+.axil-slick-arrow .slick-next:hover {
+  background: var(--blg-primary);
+  border-color: var(--blg-primary);
+}
+
+/* Arrows between sides (other sections) */
+.arrow-between-side .slick-prev {
+  left: -25px;
+}
+.arrow-between-side .slick-next {
+  right: -25px;
+}
+
+.arrow-between-side .slick-prev,
+.arrow-between-side .slick-next {
+  background: var(--blg-white);
+  border: 1px solid var(--blg-border);
+  border-radius: 50%;
+  color: var(--blg-dark);
+}
+
+.arrow-between-side .slick-prev::before,
+.arrow-between-side .slick-next::before {
+  color: var(--blg-dark);
+  font-size: 14px;
+}
+
+.arrow-between-side .slick-prev:hover,
+.arrow-between-side .slick-next:hover {
+  background: var(--blg-primary);
+  border-color: var(--blg-primary);
+}
+
+.arrow-between-side .slick-prev:hover::before,
+.arrow-between-side .slick-next:hover::before {
+  color: #fff;
+}
+
+/* Slick dots */
+.slick-dots {
+  bottom: 16px;
+  z-index: 3;
+}
+
+.slick-dots li button::before {
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  content: "";
+  opacity: 1;
+}
+
+.slick-dots li.slick-active button::before {
+  background: #fff;
+  width: 14px;
+  height: 14px;
+  margin-top: -2px;
+}
+
+/* ============================================================
+   2. SIDEBAR HERO GRID (post-grid-one-update)
+      Layout: Large post LEFT | 2 smaller posts RIGHT
+============================================================ */
+.post-grid-one-update {
+  padding: 60px 0;
+  background: var(--blg-white);
+}
+
+/* Large featured post */
+.post-grid-one-update .content-block.axil-featured {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.post-grid-one-update .content-block.axil-featured .post-thumbnail img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}
+
+.post-grid-one-update .content-block.axil-featured .post-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px 30px 30px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, transparent 100%);
+}
+
+.post-grid-one-update .content-block.axil-featured .post-content .title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.3;
+  margin: 10px 0 16px;
+}
+
+.post-grid-one-update .content-block.axil-featured .title a {
+  color: #fff;
+}
+.post-grid-one-update .content-block.axil-featured .title a:hover {
+  color: var(--blg-primary);
+}
+.post-grid-one-update .content-block.axil-featured .post-author-name a,
+.post-grid-one-update .content-block.axil-featured .post-meta-list li {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Right column horizontal posts */
+.post-horizontal {
+  display: flex;
+  gap: 16px;
+  flex-direction: column-reverse;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--blg-border);
+}
+
+.post-horizontal:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.post-horizontal.content-direction-column {
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.post-horizontal .post-content {
+  flex: 1;
+}
+
+.post-horizontal .post-thumbnail {
+  width: 120px;
+  height: 80px;
+  flex-shrink: 0;
+  border-radius: 6px;
+}
+
+.post-horizontal .post-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.post-horizontal .title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--blg-dark);
+  line-height: 1.4;
+  margin: 6px 0 10px;
+}
+
+.post-horizontal .title a {
+  color: var(--blg-dark);
+}
+.post-horizontal .title a:hover {
+  color: var(--blg-primary);
+}
+
+/* thumb-border-rounded */
+.thumb-border-rounded .post-thumbnail {
+  border-radius: 8px;
+}
+
+/* ============================================================
+   3. AD BANNER
+============================================================ */
+.blg-ad-banner {
+  padding: 10px 0;
+  text-align: center;
+  background: var(--blg-white);
+}
+
+.blg-ad-banner img {
+  max-width: 100%;
+  height: auto;
+  display: inline-block;
+}
+
+/* ============================================================
+   4. INNOVATION & TECH — Tab + Slick Slider
+============================================================ */
+.axil-tab-area {
+  padding: var(--blg-section-gap) 0;
+}
+
+.axil-tab-area .wrapper {
+  max-width: var(--blg-container);
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Tab buttons */
+.axil-tab-button.nav-tabs {
+  border: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.axil-tab-button .nav-item {
+  margin: 0;
+}
+
+.axil-tab-button .nav-link {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--blg-dark);
+  padding: 8px 18px;
+  border: 1px solid var(--blg-border);
+  border-radius: 30px;
+  background: transparent;
+  transition: var(--blg-transition-fast);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.axil-tab-button .nav-link.active,
+.axil-tab-button .nav-link:hover {
+  background: var(--blg-primary);
+  border-color: var(--blg-primary);
+  color: #fff;
+}
+
+/* Modern post card (content ABOVE image) */
+.content-block.modern-post-style {
+  padding: 0 10px;
+}
+
+.modern-post-style .post-content {
+  margin-bottom: 16px;
+}
+
+.modern-post-style .post-content .title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--blg-dark);
+  line-height: 1.4;
+  margin-top: 8px;
+}
+
+.modern-post-style .post-content .title a {
+  color: var(--blg-dark);
+}
+.modern-post-style .post-content .title a:hover {
+  color: var(--blg-primary);
+}
+
+.modern-post-style .post-thumbnail {
+  border-radius: 8px;
+}
+
+.modern-post-style .post-thumbnail img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Tab pane visibility */
+.tab-content .tab-pane {
+  display: none;
+}
+
+.tab-content .tab-pane.show.active {
+  display: block;
+}
+
+/* ============================================================
+   5. TRENDING TOPICS — Category Slider
+============================================================ */
+.axil-categories-list {
+  padding: var(--blg-section-gap) 0;
+}
+
+.axil-categories-list .section-title .title {
+  font-size: 24px;
+}
+
+.see-all-topics {
+  text-align: right;
+}
+
+/* Single category card */
+.single-cat {
+  padding: 0 8px;
+}
+
+.single-cat .inner {
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.single-cat .inner a {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.single-cat .thumbnail {
+  overflow: hidden;
+}
+
+.single-cat .thumbnail img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.5s ease;
+}
+
+.single-cat:hover .thumbnail img {
+  transform: scale(1.08);
+}
+
+.single-cat .content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 14px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.72) 0%, transparent 100%);
+  border-radius: 0 0 10px 10px;
+}
+
+.single-cat .content .title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+}
+
+/* ============================================================
+   6. TRENDING POSTS + SIDEBAR
+============================================================ */
+.axil-post-grid-area {
+  padding: var(--blg-section-gap) 0;
+}
+
+.axil-post-grid-area .wrapper,
+.axil-post-grid-area .container {
+  max-width: var(--blg-container);
+  margin: 0 auto;
+}
+
+/* Trend tab buttons */
+.axil-post-grid-area .axil-tab-button.nav-tabs {
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+/* Trend post item (numbered) */
+.content-block.trend-post {
+  display: flex;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--blg-border);
+  align-items: center;
+}
+
+.content-block.trend-post:last-child {
+  border-bottom: none;
+}
+
+.content-block.trend-post .post-inner {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  width: 100%;
+}
+
+/* Numbered order badge */
+span.post-order-list {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--blg-border);
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 50px;
+  font-style: italic;
+}
+
+.content-block.trend-post .post-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.content-block.trend-post .post-content .title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--blg-dark);
+  line-height: 1.4;
+  margin: 6px 0 10px;
+}
+
+.content-block.trend-post .post-content .title a {
+  color: var(--blg-dark);
+}
+.content-block.trend-post .post-content .title a:hover {
+  color: var(--blg-primary);
+}
+
+.content-block.trend-post .post-meta-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Thumbnail in trend post */
+.content-block.trend-post .post-thumbnail {
+  width: 130px;
+  height: 87px;
+  flex-shrink: 0;
+  border-radius: 6px;
+}
+
+.content-block.trend-post .post-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Sidebar: latest posts (medium style) */
+.content-block.post-medium {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--blg-border);
+}
+
+.content-block.post-medium:last-child {
+  border-bottom: none;
+}
+
+.content-block.post-medium .post-thumbnail {
+  width: 100px;
+  height: 70px;
+  flex-shrink: 0;
+}
+
+.content-block.post-medium .post-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.content-block.post-medium .post-content .title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--blg-dark);
+  line-height: 1.4;
+}
+
+.content-block.post-medium .post-content .title a {
+  color: var(--blg-dark);
+}
+.content-block.post-medium .post-content .title a:hover {
+  color: var(--blg-primary);
+}
+
+.content-block.post-medium .post-meta-list {
+  margin-top: 6px;
+}
+
+/* ============================================================
+   7. SOCIAL NETWORKS BAR
+============================================================ */
+.axil-social-wrapper {
+  padding: 20px 30px;
+  background: var(--blg-white);
+  border-radius: 10px;
+}
+
+.social-with-text {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+}
+
+.social-with-text li a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  transition: var(--blg-transition-fast);
+}
+
+/* Social brand colors */
+.social-with-text li.twitter a {
+  background: #1da1f2;
+}
+.social-with-text li.facebook a {
+  background: #3b5998;
+}
+.social-with-text li.youtube a {
+  background: #ff0000;
+}
+.social-with-text li.dribbble a {
+  background: #ea4c89;
+}
+.social-with-text li.behance a {
+  background: #1769ff;
+}
+.social-with-text li.linkedin a {
+  background: #0077b5;
+}
+
+.social-with-text li a:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+.social-with-text li a i {
+  font-size: 16px;
+}
+
+.axil-post-grid-area .axil-social-wrapper {
+  margin-bottom: 30px;
+}
+
+.radius {
+  border-radius: 10px;
+}
+
+/* ============================================================
+   8. MOST POPULAR — 2 column: left list + right sidebar
+============================================================ */
+.blg-most-popular-section {
+  padding: var(--blg-section-gap) 0;
+  background: var(--blg-grey);
+}
+
+/* Grid tab content pane */
+.grid-tab-content .trend-tab-content {
+  display: none;
+}
+
+.grid-tab-content .trend-tab-content.show.active {
+  display: block;
+}
+
+/* Right sidebar within most popular */
+.blg-sidebar-widgets .widget-title h3 {
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--blg-dark);
+  border-bottom: 2px solid var(--blg-primary);
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+/* Stay in Touch social icons */
+.social-icon.md-size {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.social-icon.md-size li a {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--blg-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--blg-text);
+  transition: var(--blg-transition-fast);
+}
+
+.social-icon.md-size li a:hover {
+  background: var(--blg-primary);
+  border-color: var(--blg-primary);
+  color: #fff;
+}
+
+/* Gallery grid (3×2) */
+.gallery.gallery-columns-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  transition: var(--blg-transition-fast);
+}
+
+.gallery-item img:hover {
+  opacity: 0.8;
+}
+
+/* ============================================================
+   9. LIFESTYLE SECTION — Post grid with video posts
+============================================================ */
+.axil-video-post-area {
+  padding: var(--blg-section-gap) 0;
+  background: var(--blg-white);
+}
+
+.content-block.post-default {
+  margin-bottom: 30px;
+}
+
+.content-block.post-default .post-thumbnail {
+  margin-bottom: 14px;
+  border-radius: 8px;
+}
+
+.content-block.post-default .post-thumbnail img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.content-block.post-default .post-content .title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--blg-dark);
+  line-height: 1.4;
+  margin: 8px 0 12px;
+}
+
+.content-block.post-default .title a {
+  color: var(--blg-dark);
+}
+.content-block.post-default .title a:hover {
+  color: var(--blg-primary);
+}
+
+/* Axil small post image (smaller grid) */
+.axil-small-post-image .post-thumbnail img {
+  height: 165px;
+}
+
+/* Video play icon overlay */
+.video-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+.play-icon {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  position: relative;
+  transition: var(--blg-transition-fast);
+}
+
+.play-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 54%;
+  transform: translate(-50%, -50%);
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-left: 14px solid var(--blg-primary);
+}
+
+.video-popup:hover .play-icon {
+  background: var(--blg-primary);
+}
+
+.video-popup:hover .play-icon::after {
+  border-left-color: #fff;
+}
+
+/* ============================================================
+   UTILITY SPACINGS
+============================================================ */
+.mb--20 {
+  margin-bottom: 20px !important;
+}
+.mb--30 {
+  margin-bottom: 30px !important;
+}
+.mt--10 {
+  margin-top: 10px !important;
+}
+.mt--20 {
+  margin-top: 20px !important;
+}
+.mt--30 {
+  margin-top: 30px !important;
+}
+.mt_mobile--20 {
+  margin-top: 20px;
+}
+
+.text-left {
+  text-align: left !important;
+}
+.text-right {
+  text-align: right !important;
+}
+.text-center {
+  text-align: center !important;
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 1199px) {
+  .arrow-between-side .slick-prev {
+    left: 0;
+  }
+  .arrow-between-side .slick-next {
+    right: 0;
+  }
+}
+
+@media (max-width: 991px) {
+  .slider-activation .post-content {
+    padding: 30px 30px 24px;
+  }
+  .slider-activation .post-content .title {
+    font-size: 28px;
+  }
+
+  .post-grid-one-update .content-block.axil-featured .post-thumbnail img {
+    height: 380px;
+  }
+  .post-grid-one-update .content-block.axil-featured .post-content .title {
+    font-size: 22px;
+  }
+
+  .content-block.trend-post {
+    flex-direction: column;
+    gap: 10px;
+  }
+  span.post-order-list {
+    font-size: 28px;
+    min-width: 40px;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --blg-section-gap: 60px;
+  }
+
+  .slider-activation .post-content {
+    padding: 20px 20px 18px;
+  }
+  .slider-activation .post-content .title {
+    font-size: 20px;
+    margin: 8px 0 14px;
+  }
+
+  .axil-tab-button .nav-link {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .social-with-text {
+    gap: 6px;
+  }
+  .social-with-text li a {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  .content-block.trend-post .post-thumbnail {
+    width: 100%;
+    height: 160px;
+  }
+
+  .see-all-topics {
+    text-align: left;
+    margin-top: 10px;
+  }
+
+  .gallery.gallery-columns-3 {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+}
+
+@media (max-width: 575px) {
+  .slider-activation .post-content .title {
+    font-size: 16px;
+  }
+  .axil-slick-arrow .slick-prev {
+    left: 6px;
+  }
+  .axil-slick-arrow .slick-next {
+    right: 6px;
+  }
+}

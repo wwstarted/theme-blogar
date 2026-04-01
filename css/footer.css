@@ -1,0 +1,265 @@
+/* ============================================================
+   Blogar — footer.css
+   Covers: Instagram section, footer menu columns, bottom bar,
+           back-to-top button
+============================================================ */
+
+/* ============================================================
+   INSTAGRAM SECTION
+============================================================ */
+.axil-instagram-area {
+  padding: 80px 0;
+  background: var(--blg-grey);
+}
+
+.axil-instagram-area .section-title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.axil-instagram-area .section-title .title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--blg-dark);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Instagram grid placeholder (plugin fills this) */
+.axil-instagram-area .sbi-screenreader {
+  display: none;
+}
+
+/* ============================================================
+   FOOTER MAIN
+============================================================ */
+.axil-footer-area {
+  background: var(--blg-white);
+  border-top: 1px solid var(--blg-border);
+}
+
+/* ── Footer Top: Widget Columns ────────────────────────────── */
+.footer-mainmenu {
+  padding: 70px 0 50px;
+}
+
+.footer-mainmenu .container {
+  max-width: var(--blg-container);
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.footer-widget-item {
+  padding-right: 20px;
+}
+
+/* Separator line on first column */
+.axil-border-right {
+  border-right: 1px solid var(--blg-border);
+  padding-right: 30px;
+}
+
+/* Widget title */
+.footer-widget-item .widget-title,
+.footer-widget-item h5.widget-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--blg-dark);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--blg-primary);
+  display: inline-block;
+}
+
+/* Nav menu list inside footer widget */
+.footer-widget-item .menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-widget-item .menu li {
+  margin-bottom: 10px;
+}
+
+.footer-widget-item .menu li a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--blg-text);
+  line-height: 1.5;
+  transition: var(--blg-transition-fast);
+  position: relative;
+  padding-left: 0;
+}
+
+.footer-widget-item .menu li a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 0;
+  height: 1px;
+  background: var(--blg-primary);
+  transition: width 0.3s ease;
+}
+
+.footer-widget-item .menu li a:hover {
+  color: var(--blg-primary);
+}
+
+.footer-widget-item .menu li a:hover::before {
+  width: 100%;
+}
+
+/* ── Footer Bottom ─────────────────────────────────────────── */
+.footer-bottom {
+  border-top: 1px solid var(--blg-border);
+  padding: 20px 0;
+}
+
+.footer-bottom .container {
+  max-width: var(--blg-container);
+  margin: 0 auto;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Bottom logo */
+.footer-bottom .footer-logo img {
+  height: 36px;
+  width: auto;
+}
+
+/* Bottom nav */
+.footer-bottom-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-bottom-nav li a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--blg-text);
+  transition: var(--blg-transition-fast);
+}
+
+.footer-bottom-nav li a:hover {
+  color: var(--blg-primary);
+}
+
+/* Copyright */
+.copyright-right p,
+.footer-copyright p {
+  font-size: 13px;
+  color: var(--blg-text-light);
+  margin: 0;
+}
+
+.copyright-right a,
+.footer-copyright a {
+  color: var(--blg-dark);
+  font-weight: 700;
+  transition: var(--blg-transition-fast);
+}
+
+.copyright-right a:hover,
+.footer-copyright a:hover {
+  color: var(--blg-primary);
+}
+
+/* ============================================================
+   BACK TO TOP
+============================================================ */
+#backto-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 44px;
+  height: 44px;
+  background: var(--blg-primary);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: var(--blg-transition);
+  box-shadow: 0 4px 15px rgba(56, 88, 246, 0.4);
+}
+
+#backto-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+#backto-top:hover {
+  background: var(--blg-dark);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  color: #fff;
+}
+
+#backto-top::before {
+  content: "\f077";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 1199px) {
+  .footer-mainmenu {
+    padding: 60px 0 40px;
+  }
+  .axil-border-right {
+    border-right: none;
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 991px) {
+  .footer-widget-item {
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 767px) {
+  .footer-mainmenu {
+    padding: 50px 0 30px;
+  }
+  .axil-instagram-area {
+    padding: 60px 0;
+  }
+
+  .footer-bottom .container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-bottom-nav {
+    justify-content: center;
+  }
+
+  #backto-top {
+    bottom: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+    font-size: 15px;
+  }
+}
