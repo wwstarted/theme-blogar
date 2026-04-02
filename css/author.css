@@ -1,0 +1,201 @@
+/* =============================================================================
+   AUTHOR.CSS — Blogar Theme
+   Template: author.php
+
+   Dependency: archive.css phải load trước.
+   File này CHỈ chứa styles cho author info block.
+   Toàn bộ layout grid, post card, sidebar, pagination → reuse archive.css.
+
+   Breakpoints:
+     Desktop     ≥ 1200px (default)
+     Tablet      768–1199px
+     Mobile      ≤ 767px
+     Mobile-XS   ≤ 575px
+   ============================================================================= */
+
+/* =============================================================================
+   AUTHOR INFO BLOCK
+   Nằm bên trong .axil-breadcrumb-area, ngay dưới breadcrumb nav + h1.
+   Layout: flex ngang — avatar bên trái, meta bên phải.
+   ============================================================================= */
+.author-info-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-top: 28px;
+  padding: 28px 32px;
+  background: var(--color-white, #fff);
+  border-radius: var(--radius, 10px);
+  box-shadow: var(--shadow-primary, 0 10px 40px rgba(15, 23, 42, 0.08));
+}
+
+/* ── Avatar ──────────────────────────────────────────────── */
+.author-info-avatar {
+  flex: 0 0 96px;
+  width: 96px;
+  height: 96px;
+  overflow: hidden;
+  border-radius: 50%;
+  /* Viền nhẹ để avatar nổi trên nền trắng */
+  outline: 3px solid var(--color-lightest, #f8f9fa);
+  outline-offset: 2px;
+}
+
+.author-info-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* ── Meta ────────────────────────────────────────────────── */
+.author-info-meta {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Label "Written By" */
+.author-info-label {
+  display: block;
+  color: var(--color-secondary, #d93e40);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* Author name — h2 vì h1 đã dùng cho page title */
+.author-info-name {
+  margin: 0;
+  color: var(--color-heading);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+/* Bio / description — ẩn nếu trống (PHP đã kiểm tra) */
+.author-info-bio {
+  margin: 0;
+  color: var(--color-body, #65676b);
+  font-size: 14px;
+  line-height: 1.7;
+  max-width: 600px;
+  /* Clamp 3 dòng để tránh bio quá dài vỡ layout */
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* Post count badge */
+.author-info-count {
+  display: inline-block;
+  padding: 3px 12px;
+  background: var(--color-lightest, #f8f9fa);
+  border-radius: 20px;
+  color: var(--color-midgray);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+  align-self: flex-start;
+}
+
+/* =============================================================================
+   NO POSTS FALLBACK
+   Hiển thị khi author chưa có bài viết nào.
+   ============================================================================= */
+.no-posts-found {
+  padding: 60px 30px;
+  background: var(--color-lightest, #f8f9fa);
+  border-radius: var(--radius, 10px);
+  text-align: center;
+}
+
+.no-posts-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.no-posts-message {
+  margin: 0;
+  color: var(--color-body, #65676b);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.no-posts-message strong {
+  color: var(--color-heading);
+  font-weight: 700;
+}
+
+/* =============================================================================
+   RESPONSIVE
+   ============================================================================= */
+
+/* ── Tablet: 768–1199px ─────────────────────────────────── */
+@media only screen and (max-width: 1199px) {
+  .author-info-block {
+    padding: 22px 24px;
+    gap: 20px;
+  }
+
+  .author-info-name {
+    font-size: 20px;
+  }
+}
+
+/* ── Mobile: ≤ 767px ─────────────────────────────────────── */
+@media only screen and (max-width: 767px) {
+  .author-info-block {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .author-info-avatar {
+    flex: 0 0 72px;
+    width: 72px;
+    height: 72px;
+  }
+
+  .author-info-name {
+    font-size: 18px;
+  }
+
+  .author-info-bio {
+    font-size: 14px;
+    -webkit-line-clamp: 4; /* mobile cho xem thêm 1 dòng */
+  }
+
+  .no-posts-found {
+    padding: 40px 20px;
+  }
+}
+
+/* ── Mobile XS: ≤ 575px ─────────────────────────────────── */
+@media only screen and (max-width: 575px) {
+  .author-info-block {
+    padding: 16px;
+    gap: 14px;
+    margin-top: 16px;
+  }
+
+  .author-info-avatar {
+    flex: 0 0 60px;
+    width: 60px;
+    height: 60px;
+  }
+
+  .author-info-name {
+    font-size: 17px;
+  }
+}

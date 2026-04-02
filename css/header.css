@@ -1,7 +1,19 @@
+/* =============================================================================
+   HEADER — Blogar Theme
+   Breakpoints:
+     Desktop     : ≥ 1200px (default)
+     Desktop-SM  : 1200–1599px
+     Tablet      : 768–1199px (hamburger, inline search)
+     Mobile      : ≤ 767px
+     Mobile-XS   : ≤ 575px (search icon toggle)
+   ============================================================================= */
+
+/* ===================== TOKENS ===================== */
 :root {
   --blogar-header-padding-x: 60px;
 }
 
+/* ===================== BASE ===================== */
 .axil-header {
   position: relative;
   z-index: 99;
@@ -13,6 +25,7 @@
   box-shadow: var(--shadow-primary);
 }
 
+/* ===================== STICKY ===================== */
 .axil-header.header-sticky.sticky {
   position: fixed;
   top: 0;
@@ -23,6 +36,12 @@
   animation: headerSlideDown 0.95s ease forwards;
 }
 
+/* Desktop sticky offset */
+body.header-sticky-now .main-content {
+  padding-top: 80px;
+}
+
+/* ===================== WRAP / INNER ===================== */
 .header-wrap {
   width: 100%;
 }
@@ -32,8 +51,10 @@
   align-items: center;
   justify-content: space-between;
   min-height: 80px;
+  position: relative;
 }
 
+/* ===================== COLUMNS — DESKTOP ===================== */
 .header-branding {
   flex: 0 0 16.666667%;
   max-width: 16.666667%;
@@ -49,14 +70,16 @@
 }
 
 .header-actions {
-  flex: 0 0 25%;
-  max-width: 25%;
+  flex: 0 0 33.333333%;
+  max-width: 33.333333%;
 }
 
+/* Mobile actions hidden on desktop */
 .header-actions-mobile {
   display: none;
 }
 
+/* ===================== LOGO ===================== */
 .axil-header .logo {
   padding: 20px 0;
 }
@@ -67,12 +90,14 @@
 
 .axil-header .logo a img {
   max-height: 37px;
+  display: block;
 }
 
 .axil-header .logo a .light-logo {
   display: none;
 }
 
+/* ===================== DESKTOP NAV ===================== */
 .mainmenu-wrapper {
   display: block;
   width: 100%;
@@ -112,9 +137,11 @@
   font-size: var(--font-size-b2);
   font-weight: var(--p-medium);
   line-height: 80px;
+  white-space: nowrap;
   transition: color 0.3s ease;
 }
 
+/* Active underline bar */
 .mainmenu > li > a::after {
   position: absolute;
   bottom: 0;
@@ -143,11 +170,12 @@
   width: 100%;
 }
 
+/* ===================== DROPDOWN ===================== */
 .mainmenu > li > .sub-menu {
   position: absolute;
   top: 100%;
   left: 0;
-  z-index: -1;
+  z-index: 99; /* FIX: was -1, caused stacking bugs */
   min-width: 240px;
   padding: 20px;
   background: #fff;
@@ -155,15 +183,26 @@
   box-shadow: var(--shadow-primary);
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transition:
     opacity 0.25s ease,
     visibility 0.25s ease;
 }
 
+/* FIX: Bridge gap so dropdown doesn't close when mouse crosses the gap */
+.mainmenu > li > .sub-menu::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
+}
+
 .mainmenu > li:hover > .sub-menu {
-  z-index: 9;
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
 .mainmenu .sub-menu li {
@@ -190,11 +229,12 @@
   color: var(--color-primary);
 }
 
+/* Second level dropdown */
 .mainmenu .sub-menu .sub-menu {
   position: absolute;
   top: 0;
   left: 100%;
-  z-index: -1;
+  z-index: 99;
   min-width: 240px;
   padding: 20px;
   background: #fff;
@@ -202,21 +242,24 @@
   box-shadow: var(--shadow-primary);
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transition:
     opacity 0.25s ease,
     visibility 0.25s ease;
 }
 
 .mainmenu .sub-menu li:hover > .sub-menu {
-  z-index: 9;
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
 }
 
+/* ===================== RIGHT ACTIONS ===================== */
 .header-search {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  gap: 0;
 }
 
 .header-search-form {
@@ -283,13 +326,15 @@
   height: 18px;
 }
 
+/* ===================== METABAR (ICONS ROW) ===================== */
 .metabar-block {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .metabar-block li {
-  margin: 0 0 0 20px;
+  margin: 0 0 0 16px;
 }
 
 .metabar-block li.icon a,
@@ -308,6 +353,7 @@
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
+  flex-shrink: 0;
 }
 
 .metabar-block li.icon a:hover,
@@ -318,19 +364,22 @@
   background: var(--color-primary);
 }
 
+/* ===================== HAMBURGER ===================== */
 .hamburger-menu {
-  display: none;
-  margin: 0 0 0 20px;
+  display: none; /* hidden on desktop, shown via tablet rule */
+  margin: 0;
   padding: 0;
   background: transparent;
   border: 0;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .hamburger-inner {
   display: block;
 }
 
+/* ===================== CART ===================== */
 .mini-cart {
   position: relative;
   display: inline-flex;
@@ -354,25 +403,28 @@
   text-align: center;
 }
 
+/* ===================== MOBILE OVERLAY MENU ===================== */
 .popup-mobilemenu-area {
   position: fixed;
   inset: 0;
   z-index: 99999;
   visibility: hidden;
   opacity: 0;
-  background: rgba(0, 0, 0, 0.9);
-  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  background: rgba(0, 0, 0, 0.85);
+  transition:
+    opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+    visibility 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 .popup-mobilemenu-area .inner {
   position: relative;
   width: 320px;
-  max-width: 80%;
+  max-width: 82%;
   height: 100%;
   overflow-y: auto;
   background: var(--color-white);
   transform: translateX(-100%);
-  transition: all 0.3s;
+  transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
 body.popup-mobile-menu-show {
@@ -385,9 +437,10 @@ body.popup-mobile-menu-show .popup-mobilemenu-area {
 }
 
 body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
-  transform: none;
+  transform: translateX(0);
 }
 
+/* ===================== MOBILE MENU TOP ===================== */
 .mobile-menu-top {
   display: flex;
   align-items: center;
@@ -404,13 +457,21 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 36px;
+  height: 36px;
   padding: 0;
   color: #000;
   background: transparent;
   border: 0;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
+.mobile-close:hover {
+  color: var(--color-primary);
+}
+
+/* ===================== MOBILE MENU ITEMS ===================== */
 .menu-item {
   display: block;
 }
@@ -421,7 +482,7 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
 
 .mainmenu-item > li {
   margin: 0;
-  padding: 15px 0;
+  padding: 12px 0;
   border-bottom: 1px solid var(--color-lightest);
 }
 
@@ -430,7 +491,7 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
   color: var(--color-gray);
   font-size: 16px;
   font-weight: 500;
-  line-height: 20px;
+  line-height: 1.5;
   transition: color 0.3s ease;
 }
 
@@ -442,6 +503,7 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
   color: var(--color-primary);
 }
 
+/* Submenu toggle arrow */
 .mainmenu-item .menu-item-has-children > a {
   position: relative;
   padding-right: 24px;
@@ -483,6 +545,7 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
   color: var(--color-gray);
   font-size: 14px;
   line-height: 18px;
+  transition: color 0.3s ease;
 }
 
 .mainmenu-item .sub-menu li a:hover,
@@ -491,6 +554,7 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
   color: var(--color-primary);
 }
 
+/* ===================== SEARCH MOBILE — BASE (hidden) ===================== */
 .search-mobile-icon {
   display: none;
 }
@@ -499,6 +563,9 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
   display: none;
 }
 
+/* =============================================================================
+   DESKTOP SMALL: 1200px – 1599px
+   ============================================================================= */
 @media only screen and (min-width: 1200px) and (max-width: 1599px) {
   :root {
     --blogar-header-padding-x: 30px;
@@ -512,103 +579,230 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
     margin: 0 12px;
   }
 
+  /* FIX: was 143px — too narrow */
   .header-search-form {
-    max-width: 143px;
+    max-width: 200px;
   }
 
   .axil-search .form-control {
-    height: 35px;
+    height: 38px;
   }
 
   .metabar-block li {
-    margin-left: 5px;
+    margin-left: 10px;
   }
 
   .metabar-block li.icon a {
-    width: 35px;
-    height: 35px;
+    width: 38px;
+    height: 38px;
   }
 }
 
+/* =============================================================================
+   TABLET: ≤ 1199px
+   - Hide desktop nav, show hamburger
+   - Show inline search (same as source "d-none d-sm-block" at ≥576px)
+   - FIX: min-height was 40px → bumped to 70px
+   - FIX: hamburger grouped right via margin-left: auto
+   ============================================================================= */
 @media only screen and (max-width: 1199px) {
   .axil-header {
-    padding: 20px 30px;
+    padding: 0 20px;
   }
 
+  /* FIX: was 40px — header was impossibly thin */
   .header-inner {
-    min-height: 40px;
+    min-height: 70px;
+    gap: 12px;
   }
 
+  /* Logo: shrink to content width */
   .header-branding {
-    flex: 0 0 50%;
-    max-width: 50%;
+    flex: 0 0 auto;
+    max-width: none;
   }
+
+  /* Nav (hamburger only):
+     FIX: margin-left:auto pushes hamburger + actions to the right,
+     so layout becomes: [LOGO] ←auto gap→ [HAMBURGER] [SEARCH+CART]
+     matching source Bootstrap col layout behavior */
+  /* .header-navigation {
+    justify-content: flex-end;
+    flex: 0 0 auto;
+    max-width: none;
+    margin-left: auto;
+  } */
 
   .header-navigation {
     justify-content: flex-end;
-    flex: 0 0 25%;
-    max-width: 25%;
+    flex: 0 0 auto;
+    max-width: none;
+    margin-left: 0; /* ← BỎ auto, chuyển xuống actions-mobile */
+    order: 3; /* ← hamburger luôn ngoài cùng phải */
   }
 
+  /* Actions: natural width, don't grow */
   .header-actions {
-    flex: 0 0 25%;
-    max-width: 25%;
+    flex: 0 0 auto;
+    max-width: none;
+    min-width: 0;
   }
 
+  /* Remove logo top/bottom padding on tablet */
   .axil-header .logo {
     padding: 0;
   }
 
+  /* Hide desktop nav */
   .mainmenu-wrapper {
     display: none;
   }
 
+  /* Show hamburger */
+  /* .hamburger-menu {
+    display: inline-flex;
+    margin-left: 12px;
+  } */
+
   .hamburger-menu {
-    display: inline-block;
+    display: inline-flex;
+    margin-left: 0; /* ← BỎ, tránh double gap */
   }
 
+  /* Swap desktop ↔ mobile action panels */
   .header-actions-desktop {
     display: none;
   }
 
   .header-actions-mobile {
+    display: flex; /* ← override display: none từ base */
+    align-items: center;
+    order: 2;
+    margin-left: auto;
+  }
+
+  /* FIX: Show inline search at tablet (992–1199px AND 768–991px)
+     Matches source: "d-none d-sm-block" = visible from 576px up */
+  .large-mobile-blog-search {
     display: block;
+    position: static;
+    width: 100%;
+    max-width: 220px;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Hide toggle icon at tablet — inline form is always visible */
+  .search-mobile-icon {
+    display: none;
+  }
+
+  .header-actions-mobile .header-search {
+    gap: 10px;
+  }
+
+  /* Sticky offset matches header height */
+  body.header-sticky-now .main-content {
+    padding-top: 70px;
   }
 }
 
+/* =============================================================================
+   TABLET SMALL: 768px – 991px
+   Extra sub-rules for the mobile search form positioning/sizing
+   ============================================================================= */
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-  .metabar-block li,
-  .hamburger-menu {
+  .axil-search-mobile {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    padding: 0;
+    background: transparent;
+  }
+
+  .axil-search-mobile .form-control {
+    height: 40px;
+    padding: 0 20px 0 48px;
+    background: var(--color-lightest);
+    border-radius: 999px;
+  }
+
+  .axil-search-mobile .search-button {
+    top: 50%;
+    right: auto;
+    left: 18px;
+    width: 18px;
+    height: 18px;
+    transform: translateY(-50%);
+  }
+
+  .metabar-block li {
     margin-left: 10px;
   }
 }
 
+/* =============================================================================
+   MOBILE: ≤ 767px
+   ============================================================================= */
 @media only screen and (max-width: 767px) {
-  .metabar-block li,
-  .hamburger-menu {
+  .axil-header {
+    padding: 0 16px;
+  }
+
+  .header-inner {
+    min-height: 64px;
+    gap: 8px;
+  }
+
+  .metabar-block li {
     margin-left: 10px;
+  }
+
+  body.header-sticky-now .main-content {
+    padding-top: 64px;
   }
 }
 
+/* =============================================================================
+   MOBILE XS: ≤ 575px
+   - Hide inline search
+   - Show search icon toggle (matches source "d-block d-sm-none")
+   ============================================================================= */
 @media only screen and (max-width: 575px) {
+  .header-inner {
+    min-height: 60px;
+    gap: 6px;
+  }
+
+  body.header-sticky-now .main-content {
+    padding-top: 60px;
+  }
+
+  /* Show search icon toggle */
   .search-mobile-icon {
     display: inline-flex;
-    min-width: 40px;
+    flex-shrink: 0;
   }
 
   .search-mobile-icon button {
     cursor: pointer;
   }
 
+  /* Hide inline form, show as dropdown below header */
   .large-mobile-blog-search {
     position: absolute;
     top: 100%;
+    left: 0;
     right: 0;
     display: block;
-    width: 100%;
+    max-width: none;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    z-index: 98;
+    transition:
+      opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1),
+      visibility 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   }
 
   .large-mobile-blog-search.active {
@@ -617,38 +811,49 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
   }
 
   .axil-search-mobile {
-    position: absolute;
-    top: 100%;
-    right: 0;
+    position: static;
     width: 100%;
-    margin-bottom: 0;
-    padding: 20px;
+    padding: 14px 16px;
     background: var(--color-lightest);
   }
 
   .axil-search-mobile .form-control {
-    height: 47px;
-    padding-right: 52px;
-    padding-left: 20px;
+    height: 44px;
+    padding: 0 52px 0 20px;
     background: #fff;
-    border-radius: var(--radius);
+    border-radius: var(--radius, 6px);
   }
 
+  /* Search icon on right for mobile XS */
   .axil-search-mobile .search-button {
     top: 50%;
-    right: 19px;
+    right: 16px;
     left: auto;
-    width: 52px;
-    height: 47px;
+    width: 20px;
+    height: 20px;
     transform: translateY(-50%);
+  }
+
+  .header-actions-mobile .header-search {
+    gap: 6px;
+  }
+
+  .metabar-block li {
+    margin-left: 8px;
+  }
+
+  .metabar-block li.icon a,
+  .search-mobile-icon button {
+    width: 36px;
+    height: 36px;
   }
 }
 
+/* ===================== ANIMATION ===================== */
 @keyframes headerSlideDown {
   0% {
     transform: translateY(-100%);
   }
-
   100% {
     transform: translateY(0);
   }

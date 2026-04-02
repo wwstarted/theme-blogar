@@ -1,0 +1,487 @@
+/* =============================================================================
+   PAGE.CSS — Blogar Theme
+   Template: page.php (About Us, Privacy Policy, Terms, Contact…)
+
+   Dependencies (đã load trước):
+     archive.css  → sidebar widgets, .axil-search, .gallery, .tagcloud, newsletter
+     single.css   → .single-post-content prose (p, h2-h6, ul, ol, blockquote, img…)
+
+   File này chỉ chứa:
+     1. Hero Banner (.axil-banner.banner-style-1)
+     2. Layout wrapper overrides cụ thể cho page
+     3. Featured image block (.page-featured-image)
+     4. Page content overrides (nếu cần ngoài single.css)
+     5. Responsive
+
+   Breakpoints:
+     Desktop     ≥ 1200px (default)
+     Desktop-SM  1200–1599px
+     Tablet      768–1199px
+     Mobile      ≤ 767px
+     Mobile-XS   ≤ 575px
+   ============================================================================= */
+
+/* =============================================================================
+   1. CONTAINER — reuse pattern từ archive.css
+   ============================================================================= */
+.axil-post-list-area .container {
+  width: 100%;
+  max-width: 1230px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* =============================================================================
+   2. HERO BANNER
+   Source: .axil-banner.banner-style-1.bg_image (index.html line 1435)
+   - Background image = featured image của page
+   - Overlay tối để text đọc được
+   - h1.title — trắng, lớn
+   - p.description — trắng nhạt, mô tả page
+   ============================================================================= */
+.axil-banner.banner-style-1.page-banner {
+  position: relative;
+  padding: 100px 0;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+/* Dark overlay */
+.axil-banner.banner-style-1.page-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.52);
+  z-index: 0;
+}
+
+/* Container phải nổi trên overlay */
+.axil-banner.banner-style-1.page-banner .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Row + col */
+.axil-banner.banner-style-1.page-banner .inner {
+  max-width: 740px;
+}
+
+/* h1 — ONE h1 per page */
+.axil-banner.banner-style-1.page-banner .inner .title {
+  margin: 0 0 16px;
+  color: var(--color-white, #fff);
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+}
+
+/* Description / excerpt */
+.axil-banner.banner-style-1.page-banner .inner .description {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 16px;
+  line-height: 1.75;
+  max-width: 620px;
+}
+
+/* =============================================================================
+   3. MAIN LAYOUT — 2 cột (clone từ single/archive)
+   ============================================================================= */
+
+/* row--40 = col-gap 40px */
+.axil-post-list-area .row--40 {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -20px;
+}
+
+.axil-post-list-area .row--40 > [class*="col-"] {
+  padding: 0 20px;
+}
+
+/* col-lg-8 */
+.axil-post-list-area .col-lg-8 {
+  flex: 0 0 66.666667%;
+  max-width: 66.666667%;
+}
+
+/* col-lg-4 */
+.axil-post-list-area .col-lg-4 {
+  flex: 0 0 33.333333%;
+  max-width: 33.333333%;
+}
+
+/* =============================================================================
+   4. FEATURED IMAGE BLOCK (inline — optional, hiển thị trong content col)
+   Chỉ hiện nếu page có featured image VÀ không phải chỉ dùng ở banner.
+   ============================================================================= */
+.page-featured-image {
+  overflow: hidden;
+  border-radius: var(--radius, 10px);
+  margin-bottom: 36px;
+  line-height: 0;
+  aspect-ratio: 1230 / 615;
+}
+
+.page-featured-image img.page-thumb-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: var(--radius, 10px);
+}
+
+/* =============================================================================
+   5. PAGE CONTENT PROSE
+   Dùng lại .single-post-content từ single.css — không viết lại.
+   Chỉ override nếu page cần khác single post.
+   ============================================================================= */
+
+/* Page content không có TOC → đảm bảo margin-top đúng khi không có ảnh */
+.page-article .single-post-content.page-content {
+  margin-top: 0;
+}
+
+/* Nếu có ảnh trước thì margin-top giữa ảnh và content */
+.page-article .page-featured-image + .single-post-content.page-content {
+  margin-top: 36px;
+}
+
+/* WordPress .wp-block-* inside page content — đảm bảo không tràn */
+.page-content .wp-block-image img,
+.page-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius, 10px);
+}
+
+/* wp-block-columns — không để tràn trên mobile */
+.page-content .wp-block-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.page-content .wp-block-column {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+/* Gutenberg button block */
+.page-content .wp-block-button__link {
+  display: inline-block;
+  padding: 10px 28px;
+  background: var(--color-primary, #3858f6);
+  color: var(--color-white, #fff);
+  border-radius: 500px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.page-content .wp-block-button__link:hover {
+  background: transparent;
+  color: var(--color-primary, #3858f6);
+  outline: 2px solid var(--color-primary, #3858f6);
+}
+
+/* wp-block-table */
+.page-content .wp-block-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  margin: 1.4em 0;
+}
+.page-content .wp-block-table td,
+.page-content .wp-block-table th {
+  padding: 10px 14px;
+  border: 1px solid var(--color-lighter, #e9ecef);
+  text-align: left;
+}
+.page-content .wp-block-table th {
+  background: var(--color-lightest, #f8f9fa);
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+/* wp-block-quote */
+.page-content .wp-block-quote {
+  margin: 1.6em 0;
+  padding: 20px 30px;
+  border-left: 4px solid var(--color-primary, #3858f6);
+  background: var(--color-lightest, #f8f9fa);
+  border-radius: 0 var(--radius, 10px) var(--radius, 10px) 0;
+  font-style: italic;
+}
+.page-content .wp-block-quote p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--color-heading);
+}
+.page-content .wp-block-quote cite {
+  display: block;
+  margin-top: 10px;
+  color: var(--color-midgray);
+  font-size: 13px;
+  font-style: normal;
+}
+
+/* wp-block-separator */
+.page-content .wp-block-separator {
+  border: 0;
+  border-top: 1px solid var(--color-lighter, #e9ecef);
+  margin: 2em 0;
+}
+
+/* Contact Form 7 nếu dùng */
+.page-content .wpcf7 input[type="text"],
+.page-content .wpcf7 input[type="email"],
+.page-content .wpcf7 input[type="tel"],
+.page-content .wpcf7 textarea {
+  width: 100%;
+  padding: 10px 14px;
+  color: var(--color-gray);
+  background: var(--color-lightest, #f8f9fa);
+  border: 1px solid var(--color-lighter, #e9ecef);
+  border-radius: var(--radius, 10px);
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.3s ease;
+  margin-bottom: 14px;
+}
+.page-content .wpcf7 input:focus,
+.page-content .wpcf7 textarea:focus {
+  border-color: var(--color-primary, #3858f6);
+}
+.page-content .wpcf7 textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+.page-content .wpcf7 input[type="submit"],
+.page-content .wpcf7 .wpcf7-submit {
+  display: inline-block;
+  padding: 10px 30px;
+  background: var(--color-primary, #3858f6);
+  color: var(--color-white, #fff);
+  border: 2px solid transparent;
+  border-radius: 500px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+.page-content .wpcf7 input[type="submit"]:hover {
+  background: transparent;
+  color: var(--color-primary, #3858f6);
+  border-color: var(--color-primary, #3858f6);
+}
+
+/* WordPress pagination (page có <!--nextpage-->) */
+.page-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-lighter, #e9ecef);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.page-links .page-link-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--color-lightest, #f8f9fa);
+  border-radius: 50%;
+  color: var(--color-gray);
+  font-weight: 600;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.page-links .page-link-item:hover,
+.page-links > .page-link-item:not(a) {
+  background: var(--color-primary, #3858f6);
+  color: var(--color-white, #fff);
+}
+
+/* =============================================================================
+   6. SIDEBAR — reuse từ archive.css / single.css, không viết lại
+   Chỉ đảm bảo sticky behavior giống single.php
+   ============================================================================= */
+
+/* sticky sidebar (giống single.php) */
+.page-sidebar .single-sidebar-sticky {
+  position: sticky;
+  top: 90px;
+  max-height: none;
+  overflow: visible;
+  scrollbar-width: none;
+}
+
+.page-sidebar .single-sidebar-sticky::-webkit-scrollbar {
+  display: none;
+}
+
+/* =============================================================================
+   7. RESPONSIVE
+   ============================================================================= */
+
+/* ── Desktop SM: 1200–1599px ────────────────────────────────── */
+@media only screen and (min-width: 1200px) and (max-width: 1599px) {
+  .axil-banner.banner-style-1.page-banner .inner .title {
+    font-size: 44px;
+  }
+}
+
+/* ── Tablet: ≤ 1199px ─────────────────────────────────────── */
+@media only screen and (max-width: 1199px) {
+  /* Banner */
+  .axil-banner.banner-style-1.page-banner {
+    padding: 70px 0;
+  }
+
+  .axil-banner.banner-style-1.page-banner .inner .title {
+    font-size: 38px;
+  }
+
+  /* Layout: 1 cột */
+  .axil-post-list-area .col-lg-8,
+  .axil-post-list-area .col-lg-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  /* Sidebar xuống dưới */
+  .page-sidebar {
+    margin-top: 40px;
+  }
+
+  /* Sidebar không sticky dưới 1200px */
+  .page-sidebar .single-sidebar-sticky {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* Featured image */
+  .page-featured-image {
+    margin-bottom: 28px;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* ── Mobile: ≤ 767px ─────────────────────────────────────── */
+@media only screen and (max-width: 767px) {
+  /* Banner */
+  .axil-banner.banner-style-1.page-banner {
+    padding: 50px 0;
+  }
+
+  .axil-banner.banner-style-1.page-banner .inner {
+    max-width: 100%;
+  }
+
+  .axil-banner.banner-style-1.page-banner .inner .title {
+    font-size: 26px;
+    line-height: 1.22;
+    margin-bottom: 12px;
+  }
+
+  .axil-banner.banner-style-1.page-banner .inner .description {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  /* Layout */
+  .axil-post-list-area .row--40 {
+    margin: 0 -12px;
+  }
+
+  .axil-post-list-area .row--40 > [class*="col-"] {
+    padding: 0 12px;
+  }
+
+  /* Featured image */
+  .page-featured-image {
+    border-radius: 0;
+    aspect-ratio: 4 / 3;
+    margin-bottom: 20px;
+  }
+
+  .page-featured-image img.page-thumb-img {
+    border-radius: 0;
+  }
+
+  /* Content */
+  .page-article .single-post-content.page-content {
+    font-size: 15px;
+  }
+
+  /* wp-block-columns stack */
+  .page-content .wp-block-columns {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .page-content .wp-block-column {
+    flex: none;
+    width: 100%;
+  }
+
+  /* wp-block-quote */
+  .page-content .wp-block-quote {
+    padding: 14px 18px;
+  }
+
+  /* Pagination */
+  .page-links {
+    margin-top: 24px;
+    padding-top: 16px;
+  }
+}
+
+/* ── Mobile XS: ≤ 575px ─────────────────────────────────── */
+@media only screen and (max-width: 575px) {
+  .axil-banner.banner-style-1.page-banner {
+    padding: 40px 0;
+  }
+
+  .axil-banner.banner-style-1.page-banner .inner .title {
+    font-size: 22px;
+  }
+
+  .axil-post-list-area .container {
+    padding: 0 12px;
+  }
+
+  .page-featured-image {
+    margin-left: -12px;
+    margin-right: -12px;
+  }
+
+  .page-content .wp-block-table {
+    overflow-x: auto;
+    display: block;
+  }
+}

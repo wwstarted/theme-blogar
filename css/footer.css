@@ -1,3 +1,15 @@
+/* =============================================================================
+   FOOTER — Blogar Theme
+   Breakpoints:
+     Desktop     : ≥ 1200px (default)
+     Desktop-SM  : 1200–1599px
+     Tablet-LG   : 992–1199px
+     Tablet      : 768–991px
+     Mobile      : ≤ 767px
+     Mobile-XS   : ≤ 575px
+   ============================================================================= */
+
+/* ===================== CONTAINER ===================== */
 .axil-footer-area {
   background: #fff;
 }
@@ -9,6 +21,7 @@
   padding: 0 15px;
 }
 
+/* ===================== FOOTER MAINMENU ===================== */
 .footer-mainmenu {
   padding-top: 90px;
   padding-bottom: 25px;
@@ -41,7 +54,7 @@
 }
 
 .footer-widget-item .menu-item {
-  margin: 0 0 12px;
+  margin: 0 0 10px;
 }
 
 .footer-widget-item .menu-item:last-child {
@@ -59,12 +72,14 @@
   color: var(--color-primary);
 }
 
+/* ===================== FOOTER TOP ===================== */
 .footer-top {
   position: relative;
   padding-top: 30px;
   padding-bottom: 30px;
 }
 
+/* Divider lines above and below footer-top */
 .footer-top::before,
 .footer-top::after {
   position: absolute;
@@ -102,6 +117,7 @@
   max-width: 66.666667%;
 }
 
+/* ===================== FOOTER LOGO ===================== */
 .axil-footer-area .logo a {
   display: block;
 }
@@ -110,6 +126,12 @@
   max-height: 37px;
 }
 
+/* FIX: Ẩn light-logo phòng trường hợp vẫn còn trong markup */
+.axil-footer-area .logo .light-logo {
+  display: none;
+}
+
+/* ===================== SOCIAL ICONS ===================== */
 .footer-social-wrap {
   display: flex;
   align-items: center;
@@ -146,6 +168,7 @@
   color: var(--color-heading);
   background: var(--color-lightest);
   border-radius: 50%;
+  cursor: pointer; /* FIX: thiếu */
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
@@ -162,11 +185,13 @@
   background: var(--color-primary);
 }
 
+/* md-size variant: dùng cho footer social */
 .social-icon.md-size li a {
   width: 40px;
   height: 40px;
 }
 
+/* ===================== COPYRIGHT AREA ===================== */
 .copyright-area {
   padding-top: 40px;
   padding-bottom: 40px;
@@ -190,11 +215,12 @@
   text-align: right;
 }
 
+/* Bottom nav links */
 .copyright-area .mainmenu {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  margin: 0 0 -10px;
+  margin: 0 0 -10px; /* FIX: chỉ bottom bleed, không offset ngang */
   padding: 0;
   list-style: none;
 }
@@ -218,6 +244,7 @@
   color: var(--color-primary);
 }
 
+/* Copyright text */
 .copyright-area .copyright-right p {
   margin: 0;
   color: var(--color-midgray);
@@ -234,7 +261,33 @@
   color: var(--color-primary);
 }
 
+/* =============================================================================
+   DESKTOP SM: 1200px – 1599px
+   Thu padding container, giảm gap social icon nhẹ
+   ============================================================================= */
+@media only screen and (min-width: 1200px) and (max-width: 1599px) {
+  .footer-container {
+    padding: 0 30px;
+  }
+
+  .social-icon {
+    margin: -4px;
+  }
+
+  .social-icon li {
+    margin: 4px;
+  }
+}
+
+/* =============================================================================
+   TABLET LG: 992px – 1199px
+   Grid vẫn 6 cột nhưng gap và social icon thu lại
+   ============================================================================= */
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
+  .footer-grid {
+    gap: 20px; /* FIX: thu gap từ 30px để không bị chật ở tầm này */
+  }
+
   .social-icon {
     margin: -3px;
   }
@@ -244,38 +297,65 @@
   }
 }
 
+/* =============================================================================
+   TABLET: ≤ 991px
+   - Footer grid: 6 cột → 2 cột
+   - Footer top + copyright: stack dọc
+   ============================================================================= */
 @media only screen and (max-width: 991px) {
   .footer-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .footer-top-row,
-  .copyright-row {
+  /* Stack footer top: logo trên, social dưới */
+  .footer-top-row {
     flex-direction: column;
     align-items: flex-start;
+    gap: 15px; /* FIX: source dùng mt_sm--15 = 15px margin trên social */
   }
 
   .footer-top-brand,
-  .footer-top-social,
+  .footer-top-social {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  /* Social align về trái khi stack */
+  .footer-social-wrap {
+    justify-content: flex-start;
+  }
+
+  /* Stack copyright: links trên, text dưới */
+  .copyright-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0; /* Gap dùng margin-top trên right thay vì gap chung */
+  }
+
   .copyright-left,
   .copyright-right {
     flex: 0 0 100%;
     max-width: 100%;
   }
 
-  .footer-social-wrap {
-    justify-content: flex-start;
-  }
-
+  /* FIX: Source dùng mt_md--20 = 20px margin-top trên copyright-right khi stack */
   .copyright-right {
+    margin-top: 20px;
     text-align: left;
   }
 
   .copyright-area .mainmenu li {
     margin: 0 8px 10px;
   }
+
+  .copyright-area .mainmenu li:first-child {
+    margin-left: 0;
+  }
 }
 
+/* =============================================================================
+   MOBILE: ≤ 767px
+   ============================================================================= */
 @media only screen and (max-width: 767px) {
   .footer-mainmenu {
     padding-top: 70px;
@@ -283,7 +363,7 @@
   }
 
   .footer-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 35px;
   }
 
@@ -302,11 +382,30 @@
     padding-bottom: 30px;
   }
 
+  /* FIX: reset mainmenu về đúng intent — chỉ items có margin */
   .copyright-area .mainmenu {
-    margin: 5px;
+    margin: 0 0 -10px;
   }
 
   .copyright-area .mainmenu li {
-    margin: 5px;
+    margin: 0 5px 10px;
+  }
+
+  .copyright-area .mainmenu li:first-child {
+    margin-left: 0;
+  }
+}
+
+/* =============================================================================
+   MOBILE XS: ≤ 575px
+   ============================================================================= */
+@media only screen and (max-width: 575px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .footer-container {
+    padding: 0 16px;
   }
 }
