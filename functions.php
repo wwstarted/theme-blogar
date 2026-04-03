@@ -190,6 +190,15 @@ function blogar_enqueue_assets()
             wp_get_theme()->get('Version')
         );
     }
+
+    if (is_page_template('page-contact.php')) {
+        wp_enqueue_style(
+            'blogar-page-contact',
+            get_template_directory_uri() . '/css/page-contact.css',
+            array('blogar-page'),
+            blogar_asset_version('css/page-contact.css')
+        );
+    }
 }
 add_action('wp_enqueue_scripts', 'blogar_enqueue_assets');
 

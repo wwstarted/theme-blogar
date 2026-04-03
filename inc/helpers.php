@@ -38,6 +38,33 @@ function blogar_reading_time($post_id = 0, $wpm = 200)
 // CATEGORIES
 // ================================================================
 
+function blogar_hover_flip_link_html($url, $text, $class = '')
+{
+    $url = esc_url($url);
+    $text = wp_strip_all_tags((string) $text);
+
+    if ('' === $url || '' === $text) {
+        return '';
+    }
+
+    $classes = trim('hover-flip-item-wrapper ' . $class);
+
+    return '<a class="' . esc_attr($classes) . '" href="' . $url . '"><span class="hover-flip-item"><span data-text="' . esc_attr($text) . '">' . esc_html($text) . '</span></span></a>';
+}
+
+function blogar_hover_flip_text_html($text, $class = '')
+{
+    $text = wp_strip_all_tags((string) $text);
+
+    if ('' === $text) {
+        return '';
+    }
+
+    $classes = trim('hover-flip-item-wrapper ' . $class);
+
+    return '<span class="' . esc_attr($classes) . '"><span class="hover-flip-item"><span data-text="' . esc_attr($text) . '">' . esc_html($text) . '</span></span></span>';
+}
+
 /**
  * Render danh sách category của một post dưới dạng hover-flip links.
  *
@@ -59,14 +86,7 @@ function blogar_post_categories_html($post_id, $limit = 1)
         if ($count >= $limit) {
             break;
         }
-        $cat_url = esc_url(get_category_link($cat->term_id));
-        $cat_name = esc_html($cat->name);
-
-        $output .= '<a class="hover-flip-item-wrapper" href="' . $cat_url . '">';
-        $output .= '<span class="hover-flip-item">';
-        $output .= '<span data-text="' . esc_attr($cat->name) . '">' . $cat_name . '</span>';
-        $output .= '</span>';
-        $output .= '</a>';
+        $output .= blogar_hover_flip_link_html(get_category_link($cat->term_id), $cat->name);
 
         $count++;
     }
@@ -678,5 +698,273 @@ function blogar_get_featured_video_data()
         'title' => $title,
         'big_post' => $big_post,
         'small_posts' => $small_posts,
+    );
+}
+
+// ================================================================
+// QUERY HELPERS â€” SECTION 11: NEWS HIGHLIGHT BLOCK
+// ================================================================
+
+/**
+ * Lay data cho Section 11 â€” News Highlight block.
+ * Layout gom:
+ * - 1 headline ticker o phia tren
+ * - 1 big post ben trai
+ * - 3 small posts xep doc ben phai
+ *
+ * @return array {
+ *     @type string $ticker_title
+ *     @type array  $ticker_posts
+ *     @type array  $grid_posts
+ * }
+ */
+function blogar_get_news_highlight_block_data()
+{
+    $ticker_title = get_option('blogar_s11_ticker_title', 'News Highlight');
+    $cat_id = (int) get_option('blogar_s11_cat', 0);
+    $selected_ids = array(
+        (int) get_option('blogar_s11_main_post', 0),
+        (int) get_option('blogar_s11_small_post_1', 0),
+        (int) get_option('blogar_s11_small_post_2', 0),
+        (int) get_option('blogar_s11_small_post_3', 0),
+    );
+
+    $grid_posts = blogar_get_configured_posts(4, $cat_id, $selected_ids, 'latest');
+    $grid_used_ids = array();
+
+    foreach ($grid_posts as $grid_post) {
+        if ($grid_post instanceof WP_Post) {
+            $grid_used_ids[] = (int) $grid_post->ID;
+        }
+    }
+
+    $ticker_args = blogar_build_posts_query_args(6, $cat_id, 'latest');
+    $ticker_args['no_found_rows'] = true;
+
+    if (!empty($grid_used_ids)) {
+        $ticker_args['post__not_in'] = $grid_used_ids;
+    }
+
+    $ticker_posts = get_posts($ticker_args);
+
+    if (empty($ticker_posts)) {
+        $ticker_posts = blogar_get_configured_posts(6, $cat_id, array(), 'latest');
+    }
+
+    while (count($grid_posts) < 4) {
+        $grid_posts[] = null;
+    }
+
+    return array(
+        'ticker_title' => $ticker_title,
+        'ticker_posts' => $ticker_posts,
+        'grid_posts' => $grid_posts,
+    );
+}
+
+/**
+ * Resolve a category from a list of slug/name candidates.
+ *
+ * @param  array $candidates Candidate slugs or names.
+ * @return WP_Term|null
+ */
+function blogar_find_category_by_candidates($candidates)
+{
+    foreach ((array) $candidates as $candidate) {
+        $candidate = trim((string) $candidate);
+
+        if ($candidate === '') {
+            continue;
+        }
+
+        $term = get_category_by_slug($candidate);
+
+        if (!$term) {
+            $term = get_category_by_slug(sanitize_title($candidate));
+        }
+
+        if (!$term) {
+            $term = get_term_by('name', $candidate, 'category');
+        }
+
+        if ($term instanceof WP_Term && !is_wp_error($term)) {
+            return $term;
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Build one column of the dual latest-post lists section.
+ *
+ * @param  string $heading_default Default heading text.
+ * @param  array  $main_candidates Candidate slugs/names for the main tab source.
+ * @param  array  $filter_configs  Tab configs with label + category candidates.
+ * @param  array  $fallback_exclude Term IDs excluded from fallback picks.
+ * @return array
+ */
+function blogar_build_dual_latest_column_data($heading_default, $main_candidates, $filter_configs, $fallback_exclude = array())
+{
+    $main_term = blogar_find_category_by_candidates($main_candidates);
+    $fallback_exclude = array_values(array_filter(array_map('absint', (array) $fallback_exclude)));
+
+    if (!$main_term) {
+        $fallback_terms = get_categories(array(
+            'number' => 1,
+            'hide_empty' => true,
+            'exclude' => $fallback_exclude,
+            'orderby' => 'count',
+            'order' => 'DESC',
+        ));
+
+        $main_term = !empty($fallback_terms) ? $fallback_terms[0] : null;
+    }
+
+    $main_term_id = $main_term instanceof WP_Term ? (int) $main_term->term_id : 0;
+    $heading = $main_term instanceof WP_Term ? $main_term->name : $heading_default;
+    $all_posts = blogar_get_configured_posts(5, $main_term_id, array(), 'latest');
+    $tabs = array(
+        array(
+            'label' => __('All', 'blogar'),
+            'posts' => $all_posts,
+        ),
+    );
+
+    $used_term_ids = array();
+    if ($main_term_id) {
+        $used_term_ids[] = $main_term_id;
+    }
+
+    foreach ((array) $filter_configs as $filter_config) {
+        $label = isset($filter_config['label']) ? (string) $filter_config['label'] : '';
+        $candidates = isset($filter_config['candidates']) ? (array) $filter_config['candidates'] : array();
+        $term = blogar_find_category_by_candidates($candidates);
+
+        if (!$term instanceof WP_Term || is_wp_error($term)) {
+            continue;
+        }
+
+        if (in_array((int) $term->term_id, $used_term_ids, true)) {
+            continue;
+        }
+
+        $posts = blogar_get_configured_posts(5, (int) $term->term_id, array(), 'latest');
+
+        if (empty($posts)) {
+            continue;
+        }
+
+        $tabs[] = array(
+            'label' => $label ?: $term->name,
+            'posts' => $posts,
+        );
+
+        $used_term_ids[] = (int) $term->term_id;
+    }
+
+    if (count($tabs) < 4) {
+        $fallback_tabs = get_categories(array(
+            'number' => 4,
+            'hide_empty' => true,
+            'exclude' => array_merge($fallback_exclude, $used_term_ids),
+            'orderby' => 'count',
+            'order' => 'DESC',
+        ));
+
+        foreach ($fallback_tabs as $fallback_term) {
+            if (count($tabs) >= 4) {
+                break;
+            }
+
+            $posts = blogar_get_configured_posts(5, (int) $fallback_term->term_id, array(), 'latest');
+
+            if (empty($posts)) {
+                continue;
+            }
+
+            $tabs[] = array(
+                'label' => $fallback_term->name,
+                'posts' => $posts,
+            );
+            $used_term_ids[] = (int) $fallback_term->term_id;
+        }
+    }
+
+    return array(
+        'heading' => $heading,
+        'main_term' => $main_term,
+        'tabs' => $tabs,
+    );
+}
+
+/**
+ * Data for the dual latest-post lists section under the highlight block.
+ *
+ * @return array
+ */
+function blogar_get_dual_latest_lists_data()
+{
+    $column_configs = array(
+        array(
+            'heading' => 'Healthy Living',
+            'main_candidates' => array('healthy-living', 'Healthy Living', 'health'),
+            'filters' => array(
+                array(
+                    'label' => 'Fashion',
+                    'candidates' => array('fashion', 'Fashion'),
+                ),
+                array(
+                    'label' => 'Life Style',
+                    'candidates' => array('life-style', 'lifestyle', 'Life Style', 'Lifestyle'),
+                ),
+                array(
+                    'label' => 'Style',
+                    'candidates' => array('style', 'Style'),
+                ),
+            ),
+        ),
+        array(
+            'heading' => 'Travel',
+            'main_candidates' => array('travel', 'Travel'),
+            'filters' => array(
+                array(
+                    'label' => 'Food',
+                    'candidates' => array('food', 'Food'),
+                ),
+                array(
+                    'label' => 'Culture',
+                    'candidates' => array('culture', 'Culture'),
+                ),
+                array(
+                    'label' => 'Technology',
+                    'candidates' => array('technology', 'Technology'),
+                ),
+            ),
+        ),
+    );
+
+    $columns = array();
+    $reserved_term_ids = array();
+
+    foreach ($column_configs as $column_config) {
+        $column = blogar_build_dual_latest_column_data(
+            $column_config['heading'],
+            $column_config['main_candidates'],
+            $column_config['filters'],
+            $reserved_term_ids
+        );
+
+        if (!empty($column['tabs'])) {
+            $columns[] = $column;
+        }
+
+        if (isset($column['main_term']) && $column['main_term'] instanceof WP_Term) {
+            $reserved_term_ids[] = (int) $column['main_term']->term_id;
+        }
+    }
+
+    return array(
+        'columns' => $columns,
     );
 }

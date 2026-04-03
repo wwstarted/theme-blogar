@@ -310,8 +310,8 @@
 
   /* ================================================================
      CATEGORY CAROUSEL — Trending Topics
-     Source: 8 items, Slick shows 6 at desktop.
-     Our implementation: 6 at ≥1200px, 4 at ≥992px, 3 at ≥576px, 2 mobile.
+     Source: 8 items.
+     Our implementation: 4 at desktop, 3 at tablet, 2 on mobile.
      ================================================================ */
   function initCategoryCarousel() {
     var wrapper = document.querySelector("[data-cat-carousel]");
@@ -319,12 +319,11 @@
 
     var carousel = createCarousel(wrapper, {
       slideSelector: ".single-cat",
-      gap: 20,
+      gap: 24,
       slidesToShowFn: function () {
         var w = window.innerWidth;
-        if (w >= 1200) return 6;
         if (w >= 992) return 4;
-        if (w >= 576) return 3;
+        if (w >= 768) return 3;
         return 2;
       },
     });
@@ -338,6 +337,199 @@
       rt = setTimeout(function () {
         carousel.resize();
       }, 120);
+    });
+  }
+
+  /* ================================================================
+     NEWS HIGHLIGHT TICKER
+     ================================================================ */
+  function initNewsHighlightTicker() {
+    document.querySelectorAll("[data-news-ticker]").forEach(function (ticker) {
+      var items = Array.prototype.slice.call(
+        ticker.querySelectorAll(".blogar-news-highlight-ticker-item"),
+      );
+      if (!items.length) return;
+
+      var prevBtn = ticker.querySelector(".blogar-news-highlight-ticker-prev");
+      var nextBtn = ticker.querySelector(".blogar-news-highlight-ticker-next");
+      var current = 0;
+      var timer = null;
+      var delay = parseInt(ticker.getAttribute("data-autotime"), 10) || 3000;
+
+      items.forEach(function (item, index) {
+        if (item.classList.contains("is-active")) current = index;
+      });
+
+      function goTo(index) {
+        current = (index + items.length) % items.length;
+
+        items.forEach(function (item, itemIndex) {
+          var active = itemIndex === current;
+          var link = item.querySelector("a");
+
+          item.classList.toggle("is-active", active);
+          item.setAttribute("aria-hidden", active ? "false" : "true");
+
+          if (link) {
+            link.setAttribute("tabindex", active ? "0" : "-1");
+          }
+        });
+      }
+
+      function stopAutoplay() {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+      }
+
+      function startAutoplay() {
+        if (items.length < 2) return;
+
+        stopAutoplay();
+        timer = setInterval(function () {
+          goTo(current + 1);
+        }, delay);
+      }
+
+      if (items.length < 2) {
+        if (prevBtn) prevBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = true;
+        goTo(0);
+        return;
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener("click", function () {
+          goTo(current - 1);
+          startAutoplay();
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener("click", function () {
+          goTo(current + 1);
+          startAutoplay();
+        });
+      }
+
+      ticker.addEventListener("mouseenter", stopAutoplay);
+      ticker.addEventListener("mouseleave", startAutoplay);
+      ticker.addEventListener("focusin", stopAutoplay);
+      ticker.addEventListener("focusout", function () {
+        setTimeout(function () {
+          if (!ticker.contains(document.activeElement)) {
+            startAutoplay();
+          }
+        }, 0);
+      });
+
+      var touchStartX = 0;
+      ticker.addEventListener(
+        "touchstart",
+        function (e) {
+          touchStartX = e.touches[0].clientX;
+        },
+        { passive: true },
+      );
+      ticker.addEventListener(
+        "touchend",
+        function (e) {
+          var diff = touchStartX - e.changedTouches[0].clientX;
+          if (Math.abs(diff) > 40) {
+            diff > 0 ? goTo(current + 1) : goTo(current - 1);
+            startAutoplay();
+          }
+        },
+        { passive: true },
+      );
+
+      goTo(current);
+      startAutoplay();
+    });
+  }
+
+  /* ================================================================
+     DUAL LATEST LISTS
+     ================================================================ */
+  function initDualLatestLists() {
+    document.querySelectorAll("[data-dual-list]").forEach(function (wrapper) {
+      var tabs = Array.prototype.slice.call(
+        wrapper.querySelectorAll(".blogar-dual-latest-tab-link"),
+      );
+      var panels = Array.prototype.slice.call(
+        wrapper.querySelectorAll(".blogar-dual-latest-panel"),
+      );
+      var prevBtn = wrapper.querySelector(".blogar-dual-latest-nav-prev");
+      var nextBtn = wrapper.querySelector(".blogar-dual-latest-nav-next");
+      var current = 0;
+
+      if (!tabs.length || !panels.length) return;
+
+      tabs.forEach(function (tab, index) {
+        if (tab.classList.contains("is-active")) current = index;
+      });
+
+      function setActive(index) {
+        current = Math.max(0, Math.min(index, tabs.length - 1));
+
+        tabs.forEach(function (tab, tabIndex) {
+          var active = tabIndex === current;
+          var panel = panels[tabIndex];
+
+          tab.classList.toggle("is-active", active);
+          tab.setAttribute("aria-selected", active ? "true" : "false");
+          tab.setAttribute("tabindex", active ? "0" : "-1");
+
+          if (panel) {
+            panel.classList.toggle("is-active", active);
+            panel.hidden = !active;
+          }
+        });
+
+        if (prevBtn) prevBtn.disabled = current === 0;
+        if (nextBtn) nextBtn.disabled = current === tabs.length - 1;
+      }
+
+      tabs.forEach(function (tab, index) {
+        tab.addEventListener("click", function () {
+          setActive(index);
+        });
+
+        tab.addEventListener("keydown", function (e) {
+          if (e.key === "ArrowRight") {
+            e.preventDefault();
+            setActive(Math.min(current + 1, tabs.length - 1));
+            tabs[current].focus();
+          } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            setActive(Math.max(current - 1, 0));
+            tabs[current].focus();
+          } else if (e.key === "Home") {
+            e.preventDefault();
+            setActive(0);
+            tabs[current].focus();
+          } else if (e.key === "End") {
+            e.preventDefault();
+            setActive(tabs.length - 1);
+            tabs[current].focus();
+          }
+        });
+      });
+
+      if (prevBtn) {
+        prevBtn.addEventListener("click", function () {
+          setActive(current - 1);
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener("click", function () {
+          setActive(current + 1);
+        });
+      }
+
+      setActive(current);
     });
   }
 
@@ -395,6 +587,8 @@
     initSlider();
     initTabs();
     initCategoryCarousel();
+    initNewsHighlightTicker();
+    initDualLatestLists();
     initCopyLinks();
   }
 

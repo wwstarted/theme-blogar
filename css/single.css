@@ -1017,3 +1017,32 @@
     padding: 0 12px;
   }
 }
+
+/* ================================================================
+   SIDEBAR RECENT POSTS — LANDSCAPE FIX
+   Override: 1:1 square → 4:3 landscape cho .post-medium thumbnail.
+   Áp dụng cho: archive.php, single.php, page.php, page-contact.php
+   (tất cả đều dùng .archive-sidebar từ archive.css).
+   Scoped hoàn toàn trong .archive-sidebar.
+   ================================================================ */
+
+.archive-sidebar .content-block.post-medium .post-thumbnail {
+  height: auto; /* bỏ height: 100px cứng */
+  aspect-ratio: 4 / 3; /* 100px wide → ~75px tall, landscape */
+}
+
+/* Mobile ≤ 767px — width: 80px → ~60px tall, vẫn landscape */
+@media only screen and (max-width: 767px) {
+  .archive-sidebar .content-block.post-medium .post-thumbnail {
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* Mobile XS ≤ 575px — width: 70px → ~52px tall, vẫn landscape */
+@media only screen and (max-width: 575px) {
+  .archive-sidebar .content-block.post-medium .post-thumbnail {
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+}

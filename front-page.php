@@ -16,395 +16,205 @@ $svg_be = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path
 $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
 ?>
 
+
+
+
 <div class="blogar-front-page-shell">
     <div class="main-wrapper">
-
-
         <!-- ================================================================
-     SECTION 1 — HERO SLIDER
-     Dữ liệu: WP_Query từ posts được chọn trong Appearance > Blogar Settings.
-     Fallback: 3 bài mới nhất nếu admin chưa cấu hình.
+     SECTION 11 â€” NEWS HIGHLIGHT BLOCK
      ================================================================ -->
         <?php
-        $hero_query = blogar_get_hero_posts();
-        $is_first_slide = true;
+        $news_highlight_data = blogar_get_news_highlight_block_data();
+        $news_highlight_ticker_posts = isset($news_highlight_data['ticker_posts']) ? $news_highlight_data['ticker_posts'] : array();
+        $news_highlight_grid_posts = isset($news_highlight_data['grid_posts']) ? $news_highlight_data['grid_posts'] : array();
+        $news_highlight_big_post = !empty($news_highlight_grid_posts) ? $news_highlight_grid_posts[0] : null;
+        $news_highlight_small_posts = count($news_highlight_grid_posts) > 1 ? array_slice($news_highlight_grid_posts, 1, 3) : array();
         ?>
-        <section class="slider-area bg-color-grey axil-section-gap">
-            <div class="axil-slide slider-style-1">
-                <div class="container">
-                    <div class="slider-activation-wrap">
-                        <div class="slider-activation axil-slick-arrow" data-slider>
 
-                            <?php while ($hero_query->have_posts()):
-                                $hero_query->the_post();
+        <section class="axil-highlight-showcase-area axil-section-gap bg-color-grey">
+            <div class="container">
+                <div class="blogar-news-highlight-shell">
+                    <div class="blogar-news-highlight-ticker" data-news-ticker data-autotime="3000">
+                        <div class="blogar-news-highlight-ticker-bar">
+                            <span class="blogar-news-highlight-label">
+                                <?php echo esc_html($news_highlight_data['ticker_title']); ?>
+                            </span>
 
-                                // ── Post data ─────────────────────────────────────────
-                                $post_id = get_the_ID();
-                                $post_url = get_permalink();
-                                $post_title = get_the_title();
-                                $post_date = get_the_date('F j, Y');
-                                $read_time = blogar_reading_time($post_id);
+                            <div class="blogar-news-highlight-controls" role="group"
+                                aria-label="<?php esc_attr_e('Headline navigation', 'blogar'); ?>">
+                                <button type="button"
+                                    class="blogar-news-highlight-control blogar-news-highlight-ticker-prev"
+                                    aria-label="<?php esc_attr_e('Previous headline', 'blogar'); ?>">
+                                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                        <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor"
+                                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                                    </svg>
+                                </button>
+                                <button type="button"
+                                    class="blogar-news-highlight-control blogar-news-highlight-ticker-next"
+                                    aria-label="<?php esc_attr_e('Next headline', 'blogar'); ?>">
+                                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                        <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round"
+                                            stroke-linejoin="round" stroke-width="2"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
 
-                                // ── Featured image ────────────────────────────────────
-                                // Dùng size 'blogar-hero' (1230x615) đã đăng ký trong functions.php.
-                                $thumb_url = blogar_thumbnail_url($post_id, 'blogar-hero');
-                                $thumb_alt = blogar_thumbnail_alt($post_id);
+                        <div class="blogar-news-highlight-ticker-viewport" aria-live="polite">
+                            <?php if (!empty($news_highlight_ticker_posts)): ?>
+                            <?php foreach ($news_highlight_ticker_posts as $ticker_index => $ticker_post):
+                                    $ticker_post_id = $ticker_post->ID;
+                                    $ticker_post_url = get_permalink($ticker_post_id);
+                                    $ticker_post_title = get_the_title($ticker_post_id);
+                                    $ticker_is_active = ($ticker_index === 0);
+                                    ?>
+                            <div class="blogar-news-highlight-ticker-item<?php echo $ticker_is_active ? ' is-active' : ''; ?>"
+                                aria-hidden="<?php echo $ticker_is_active ? 'false' : 'true'; ?>">
+                                <a href="<?php echo esc_url($ticker_post_url); ?>"
+                                    tabindex="<?php echo $ticker_is_active ? '0' : '-1'; ?>">
+                                    <?php echo esc_html($ticker_post_title); ?>
+                                </a>
+                            </div>
+                            <?php endforeach; ?>
+                            <?php else: ?>
+                            <div class="blogar-news-highlight-ticker-item is-active" aria-hidden="false">
+                                <span class="blogar-news-highlight-ticker-text">
+                                    <?php esc_html_e('Latest updates will appear here soon.', 'blogar'); ?>
+                                </span>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
 
-                                // ── Author ────────────────────────────────────────────
-                                $author_id = (int) get_the_author_meta('ID');
-                                $author_name = get_the_author();
-                                $author_url = get_author_posts_url($author_id);
-                                $author_avatar = get_avatar_url($author_id, array('size' => 50));
-
-                                // ── Heading + loading strategy ────────────────────────
-                                // Slide đầu tiên: h1 (SEO) + eager loading.
-                                // Các slide sau: h2 + lazy loading.
-                                $heading_tag = $is_first_slide ? 'h1' : 'h2';
-                                $loading_attr = $is_first_slide ? 'eager' : 'lazy';
-                                $is_first_slide = false; // reset sau khi dùng
-                            
-                                // ── Social share URLs ─────────────────────────────────
-                                $share_urls = blogar_social_share_urls($post_url, $post_title);
-                                ?>
-
-                            <div class="content-block">
-                                <div class="post-thumbnail">
-                                    <a href="<?php echo esc_url($post_url); ?>">
-                                        <img <?php echo $loading_attr === 'eager' ? 'fetchpriority="high"' : ''; ?>
-                                            loading="<?php echo esc_attr($loading_attr); ?>" decoding="async"
-                                            width="1230" height="615" src="<?php echo esc_url($thumb_url); ?>"
-                                            alt="<?php echo esc_attr($thumb_alt); ?>"
-                                            sizes="(max-width: 1230px) 100vw, 1230px">
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <div class="post-cat">
-                                        <div class="post-cat-list">
-                                            <?php echo blogar_post_categories_html($post_id, 1); // phpcs:ignore ?>
-                                        </div>
-                                    </div>
-
-                                    <<?php echo esc_attr($heading_tag); ?> class="title">
-                                        <a
-                                            href="<?php echo esc_url($post_url); ?>"><?php echo esc_html($post_title); ?></a>
-                                    </<?php echo esc_attr($heading_tag); ?>>
-
-                                    <div class="post-meta-wrapper with-button">
-                                        <div class="post-meta">
-                                            <div class="post-author-avatar border-rounded">
-                                                <img alt="<?php echo esc_attr($author_name); ?>"
-                                                    src="<?php echo esc_url($author_avatar); ?>" width="50" height="50">
-                                            </div>
-                                            <div class="content">
-                                                <h6 class="post-author-name">
-                                                    <a class="hover-flip-item-wrapper"
-                                                        href="<?php echo esc_url($author_url); ?>">
-                                                        <span class="hover-flip-item">
-                                                            <span
-                                                                data-text="<?php echo esc_attr($author_name); ?>"><?php echo esc_html($author_name); ?></span>
-                                                        </span>
-                                                    </a>
-                                                </h6>
-                                                <ul class="post-meta-list">
-                                                    <li class="post-meta-date"><?php echo esc_html($post_date); ?>
-                                                    </li>
-                                                    <li class="post-meta-reading-time">
-                                                        <?php echo esc_html($read_time); ?>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-
-                                        <ul class="social-share-transparent justify-content-end">
-                                            <li>
-                                                <a href="<?php echo esc_url($share_urls['facebook']); ?>"
-                                                    target="_blank" rel="noopener nofollow" class="aw-facebook"
-                                                    aria-label="<?php esc_attr_e('Share on Facebook', 'blogar'); ?>">
-                                                    <?php echo $svg_fb; // phpcs:ignore ?>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="<?php echo esc_url($share_urls['twitter']); ?>" target="_blank"
-                                                    rel="noopener nofollow" class="aw-twitter"
-                                                    aria-label="<?php esc_attr_e('Share on Twitter', 'blogar'); ?>">
-                                                    <?php echo $svg_tw; // phpcs:ignore ?>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="<?php echo esc_url($share_urls['linkedin']); ?>"
-                                                    target="_blank" rel="noopener nofollow" class="aw-linkdin"
-                                                    aria-label="<?php esc_attr_e('Share on LinkedIn', 'blogar'); ?>">
-                                                    <?php echo $svg_li; // phpcs:ignore ?>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <button class="axilcopyLink"
-                                                    title="<?php esc_attr_e('Copy Link', 'blogar'); ?>"
-                                                    data-link="<?php echo esc_url($post_url); ?>"
-                                                    aria-label="<?php esc_attr_e('Copy link', 'blogar'); ?>">
-                                                    <?php echo $svg_lk; // phpcs:ignore ?>
-                                                </button>
-                                            </li>
-                                        </ul>
-
-                                        <div class="read-more-button cerchio">
-                                            <a class="axil-button button-rounded hover-flip-item-wrapper"
-                                                href="<?php echo esc_url($post_url); ?>">
-                                                <span class="hover-flip-item">
-                                                    <span data-text="<?php esc_attr_e('Read Post', 'blogar'); ?>">
-                                                        <?php esc_html_e('Read Post', 'blogar'); ?>
-                                                    </span>
-                                                </span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div class="blogar-news-highlight-grid">
+                        <article class="blogar-news-highlight-card blogar-news-highlight-card-featured">
+                            <div class="blogar-news-highlight-card-media">
+                                <?php if ($news_highlight_big_post instanceof WP_Post):
+                                    $highlight_big_id = $news_highlight_big_post->ID;
+                                    $highlight_big_url = get_permalink($highlight_big_id);
+                                    $highlight_big_title = get_the_title($highlight_big_id);
+                                    $highlight_big_thumb_url = blogar_thumbnail_url($highlight_big_id, 'full');
+                                    $highlight_big_thumb_alt = blogar_thumbnail_alt($highlight_big_id);
+                                    $highlight_big_author_id = (int) get_post_field('post_author', $highlight_big_id);
+                                    $highlight_big_author_name = get_the_author_meta('display_name', $highlight_big_author_id);
+                                    $highlight_big_author_url = get_author_posts_url($highlight_big_author_id);
+                                    $highlight_big_categories_all = get_the_category($highlight_big_id);
+                                    $highlight_big_categories = !empty($highlight_big_categories_all) ? array_slice($highlight_big_categories_all, 0, 2) : array();
+                                    ?>
+                                <a href="<?php echo esc_url($highlight_big_url); ?>"
+                                    class="blogar-news-highlight-card-image-link">
+                                    <img loading="lazy" decoding="async"
+                                        src="<?php echo esc_url($highlight_big_thumb_url); ?>"
+                                        alt="<?php echo esc_attr($highlight_big_thumb_alt); ?>">
+                                </a>
+                                <?php else: ?>
+                                <span class="blogar-news-highlight-card-image-link is-placeholder">
+                                    <img loading="lazy" decoding="async"
+                                        src="<?php echo esc_url(blogar_thumbnail_url(0, 'full')); ?>"
+                                        alt="<?php esc_attr_e('Placeholder image', 'blogar'); ?>">
+                                </span>
+                                <?php endif; ?>
                             </div>
 
-                            <?php endwhile;
-                            wp_reset_postdata(); ?>
+                            <div class="blogar-news-highlight-card-content">
+                                <?php if ($news_highlight_big_post instanceof WP_Post): ?>
+                                <?php if (!empty($highlight_big_categories)): ?>
+                                <div class="blogar-news-highlight-card-cats">
+                                    <?php foreach ($highlight_big_categories as $cat_index => $highlight_cat): ?>
+                                    <?php echo blogar_hover_flip_link_html(get_category_link($highlight_cat->term_id), $highlight_cat->name, 'blogar-news-highlight-card-cat'); // phpcs:ignore ?>
+                                    <?php if ($cat_index < count($highlight_big_categories) - 1): ?>
+                                    <span class="blogar-news-highlight-card-cat-dot"></span>
+                                    <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </div>
+                                <?php endif; ?>
 
-                        </div><!-- .slider-activation -->
+                                <h2 class="title"><a href="<?php echo esc_url($highlight_big_url); ?>">
+                                        <?php echo esc_html($highlight_big_title); ?>
+                                    </a>
+                                </h2>
 
-                        <!-- Prev / Next arrows -->
-                        <button class="slide-arrow prev-arrow"
-                            aria-label="<?php esc_attr_e('Previous slide', 'blogar'); ?>">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M19 12H5M12 5l-7 7 7 7" />
-                            </svg>
-                        </button>
-                        <button class="slide-arrow next-arrow"
-                            aria-label="<?php esc_attr_e('Next slide', 'blogar'); ?>">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M5 12h14M12 19l7-7-7-7" />
-                            </svg>
-                        </button>
+                                <div class="blogar-news-highlight-card-meta">
+                                    <span class="blogar-news-highlight-card-meta-item">
+                                        <?php esc_html_e('by', 'blogar'); ?>
+                                        <?php echo blogar_hover_flip_link_html($highlight_big_author_url, $highlight_big_author_name, 'blogar-news-highlight-card-author'); // phpcs:ignore ?>
+                                    </span>
+                                    <span class="blogar-news-highlight-card-meta-dot"></span>
+                                    <time class="blogar-news-highlight-card-meta-item"
+                                        datetime="<?php echo esc_attr(get_the_date('c', $highlight_big_id)); ?>">
+                                        <?php echo esc_html(get_the_date('F j, Y', $highlight_big_id)); ?>
+                                    </time>
+                                </div>
+                                <?php else: ?>
+                                <h2 class="title">
+                                    <?php esc_html_e('No featured post selected yet.', 'blogar'); ?>
+                                </h2>
+                                <?php endif; ?>
+                            </div>
+                        </article>
 
-                    </div><!-- .slider-activation-wrap -->
-                </div><!-- .container -->
-            </div><!-- .axil-slide -->
-        </section>
+                        <div class="blogar-news-highlight-stack">
+                            <?php foreach ($news_highlight_small_posts as $small_post): ?>
+                            <article class="blogar-news-highlight-card blogar-news-highlight-card-small">
+                                <div class="blogar-news-highlight-card-media">
+                                    <?php if ($small_post instanceof WP_Post):
+                                            $highlight_small_id = $small_post->ID;
+                                            $highlight_small_url = get_permalink($highlight_small_id);
+                                            $highlight_small_title = get_the_title($highlight_small_id);
+                                            $highlight_small_thumb_url = blogar_thumbnail_url($highlight_small_id, 'full');
+                                            $highlight_small_thumb_alt = blogar_thumbnail_alt($highlight_small_id);
+                                            $highlight_small_author_id = (int) get_post_field('post_author', $highlight_small_id);
+                                            $highlight_small_author_name = get_the_author_meta('display_name', $highlight_small_author_id);
+                                            $highlight_small_author_url = get_author_posts_url($highlight_small_author_id);
+                                            ?>
+                                    <a href="<?php echo esc_url($highlight_small_url); ?>"
+                                        class="blogar-news-highlight-card-image-link">
+                                        <img loading="lazy" decoding="async"
+                                            src="<?php echo esc_url($highlight_small_thumb_url); ?>"
+                                            alt="<?php echo esc_attr($highlight_small_thumb_alt); ?>">
+                                    </a>
+                                    <?php else: ?>
+                                    <span class="blogar-news-highlight-card-image-link is-placeholder">
+                                        <img loading="lazy" decoding="async"
+                                            src="<?php echo esc_url(blogar_thumbnail_url(0, 'full')); ?>"
+                                            alt="<?php esc_attr_e('Placeholder image', 'blogar'); ?>">
+                                    </span>
+                                    <?php endif; ?>
+                                </div>
 
-        <!-- ================================================================
-     SECTION 2 — FEATURED POSTS
-     ================================================================ -->
-        <section class="axil-featured-post axil-section-gap bg-color-grey">
-            <div class="container">
-                <div class="section-title text-left">
-                    <h2 class="title">More Featured Posts.</h2>
+                                <div class="blogar-news-highlight-card-content">
+                                    <?php if ($small_post instanceof WP_Post): ?>
+                                    <h3 class="title"><a href="<?php echo esc_url($highlight_small_url); ?>">
+                                            <?php echo esc_html($highlight_small_title); ?>
+                                        </a>
+                                    </h3>
+                                    <div class="blogar-news-highlight-card-meta">
+                                        <span class="blogar-news-highlight-card-meta-item">
+                                            <?php esc_html_e('by', 'blogar'); ?>
+                                            <?php echo blogar_hover_flip_link_html($highlight_small_author_url, $highlight_small_author_name, 'blogar-news-highlight-card-author'); // phpcs:ignore ?>
+                                        </span>
+                                        <span class="blogar-news-highlight-card-meta-dot"></span>
+                                        <time class="blogar-news-highlight-card-meta-item"
+                                            datetime="<?php echo esc_attr(get_the_date('c', $highlight_small_id)); ?>">
+                                            <?php echo esc_html(get_the_date('F j, Y', $highlight_small_id)); ?>
+                                        </time>
+                                    </div>
+                                    <?php else: ?>
+                                    <h3 class="title">
+                                        <?php esc_html_e('No post available yet.', 'blogar'); ?>
+                                    </h3>
+                                    <?php endif; ?>
+                                </div>
+                            </article>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="featured-posts-grid">
-                    <!-- Post 1 -->
-                    <div
-                        class="content-block content-direction-column axil-control is-active post-horizontal thumb-border-rounded">
-                        <div class="post-content">
-                            <div class="post-cat">
-                                <div class="post-cat-list">
-                                    <a class="hover-flip-item-wrapper" href="#">
-                                        <span class="hover-flip-item"><span
-                                                data-text="Lifestyle">Lifestyle</span></span>
-                                    </a>
-                                </div>
-                            </div>
-                            <h4 class="title">
-                                <a href="#">Fashion portrait of young businessman handsome model man in casual
-                                    cloth.</a>
-                            </h4>
-                            <div class="post-meta">
-                                <div class="post-author-avatar border-rounded">
-                                    <img alt="axilthemes"
-                                        src="https://secure.gravatar.com/avatar/1b70c830da30f39d5c6fab323017430c?s=50&d=mm&r=g"
-                                        width="50" height="50">
-                                </div>
-                                <div class="content">
-                                    <h6 class="post-author-name">
-                                        <a class="hover-flip-item-wrapper" href="#">
-                                            <span class="hover-flip-item"><span
-                                                    data-text="axilthemes">axilthemes</span></span>
-                                        </a>
-                                    </h6>
-                                    <ul class="post-meta-list">
-                                        <li class="post-meta-date">January 21, 2021</li>
-                                        <li class="post-meta-reading-time">4 min read</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="post-thumbnail">
-                            <a href="#">
-                                <img loading="lazy" decoding="async" width="300" height="169"
-                                    src="<?php echo esc_url($img . 'demo_image-300x169.jpg'); ?>" alt="demo_image">
-                            </a>
-                        </div>
-                    </div>
-                    <!-- End Post 1 -->
-
-                    <!-- Post 2 -->
-                    <div
-                        class="content-block content-direction-column axil-control is-active post-horizontal thumb-border-rounded">
-                        <div class="post-content">
-                            <div class="post-cat">
-                                <div class="post-cat-list">
-                                    <a class="hover-flip-item-wrapper" href="#">
-                                        <span class="hover-flip-item"><span data-text="Design">Design</span></span>
-                                    </a>
-                                </div>
-                            </div>
-                            <h4 class="title">
-                                <a href="#">Security isn&#8217;t just a technology problem it&#8217;s about design,
-                                    too</a>
-                            </h4>
-                            <div class="post-meta">
-                                <div class="post-author-avatar border-rounded">
-                                    <img alt="axilthemes"
-                                        src="https://secure.gravatar.com/avatar/1b70c830da30f39d5c6fab323017430c?s=50&d=mm&r=g"
-                                        width="50" height="50">
-                                </div>
-                                <div class="content">
-                                    <h6 class="post-author-name">
-                                        <a class="hover-flip-item-wrapper" href="#">
-                                            <span class="hover-flip-item"><span
-                                                    data-text="axilthemes">axilthemes</span></span>
-                                        </a>
-                                    </h6>
-                                    <ul class="post-meta-list">
-                                        <li class="post-meta-date">January 20, 2021</li>
-                                        <li class="post-meta-reading-time">4 min read</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="post-thumbnail">
-                            <a href="#">
-                                <img loading="lazy" decoding="async" width="300" height="169"
-                                    src="<?php echo esc_url($img . 'demo_image-5-300x169.jpg'); ?>" alt="demo_image-5">
-                            </a>
-                        </div>
-                    </div>
-                    <!-- End Post 2 -->
-                </div><!-- .featured-posts-grid -->
-            </div><!-- .container -->
-        </section>
-
-
-        <!-- ================================================================
-     SECTION 3 — AD BANNER
-     ================================================================ -->
-        <section class="axil-banner-ad bg-color-white">
-            <div class="container">
-                <img loading="lazy" decoding="async" width="1230" height="200"
-                    src="<?php echo esc_url($img . 'banner-03.png'); ?>" alt="banner-03"
-                    sizes="(max-width: 1230px) 100vw, 1230px">
             </div>
         </section>
 
-
-        <!-- ================================================================
-     SECTION 4 — INNOVATION & TECH (tabs + carousel)
-     ================================================================ -->
-        <?php
-        $inno_data = blogar_get_innovation_data();
-        $inno_tabs = $inno_data['tabs'];
-        $inno_first = true;
-        ?>
-        <?php if (!empty($inno_tabs)): ?>
-        <section class="axil-tab-area axil-section-gap bg-color-white">
-            <div class="wrapper">
-                <div class="container">
-                    <div class="section-title text-left">
-                        <h2 class="title"><?php echo esc_html($inno_data['title']); ?></h2>
-                    </div>
-
-                    <ul class="axil-tab-button mt--20" role="tablist">
-                        <?php foreach ($inno_tabs as $ti => $tab):
-                                $tab_id = 'tab-inno-' . ($ti + 1);
-                                $is_active = $inno_first;
-                                $inno_first = false;
-                                ?>
-                        <li role="presentation">
-                            <a class="tab-link<?php echo $is_active ? ' active' : ''; ?>"
-                                data-tab="#<?php echo esc_attr($tab_id); ?>" role="tab"
-                                aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>">
-                                <?php echo esc_html($tab['label']); ?>
-                            </a>
-                        </li>
-                        <?php endforeach; ?>
-                    </ul>
-
-                    <div class="tab-content">
-                        <?php
-                            $inno_first = true;
-                            foreach ($inno_tabs as $ti => $tab):
-                                $tab_id = 'tab-inno-' . ($ti + 1);
-                                $is_active = $inno_first;
-                                $inno_first = false;
-                                ?>
-                        <div class="single-tab-content<?php echo $is_active ? ' active' : ''; ?>"
-                            id="<?php echo esc_attr($tab_id); ?>" role="tabpanel">
-                            <div class="modern-post-activation axil-slick-arrow arrow-between-side" data-tab-carousel>
-                                <div class="carousel-viewport">
-                                    <div class="carousel-track">
-                                        <?php while ($tab['query']->have_posts()):
-                                                    $tab['query']->the_post();
-                                                    $post_id = get_the_ID();
-                                                    $post_url = get_permalink();
-                                                    $post_title = get_the_title();
-                                                    $thumb_url = blogar_thumbnail_url($post_id, 'blogar-card');
-                                                    $thumb_alt = blogar_thumbnail_alt($post_id);
-                                                    ?>
-                                        <div class="slick-single-layout">
-                                            <div
-                                                class="content-block modern-post-style text-center content-block-column">
-                                                <div class="post-content">
-                                                    <div class="post-cat">
-                                                        <div class="post-cat-list">
-                                                            <?php echo blogar_post_categories_html($post_id, 1); // phpcs:ignore ?>
-                                                        </div>
-                                                    </div>
-                                                    <h4 class="title">
-                                                        <a href="<?php echo esc_url($post_url); ?>">
-                                                            <?php echo esc_html($post_title); ?>
-                                                        </a>
-                                                    </h4>
-                                                </div>
-                                                <div class="post-thumbnail">
-                                                    <a href="<?php echo esc_url($post_url); ?>">
-                                                        <img loading="lazy" decoding="async" width="390" height="260"
-                                                            src="<?php echo esc_url($thumb_url); ?>"
-                                                            alt="<?php echo esc_attr($thumb_alt); ?>">
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <?php endwhile;
-                                                wp_reset_postdata(); ?>
-                                    </div><!-- .carousel-track -->
-                                </div><!-- .carousel-viewport -->
-
-                                <button class="slide-arrow prev-arrow"
-                                    aria-label="<?php esc_attr_e('Previous', 'blogar'); ?>">
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M19 12H5M12 5l-7 7 7 7" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </button>
-                                <button class="slide-arrow next-arrow"
-                                    aria-label="<?php esc_attr_e('Next', 'blogar'); ?>">
-                                    <svg viewBox="0 0 24 24">
-                                        <path d="M5 12h14M12 19l7-7-7-7" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                </button>
-                            </div><!-- .modern-post-activation -->
-                        </div>
-                        <?php endforeach; ?>
-                    </div><!-- .tab-content -->
-
-                </div><!-- .container -->
-            </div><!-- .wrapper -->
-        </section>
-        <?php endif; ?>
 
         <!-- ================================================================
      SECTION 5 — TRENDING TOPICS (categories carousel)
@@ -440,7 +250,9 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                                 alt="<?php echo esc_attr($cat['thumb_alt']); ?>">
                                         </div>
                                         <div class="content">
-                                            <h5 class="title"><?php echo esc_html($cat['name']); ?></h5>
+                                            <h5 class="title">
+                                                <?php echo blogar_hover_flip_text_html($cat['name'], 'blogar-card-flip-text blogar-card-flip-text--light'); // phpcs:ignore ?>
+                                            </h5>
                                         </div>
                                     </a>
                                 </div>
@@ -467,27 +279,448 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
         <?php endif; ?>
 
         <!-- ================================================================
-     SECTION 6 — MOST POPULAR (numbered list)
+     SECTION 13 — FEATURED GRID 2+3
+     Layout: 2 equal top cards | 3 equal bottom cards
+     Card style: full-bleed image + gradient + text centered bottom
+     Dark header title bar — style riêng
      ================================================================ -->
         <?php
-        $popular_list_data = blogar_get_most_popular_list_data();
-        $popular_list_tabs = $popular_list_data['tabs'];
-        $popular_list_first = true;
+        $fvg2_posts = get_posts(array(
+            'numberposts' => 5,
+            'post_status' => 'publish',
+            'meta_key' => '_thumbnail_id',
+            'offset' => 5, // tránh trùng với section 12
+        ));
+
+        // Fallback nếu không đủ offset
+        if (count($fvg2_posts) < 5) {
+            $fvg2_posts = get_posts(array(
+                'numberposts' => 5,
+                'post_status' => 'publish',
+                'meta_key' => '_thumbnail_id',
+                'orderby' => 'rand',
+            ));
+        }
         ?>
-        <?php if (!empty($popular_list_tabs)): ?>
-        <section class="axil-trending-post-area axil-section-gap bg-color-white">
+
+        <?php if (!empty($fvg2_posts)): ?>
+        <section class="axil-fvg2-area">
+
+            <!-- ── Dark title bar ─────────────────────────────────── -->
+            <div class="fvg2-header">
+                <div class="container">
+                    <h2 class="fvg2-header__title">
+                        <?php esc_html_e('Featured Videos In This Week', 'blogar'); ?>
+                    </h2>
+                </div>
+            </div>
+
+            <!-- ── Grid ───────────────────────────────────────────── -->
+
+            <div class="container">
+                <div class="fvg2-grid">
+
+                    <!-- Row 1: 2 equal top cards -->
+                    <div class="fvg2-row fvg2-row--top">
+                        <?php
+                            $top_posts = array_slice($fvg2_posts, 0, 2);
+                            foreach ($top_posts as $tp):
+                                $tp_id = $tp->ID;
+                                $tp_url = get_permalink($tp_id);
+                                $tp_title = get_the_title($tp_id);
+                                $tp_thumb = blogar_thumbnail_url($tp_id, 'blogar-grid-big');
+                                $tp_alt = blogar_thumbnail_alt($tp_id);
+                                $tp_author = get_the_author_meta('display_name', (int) $tp->post_author);
+                                $tp_date = get_the_date('F j, Y', $tp_id);
+                                ?>
+                        <a href="<?php echo esc_url($tp_url); ?>" class="fvg2-card fvg2-card--top"
+                            aria-label="<?php echo esc_attr($tp_title); ?>">
+
+                            <div class="fvg2-card__thumb">
+                                <img loading="lazy" decoding="async" src="<?php echo esc_url($tp_thumb); ?>"
+                                    alt="<?php echo esc_attr($tp_alt); ?>">
+                            </div>
+
+                            <div class="fvg2-card__overlay" aria-hidden="true"></div>
+
+                            <div class="fvg2-card__content">
+                                <h3 class="fvg2-card__title">
+                                    <span class="blogar-home-title-fill"><?php echo esc_html($tp_title); ?></span>
+                                </h3>
+                                <div class="fvg2-card__meta">
+                                    <span class="fvg2-meta-by">
+                                        <?php esc_html_e('by', 'blogar'); ?>
+                                    </span>
+                                    <?php echo blogar_hover_flip_text_html($tp_author, 'fvg2-meta-author blogar-card-flip-text blogar-card-flip-text--light'); // phpcs:ignore ?>
+                                    <span class="fvg2-meta-dot" aria-hidden="true">•</span>
+                                    <span class="fvg2-meta-date">
+                                        <?php echo esc_html($tp_date); ?>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </a>
+                        <?php endforeach; ?>
+                    </div><!-- .fvg2-row--top -->
+
+                    <!-- Row 2: 3 equal bottom cards -->
+                    <div class="fvg2-row fvg2-row--bottom">
+                        <?php
+                            $bot_posts = array_slice($fvg2_posts, 2, 3);
+                            foreach ($bot_posts as $bp):
+                                $bp_id = $bp->ID;
+                                $bp_url = get_permalink($bp_id);
+                                $bp_title = get_the_title($bp_id);
+                                $bp_thumb = blogar_thumbnail_url($bp_id, 'blogar-card');
+                                $bp_alt = blogar_thumbnail_alt($bp_id);
+                                $bp_author = get_the_author_meta('display_name', (int) $bp->post_author);
+                                $bp_date = get_the_date('F j, Y', $bp_id);
+                                ?>
+                        <a href="<?php echo esc_url($bp_url); ?>" class="fvg2-card fvg2-card--bottom"
+                            aria-label="<?php echo esc_attr($bp_title); ?>">
+
+                            <div class="fvg2-card__thumb">
+                                <img loading="lazy" decoding="async" src="<?php echo esc_url($bp_thumb); ?>"
+                                    alt="<?php echo esc_attr($bp_alt); ?>">
+                            </div>
+
+                            <div class="fvg2-card__overlay" aria-hidden="true"></div>
+
+                            <div class="fvg2-card__content">
+                                <h4 class="fvg2-card__title">
+                                    <span class="blogar-home-title-fill"><?php echo esc_html($bp_title); ?></span>
+                                </h4>
+                                <div class="fvg2-card__meta">
+                                    <span class="fvg2-meta-by">
+                                        <?php esc_html_e('by', 'blogar'); ?>
+                                    </span>
+                                    <?php echo blogar_hover_flip_text_html($bp_author, 'fvg2-meta-author blogar-card-flip-text blogar-card-flip-text--light'); // phpcs:ignore ?>
+                                    <span class="fvg2-meta-dot" aria-hidden="true">•</span>
+                                    <span class="fvg2-meta-date">
+                                        <?php echo esc_html($bp_date); ?>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </a>
+                        <?php endforeach; ?>
+                    </div><!-- .fvg2-row--bottom -->
+
+                </div><!-- .fvg2-grid -->
+
+            </div><!-- /.container -->
+        </section>
+        <?php endif; ?>
+
+
+        <!-- ================================================================
+     SECTION 14 — LATEST POSTS GRID
+     Layout: 4 cols × 2 rows = 8 cards
+     Card style: image top + content below (title, meta, button)
+     Load More button centered
+     ================================================================ -->
+        <?php
+        $lp_posts = get_posts(array(
+            'numberposts' => 8,
+            'post_status' => 'publish',
+            'meta_key' => '_thumbnail_id',
+            'orderby' => 'date',
+            'order' => 'DESC',
+        ));
+        ?>
+
+        <?php if (!empty($lp_posts)): ?>
+        <section class="axil-latest-posts-area axil-section-gap bg-color-white">
+            <div class="container">
+
+                <!-- ── Section title ─────────────────────────────── -->
+                <div class="lp-section-title">
+                    <div class="lp-title-inner">
+                        <span class="lp-title-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                <polyline points="14 2 14 8 20 8" />
+                                <line x1="16" y1="13" x2="8" y2="13" />
+                                <line x1="16" y1="17" x2="8" y2="17" />
+                                <polyline points="10 9 9 9 8 9" />
+                            </svg>
+                        </span>
+                        <span class="lp-title-text">
+                            <?php esc_html_e('Latest Posts', 'blogar'); ?>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ── Grid ──────────────────────────────────────── -->
+                <div class="lp-grid mt--30">
+                    <?php foreach ($lp_posts as $lp):
+                            $lp_id = $lp->ID;
+                            $lp_url = get_permalink($lp_id);
+                            $lp_title = get_the_title($lp_id);
+                            $lp_thumb = blogar_thumbnail_url($lp_id, 'blogar-card');
+                            $lp_alt = blogar_thumbnail_alt($lp_id);
+                            $lp_author = get_the_author_meta('display_name', (int) $lp->post_author);
+                            $lp_aurl = get_author_posts_url((int) $lp->post_author);
+                            $lp_date = get_the_date('F j, Y', $lp_id);
+                            $lp_cats = get_the_category($lp_id);
+                            ?>
+                    <article class="lp-card">
+
+                        <!-- Image -->
+                        <div class="lp-card__thumb">
+                            <a href="<?php echo esc_url($lp_url); ?>" tabindex="-1" aria-hidden="true">
+                                <img loading="lazy" decoding="async" src="<?php echo esc_url($lp_thumb); ?>"
+                                    alt="<?php echo esc_attr($lp_alt); ?>">
+                            </a>
+                        </div>
+
+                        <!-- Content below image -->
+                        <div class="lp-card__body">
+
+                            <?php if ($lp_cats): ?>
+                            <div class="lp-card__cat">
+                                <?php echo blogar_hover_flip_link_html(get_category_link($lp_cats[0]->term_id), $lp_cats[0]->name, 'lp-card__cat-link'); // phpcs:ignore ?>
+                            </div>
+                            <?php endif; ?>
+
+                            <h3 class="lp-card__title">
+                                <a href="<?php echo esc_url($lp_url); ?>">
+                                    <?php echo esc_html($lp_title); ?>
+                                </a>
+                            </h3>
+
+                            <div class="lp-card__meta">
+                                <span class="lp-meta-by"><?php esc_html_e('by', 'blogar'); ?></span>
+                                <?php echo blogar_hover_flip_link_html($lp_aurl, $lp_author, 'lp-meta-author'); // phpcs:ignore ?>
+                                <span class="lp-meta-dot" aria-hidden="true">•</span>
+                                <span class="lp-meta-date">
+                                    <?php echo esc_html($lp_date); ?>
+                                </span>
+                            </div>
+
+                            <div class="lp-card__readmore">
+                                <a href="<?php echo esc_url($lp_url); ?>" class="lp-readmore-btn">
+                                    <?php esc_html_e('Read The Article', 'blogar'); ?>
+                                </a>
+                            </div>
+
+                        </div><!-- .lp-card__body -->
+
+                    </article><!-- .lp-card -->
+                    <?php endforeach; ?>
+                </div><!-- .lp-grid -->
+
+                <!-- ── Load More ─────────────────────────────────── -->
+                <div class="lp-loadmore mt--30">
+                    <a href="<?php echo esc_url(get_permalink(get_option('page_for_posts')) ?: home_url('/')); ?>"
+                        class="lp-loadmore-btn">
+                        <span><?php esc_html_e('Load More Posts', 'blogar'); ?></span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
+                            width="14" height="14">
+                            <polyline points="23 4 23 10 17 10" />
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                        </svg>
+                    </a>
+                </div>
+
+            </div><!-- .container -->
+        </section>
+        <?php endif; ?>
+
+
+        <!-- ================================================================
+     SECTION 12 — FEATURED GRID THIS WEEK
+     Layout: Big left | Right (medium top + 3 small bottom row)
+     Card style: full-bleed image + gradient overlay + text bottom
+     Query: 5 posts mới nhất có thumbnail
+     ================================================================ -->
+        <?php
+        $fvg_posts = get_posts(array(
+            'numberposts' => 5,
+            'post_status' => 'publish',
+            'meta_key' => '_thumbnail_id',
+        ));
+
+        $fvg_big = !empty($fvg_posts) ? $fvg_posts[0] : null;
+        $fvg_medium = !empty($fvg_posts[1]) ? $fvg_posts[1] : null;
+        $fvg_smalls = count($fvg_posts) > 2 ? array_slice($fvg_posts, 2, 3) : array();
+        ?>
+
+        <?php if ($fvg_big): ?>
+        <section class="axil-featured-grid-area axil-section-gap bg-color-white">
+            <div class="container">
+
+                <div class="section-title text-left">
+                    <h2 class="title"><?php esc_html_e('Featured Videos In This Week', 'blogar'); ?></h2>
+                </div>
+
+                <div class="fvg-grid mt--30">
+
+                    <!-- ── BIG POST — LEFT ─────────────────────────── -->
+                    <div class="fvg-left">
+                        <?php
+                            $big_id = $fvg_big->ID;
+                            $big_url = get_permalink($big_id);
+                            $big_title = get_the_title($big_id);
+                            $big_thumb = blogar_thumbnail_url($big_id, 'blogar-grid-big');
+                            $big_alt = blogar_thumbnail_alt($big_id);
+                            $big_author = get_the_author_meta('display_name', (int) $fvg_big->post_author);
+                            $big_date = get_the_date('M j, Y', $big_id);
+                            $big_cats = get_the_category($big_id);
+                            $big_read = blogar_reading_time($big_id);
+                            ?>
+                        <a href="<?php echo esc_url($big_url); ?>" class="fvg-card fvg-card--big"
+                            aria-label="<?php echo esc_attr($big_title); ?>">
+
+                            <div class="fvg-card-thumb">
+                                <img loading="lazy" decoding="async" src="<?php echo esc_url($big_thumb); ?>"
+                                    alt="<?php echo esc_attr($big_alt); ?>">
+                            </div>
+
+                            <div class="fvg-card-overlay" aria-hidden="true"></div>
+
+                            <div class="fvg-card-content">
+                                <?php if ($big_cats): ?>
+                                <?php echo blogar_hover_flip_text_html($big_cats[0]->name, 'fvg-card-cat blogar-card-flip-text blogar-card-flip-text--badge'); // phpcs:ignore ?>
+                                <?php endif; ?>
+                                <h3 class="fvg-card-title"><span
+                                        class="blogar-home-title-fill"><?php echo esc_html($big_title); ?></span></h3>
+                                <div class="fvg-card-meta">
+                                    <span><?php echo esc_html($big_author); ?></span>
+                                    <span class="fvg-dot" aria-hidden="true">·</span>
+                                    <span><?php echo esc_html($big_date); ?></span>
+                                    <span class="fvg-dot" aria-hidden="true">·</span>
+                                    <span><?php echo esc_html($big_read); ?></span>
+                                </div>
+                            </div>
+
+                        </a>
+                    </div><!-- .fvg-left -->
+
+
+                    <!-- ── RIGHT COLUMN ───────────────────────────── -->
+                    <div class="fvg-right">
+
+                        <!-- Medium post: right top -->
+                        <?php if ($fvg_medium):
+                                $med_id = $fvg_medium->ID;
+                                $med_url = get_permalink($med_id);
+                                $med_title = get_the_title($med_id);
+                                $med_thumb = blogar_thumbnail_url($med_id, 'blogar-card');
+                                $med_alt = blogar_thumbnail_alt($med_id);
+                                $med_date = get_the_date('M j, Y', $med_id);
+                                $med_cats = get_the_category($med_id);
+                                $med_read = blogar_reading_time($med_id);
+                                ?>
+                        <div class="fvg-right-top">
+                            <a href="<?php echo esc_url($med_url); ?>" class="fvg-card fvg-card--medium"
+                                aria-label="<?php echo esc_attr($med_title); ?>">
+
+                                <div class="fvg-card-thumb">
+                                    <img loading="lazy" decoding="async" src="<?php echo esc_url($med_thumb); ?>"
+                                        alt="<?php echo esc_attr($med_alt); ?>">
+                                </div>
+
+                                <div class="fvg-card-overlay" aria-hidden="true"></div>
+
+                                <div class="fvg-card-content">
+                                    <?php if ($med_cats): ?>
+                                    <?php echo blogar_hover_flip_text_html($med_cats[0]->name, 'fvg-card-cat blogar-card-flip-text blogar-card-flip-text--badge'); // phpcs:ignore ?>
+                                    <?php endif; ?>
+                                    <h4 class="fvg-card-title"><span
+                                            class="blogar-home-title-fill"><?php echo esc_html($med_title); ?></span></h4>
+                                    <div class="fvg-card-meta">
+                                        <span><?php echo esc_html($med_date); ?></span>
+                                        <span class="fvg-dot" aria-hidden="true">·</span>
+                                        <span><?php echo esc_html($med_read); ?></span>
+                                    </div>
+                                </div>
+
+                            </a>
+                        </div><!-- .fvg-right-top -->
+                        <?php endif; ?>
+
+                        <!-- 3 small posts: right bottom -->
+                        <?php if (!empty($fvg_smalls)): ?>
+                        <div class="fvg-right-bottom">
+                            <?php foreach ($fvg_smalls as $sp):
+                                        $sp_id = $sp->ID;
+                                        $sp_url = get_permalink($sp_id);
+                                        $sp_title = get_the_title($sp_id);
+                                        $sp_thumb = blogar_thumbnail_url($sp_id, 'blogar-featured');
+                                        $sp_alt = blogar_thumbnail_alt($sp_id);
+                                        $sp_date = get_the_date('M j, Y', $sp_id);
+                                        $sp_cats = get_the_category($sp_id);
+                                        ?>
+                            <a href="<?php echo esc_url($sp_url); ?>" class="fvg-card fvg-card--small"
+                                aria-label="<?php echo esc_attr($sp_title); ?>">
+
+                                <div class="fvg-card-thumb">
+                                    <img loading="lazy" decoding="async" src="<?php echo esc_url($sp_thumb); ?>"
+                                        alt="<?php echo esc_attr($sp_alt); ?>">
+                                </div>
+
+                                <div class="fvg-card-overlay" aria-hidden="true"></div>
+
+                                <div class="fvg-card-content">
+                                    <?php if ($sp_cats): ?>
+                                    <?php echo blogar_hover_flip_text_html($sp_cats[0]->name, 'fvg-card-cat blogar-card-flip-text blogar-card-flip-text--badge'); // phpcs:ignore ?>
+                                    <?php endif; ?>
+                                    <h5 class="fvg-card-title"><span
+                                            class="blogar-home-title-fill"><?php echo esc_html($sp_title); ?></span></h5>
+                                    <div class="fvg-card-meta">
+                                        <span><?php echo esc_html($sp_date); ?></span>
+                                    </div>
+                                </div>
+
+                            </a>
+                            <?php endforeach; ?>
+                        </div><!-- .fvg-right-bottom -->
+                        <?php endif; ?>
+
+                    </div><!-- .fvg-right -->
+
+                </div><!-- .fvg-grid -->
+            </div><!-- .container -->
+        </section>
+        <?php endif; ?>
+
+
+
+
+        <!-- ================================================================
+     SECTION 4 — INNOVATION & TECH (tabs + carousel)
+     v2: card redesigned — image top, excerpt + author row.
+     CHỈ THAY THẾ ĐOẠN NÀY trong front-page.php, giữ nguyên các section khác.
+     ================================================================ -->
+        <?php
+        $inno_data = blogar_get_innovation_data();
+        $inno_tabs = $inno_data['tabs'];
+        $inno_first = true;
+        ?>
+        <?php if (!empty($inno_tabs)): ?>
+        <section class="axil-tab-area axil-section-gap bg-color-white">
             <div class="wrapper">
                 <div class="container">
-                    <div class="section-title text-left">
-                        <h2 class="title"><?php echo esc_html($popular_list_data['title']); ?></h2>
+
+                    <!-- Section header: title + optional subtitle -->
+                    <div class="inno-section-head">
+                        <div class="section-title text-left">
+                            <h2 class="title"><?php echo esc_html($inno_data['title']); ?></h2>
+                            <p class="inno-section-subtitle">
+                                <?php esc_html_e('Explore the latest innovations and ideas shaping the world.', 'blogar'); ?>
+                            </p>
+                        </div>
                     </div>
 
-                    <ul class="axil-tab-button mt--20" role="tablist">
-                        <?php foreach ($popular_list_tabs as $ti => $tab):
-                            $tab_id = 'tab-trend-' . ($ti + 1);
-                            $is_active = $popular_list_first;
-                            $popular_list_first = false;
-                            ?>
+                    <!-- Tab buttons -->
+                    <ul class="axil-tab-button inno-tab-button mt--20" role="tablist">
+                        <?php foreach ($inno_tabs as $ti => $tab):
+                                $tab_id = 'tab-inno-' . ($ti + 1);
+                                $is_active = $inno_first;
+                                $inno_first = false;
+                                ?>
                         <li role="presentation">
                             <a class="tab-link<?php echo $is_active ? ' active' : ''; ?>"
                                 data-tab="#<?php echo esc_attr($tab_id); ?>" role="tab"
@@ -498,572 +731,133 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                         <?php endforeach; ?>
                     </ul>
 
+                    <!-- Tab panels -->
                     <div class="tab-content">
                         <?php
-                        $popular_list_first = true;
-                        foreach ($popular_list_tabs as $ti => $tab):
-                            $tab_id = 'tab-trend-' . ($ti + 1);
-                            $active = $popular_list_first ? ' active' : '';
-                            $popular_list_first = false;
-                            ?>
-                        <div class="trend-tab-content<?php echo esc_attr($active); ?>"
-                            id="<?php echo esc_attr($tab_id); ?>" role="tabpanel">
-                            <div class="trend-tab-grid">
-                                <div class="trend-posts-full">
-                                    <?php
-                                    $num = 1;
-                                    if ($tab['query']->have_posts()):
-                                    while ($tab['query']->have_posts()):
-                                        $tab['query']->the_post();
-                                        $post_id = get_the_ID();
-                                        $post_url = get_permalink();
-                                        $post_title = get_the_title();
-                                        $post_date = get_the_date('F j, Y');
-                                        $read_time = blogar_reading_time($post_id);
-                                        $thumb_url = blogar_thumbnail_url($post_id, 'blogar-card');
-                                        $thumb_alt = blogar_thumbnail_alt($post_id);
-                                        $author_id = (int) get_the_author_meta('ID');
-                                        $author_name = get_the_author();
-                                        $author_url = get_author_posts_url($author_id);
-                                        $share_urls = blogar_social_share_urls($post_url, $post_title);
-                                        ?>
-                                    <div
-                                        class="content-block trend-post post-order-list axil-control<?php echo 1 === $num ? ' is-active' : ''; ?>">
-                                        <div class="post-inner">
-                                            <span class="post-order-list"><?php echo sprintf('%02d', $num); ?></span>
-                                            <div class="post-content">
-                                                <div class="post-cat">
-                                                    <div class="post-cat-list">
-                                                        <?php echo blogar_post_categories_html($post_id, 2); // phpcs:ignore ?>
-                                                    </div>
-                                                </div>
-                                                <h3 class="title"><a
-                                                        href="<?php echo esc_url($post_url); ?>"><?php echo esc_html($post_title); ?></a>
-                                                </h3>
-                                                <div class="post-meta-wrapper">
-                                                    <div class="post-meta">
-                                                        <div class="content">
-                                                            <h6 class="post-author-name">
-                                                                <a class="hover-flip-item-wrapper"
-                                                                    href="<?php echo esc_url($author_url); ?>">
-                                                                    <span class="hover-flip-item"><span
-                                                                            data-text="<?php echo esc_attr($author_name); ?>"><?php echo esc_html($author_name); ?></span></span>
-                                                                </a>
-                                                            </h6>
-                                                            <ul class="post-meta-list">
-                                                                <li class="post-meta-date">
-                                                                    <?php echo esc_html($post_date); ?>
-                                                                </li>
-                                                                <li class="post-meta-reading-time">
-                                                                    <?php echo esc_html($read_time); ?>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <ul class="social-share-transparent justify-content-end">
-                                                        <li><a href="<?php echo esc_url($share_urls['facebook']); ?>"
-                                                                target="_blank" rel="noopener nofollow"
-                                                                class="aw-facebook"
-                                                                aria-label="<?php esc_attr_e('Share on Facebook', 'blogar'); ?>"><?php echo $svg_fb; // phpcs:ignore ?></a>
-                                                        </li>
-                                                        <li><a href="<?php echo esc_url($share_urls['twitter']); ?>"
-                                                                target="_blank" rel="noopener nofollow"
-                                                                class="aw-twitter"
-                                                                aria-label="<?php esc_attr_e('Share on Twitter', 'blogar'); ?>"><?php echo $svg_tw; // phpcs:ignore ?></a>
-                                                        </li>
-                                                        <li><a href="<?php echo esc_url($share_urls['linkedin']); ?>"
-                                                                target="_blank" rel="noopener nofollow"
-                                                                class="aw-linkdin"
-                                                                aria-label="<?php esc_attr_e('Share on LinkedIn', 'blogar'); ?>"><?php echo $svg_li; // phpcs:ignore ?></a>
-                                                        </li>
-                                                        <li><button class="axilcopyLink"
-                                                                title="<?php esc_attr_e('Copy Link', 'blogar'); ?>"
-                                                                data-link="<?php echo esc_url($post_url); ?>"
-                                                                aria-label="<?php esc_attr_e('Copy link', 'blogar'); ?>"><?php echo $svg_lk; // phpcs:ignore ?></button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="post-thumbnail trend-preview-thumbnail">
-                                            <a href="<?php echo esc_url($post_url); ?>">
-                                                <img loading="lazy" decoding="async" width="390" height="260"
-                                                    src="<?php echo esc_url($thumb_url); ?>"
-                                                    alt="<?php echo esc_attr($thumb_alt); ?>">
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <?php
-                                    $num++;
-                                    endwhile;
-                                    else:
-                                        ?>
-                                    <div class="content-block trend-post post-order-list axil-control is-active">
-                                        <div class="post-inner">
-                                            <span class="post-order-list">--</span>
-                                            <div class="post-content">
-                                                <h3 class="title">
-                                                    <?php esc_html_e('No posts found in this tab yet.', 'blogar'); ?>
-                                                </h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php
-                                    endif;
-                                    wp_reset_postdata();
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    </div><!-- .tab-content -->
-                </div><!-- .container -->
-            </div><!-- .wrapper -->
-        </section>
-        <?php endif; ?>
-
-
-        <!-- ================================================================
-     SECTION 7 — SOCIAL NETWORKS
-     ================================================================ -->
-        <section class="axil-post-grid-area bg-color-grey">
-            <div class="container">
-                <div class="axil-social-wrapper bg-color-white radius">
-                    <ul class="social-with-text">
-                        <li class="twitter"><a href="#" target="_blank"
-                                rel="nofollow"><?php echo $svg_tw; // phpcs:ignore ?><span>Twitter</span></a></li>
-                        <li class="facebook"><a href="#" target="_blank"
-                                rel="nofollow"><?php echo $svg_fb; // phpcs:ignore ?><span>Facebook</span></a></li>
-                        <li class="youtube"><a href="#" target="_blank"
-                                rel="nofollow"><?php echo $svg_yt; // phpcs:ignore ?><span>Youtube</span></a></li>
-                        <li class="dribbble"><a href="#" target="_blank"
-                                rel="nofollow"><?php echo $svg_db; // phpcs:ignore ?><span>Dribbble</span></a></li>
-                        <li class="behance"><a href="#" target="_blank"
-                                rel="nofollow"><?php echo $svg_be; // phpcs:ignore ?><span>Behance</span></a></li>
-                        <li class="linkedin"><a href="#" target="_blank"
-                                rel="nofollow"><?php echo $svg_li; // phpcs:ignore ?><span>Linkedin</span></a></li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ================================================================
-     SECTION 8 — MOST POPULAR (grid)
-     ================================================================ -->
-        <?php
-        $popular_grid_data = blogar_get_most_popular_grid_data();
-        $popular_grid_tabs = $popular_grid_data['tabs'];
-        $popular_grid_first = true;
-        ?>
-        <?php if (!empty($popular_grid_tabs)): ?>
-        <section class="axil-post-grid-area axil-section-gap bg-color-grey most-popular-grid-area">
-            <div class="wrapper">
-                <div class="container">
-                    <div class="section-title text-left">
-                        <h2 class="title"><?php echo esc_html($popular_grid_data['title']); ?></h2>
-                    </div>
-
-                    <ul class="axil-tab-button mt--20" role="tablist">
-                        <?php foreach ($popular_grid_tabs as $ti => $tab):
-                            $tab_id = 'tab-grid-' . ($ti + 1);
-                            $is_active = $popular_grid_first;
-                            $popular_grid_first = false;
-                            ?>
-                        <li role="presentation"><a class="tab-link<?php echo $is_active ? ' active' : ''; ?>"
-                                data-tab="#<?php echo esc_attr($tab_id); ?>" role="tab"
-                                aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>">
-                                <?php echo esc_html($tab['label']); ?>
-                            </a></li>
-                        <?php endforeach; ?>
-                    </ul>
-
-                    <div class="grid-tab-content tab-content mt--10">
-
-                        <?php
-                        $popular_grid_first = true;
-                        foreach ($popular_grid_tabs as $ti => $tab):
-                            $tab_id = 'tab-grid-' . ($ti + 1);
-                            $active = $popular_grid_first ? ' active' : '';
-                            $popular_grid_first = false;
-                            $posts = isset($tab['posts']) ? $tab['posts'] : array();
-                            $big = !empty($posts) ? $posts[0] : null;
-                            $smalls = count($posts) > 1 ? array_slice($posts, 1, 2) : array();
-                            ?>
-                        <div class="trend-tab-content<?php echo esc_attr($active); ?>"
-                            id="<?php echo esc_attr($tab_id); ?>" role="tabpanel">
-                            <div class="post-grid-layout">
-                                <!-- Big post (left) -->
-                                <div class="post-grid-main">
-                                    <?php if ($big instanceof WP_Post):
-                                        $big_id = $big->ID;
-                                        $big_url = get_permalink($big_id);
-                                        $big_title = get_the_title($big_id);
-                                        $big_date = get_the_date('F j, Y', $big_id);
-                                        $big_read_time = blogar_reading_time($big_id);
-                                        $big_thumb_url = blogar_thumbnail_url($big_id, 'blogar-grid-big');
-                                        $big_thumb_alt = blogar_thumbnail_alt($big_id);
-                                        $big_author_id = (int) $big->post_author;
-                                        $big_author_name = get_the_author_meta('display_name', $big_author_id);
-                                        $big_author_url = get_author_posts_url($big_author_id);
-                                        $big_author_avatar = get_avatar_url($big_author_id, array('size' => 50));
-                                        $big_share_urls = blogar_social_share_urls($big_url, $big_title);
-                                        ?>
-                                    <div class="content-block post-grid post-grid-large mt--30 axil-big-post-image">
-                                        <div class="post-thumbnail">
-                                            <a href="<?php echo esc_url($big_url); ?>">
-                                                <img loading="lazy" decoding="async"
-                                                    src="<?php echo esc_url($big_thumb_url); ?>"
-                                                    alt="<?php echo esc_attr($big_thumb_alt); ?>">
-                                            </a>
-                                        </div>
-                                        <div class="post-grid-content">
-                                            <div class="post-content">
-                                                <div class="post-cat">
-                                                    <div class="post-cat-list">
-                                                        <?php echo blogar_post_categories_html($big_id, 1); // phpcs:ignore ?>
-                                                    </div>
-                                                </div>
-                                                <h3 class="title"><a
-                                                        href="<?php echo esc_url($big_url); ?>"><?php echo esc_html($big_title); ?></a>
-                                                </h3>
-                                                <div class="post-meta-wrapper">
-                                                    <div class="post-meta">
-                                                        <div class="post-author-avatar border-rounded">
-                                                            <img alt="<?php echo esc_attr($big_author_name); ?>"
-                                                                src="<?php echo esc_url($big_author_avatar); ?>"
-                                                                width="50" height="50">
-                                                        </div>
-                                                        <div class="content">
-                                                            <h6 class="post-author-name">
-                                                                <a class="hover-flip-item-wrapper"
-                                                                    href="<?php echo esc_url($big_author_url); ?>">
-                                                                    <span class="hover-flip-item"><span
-                                                                            data-text="<?php echo esc_attr($big_author_name); ?>"><?php echo esc_html($big_author_name); ?></span></span>
-                                                                </a>
-                                                            </h6>
-                                                            <ul class="post-meta-list">
-                                                                <li class="post-meta-date">
-                                                                    <?php echo esc_html($big_date); ?>
-                                                                </li>
-                                                                <li class="post-meta-reading-time">
-                                                                    <?php echo esc_html($big_read_time); ?>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    <ul class="social-share-transparent justify-content-end">
-                                                        <li><a href="<?php echo esc_url($big_share_urls['facebook']); ?>"
-                                                                target="_blank" rel="noopener nofollow"
-                                                                aria-label="<?php esc_attr_e('Facebook', 'blogar'); ?>"><?php echo $svg_fb; // phpcs:ignore ?></a>
-                                                        </li>
-                                                        <li><a href="<?php echo esc_url($big_share_urls['twitter']); ?>"
-                                                                target="_blank" rel="noopener nofollow"
-                                                                aria-label="<?php esc_attr_e('Twitter', 'blogar'); ?>"><?php echo $svg_tw; // phpcs:ignore ?></a>
-                                                        </li>
-                                                        <li><a href="<?php echo esc_url($big_share_urls['linkedin']); ?>"
-                                                                target="_blank" rel="noopener nofollow"
-                                                                aria-label="<?php esc_attr_e('LinkedIn', 'blogar'); ?>"><?php echo $svg_li; // phpcs:ignore ?></a>
-                                                        </li>
-                                                        <li><button class="axilcopyLink"
-                                                                data-link="<?php echo esc_url($big_url); ?>"
-                                                                aria-label="<?php esc_attr_e('Copy link', 'blogar'); ?>"><?php echo $svg_lk; // phpcs:ignore ?></button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php else: ?>
-                                    <div class="content-block post-grid post-grid-large mt--30 axil-big-post-image">
-                                        <div class="post-grid-content">
-                                            <div class="post-content">
-                                                <h3 class="title">
-                                                    <?php esc_html_e('No posts found in this tab yet.', 'blogar'); ?>
-                                                </h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php endif; ?>
-                                </div>
-
-                                <!-- Small posts (right) -->
-                                <div class="post-grid-right">
-                                    <?php foreach ($smalls as $small_post):
-                                        $small_id = $small_post->ID;
-                                        $small_url = get_permalink($small_id);
-                                        $small_title = get_the_title($small_id);
-                                        $small_thumb_url = blogar_thumbnail_url($small_id, 'blogar-grid-small');
-                                        $small_thumb_alt = blogar_thumbnail_alt($small_id);
-                                        ?>
-                                    <div
-                                        class="content-block post-grid post-grid-large mt--30 axil-small-post-image post-grid-small-card">
-                                        <div class="post-thumbnail">
-                                            <a href="<?php echo esc_url($small_url); ?>">
-                                                <img loading="lazy" decoding="async"
-                                                    src="<?php echo esc_url($small_thumb_url); ?>"
-                                                    alt="<?php echo esc_attr($small_thumb_alt); ?>">
-                                            </a>
-                                        </div>
-                                        <div class="post-grid-content">
-                                            <div class="post-content">
-                                                <div class="post-cat">
-                                                    <div class="post-cat-list">
-                                                        <?php echo blogar_post_categories_html($small_id, 1); // phpcs:ignore ?>
-                                                    </div>
-                                                </div>
-                                                <h3 class="title"><a
-                                                        href="<?php echo esc_url($small_url); ?>"><?php echo esc_html($small_title); ?></a>
-                                                </h3>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-
-                    </div><!-- .tab-content -->
-                </div><!-- .container -->
-            </div><!-- .wrapper -->
-        </section>
-        <?php endif; ?>
-
-
-        <!-- ================================================================
-     SECTION 9 — POST LIST + SIDEBAR
-     ================================================================ -->
-        <section
-            class="axil-post-list-area post-listview-visible-color axil-section-gap bg-color-white home-post-list-area">
-            <div class="container">
-                <div class="post-list-layout">
-                    <?php $post_list_sidebar_data = blogar_get_post_list_sidebar_data(); ?>
-
-                    <!-- Main content -->
-                    <div class="post-list-main">
-                        <img loading="lazy" decoding="async" width="810" height="210"
-                            src="<?php echo esc_url($img . 'banner-01.png'); ?>" alt="banner-01">
-
-                        <div class="axil-post-list-area mt--30">
-                            <?php if ($post_list_sidebar_data['main_query']->have_posts()): ?>
-                            <?php while ($post_list_sidebar_data['main_query']->have_posts()):
-                                $post_list_sidebar_data['main_query']->the_post();
-                                $list_post_id = get_the_ID();
-                                $list_post_url = get_permalink($list_post_id);
-                                $list_post_title = get_the_title($list_post_id);
-                                $list_thumb_url = blogar_thumbnail_url($list_post_id, 'blogar-list');
-                                $list_thumb_alt = blogar_thumbnail_alt($list_post_id);
-                                $list_post_date = get_the_date('', $list_post_id);
-                                $list_post_author = get_the_author_meta('display_name', (int) get_post_field('post_author', $list_post_id));
-                                $list_post_author_url = get_author_posts_url((int) get_post_field('post_author', $list_post_id));
-                                $list_post_avatar = get_avatar_url((int) get_post_field('post_author', $list_post_id), array('size' => 50));
-                                $list_share_urls = blogar_social_share_urls($list_post_url, $list_post_title);
+                            $inno_first = true;
+                            foreach ($inno_tabs as $ti => $tab):
+                                $tab_id = 'tab-inno-' . ($ti + 1);
+                                $is_active = $inno_first;
+                                $inno_first = false;
                                 ?>
-                            <div class="content-block post-list-view axil-control mt--30">
-                                <div class="post-thumbnail">
-                                    <a href="<?php echo esc_url($list_post_url); ?>">
-                                        <img loading="lazy" decoding="async" width="300" height="169"
-                                            src="<?php echo esc_url($list_thumb_url); ?>"
-                                            alt="<?php echo esc_attr($list_thumb_alt); ?>">
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <div class="post-cat">
-                                        <div class="post-cat-list">
-                                            <?php echo blogar_post_categories_html($list_post_id, 1); // phpcs:ignore ?>
-                                        </div>
-                                    </div>
-                                    <h4 class="title"><a
-                                            href="<?php echo esc_url($list_post_url); ?>"><?php echo esc_html($list_post_title); ?></a>
-                                    </h4>
-                                    <div class="post-meta-wrapper">
-                                        <div class="post-meta">
-                                            <div class="post-author-avatar border-rounded">
-                                                <img alt="<?php echo esc_attr($list_post_author); ?>"
-                                                    src="<?php echo esc_url($list_post_avatar); ?>" width="50"
-                                                    height="50">
-                                            </div>
-                                            <div class="content">
-                                                <h6 class="post-author-name">
-                                                    <a class="hover-flip-item-wrapper"
-                                                        href="<?php echo esc_url($list_post_author_url); ?>">
-                                                        <span class="hover-flip-item"><span
-                                                                data-text="<?php echo esc_attr($list_post_author); ?>"><?php echo esc_html($list_post_author); ?></span></span>
+                        <div class="single-tab-content<?php echo $is_active ? ' active' : ''; ?>"
+                            id="<?php echo esc_attr($tab_id); ?>" role="tabpanel">
+
+                            <div class="modern-post-activation axil-slick-arrow arrow-between-side" data-tab-carousel>
+                                <div class="carousel-viewport">
+                                    <div class="carousel-track">
+
+                                        <?php while ($tab['query']->have_posts()):
+                                                    $tab['query']->the_post();
+
+                                                    $post_id = get_the_ID();
+                                                    $post_url = get_permalink();
+                                                    $post_title = get_the_title();
+                                                    $post_excerpt = wp_trim_words(get_the_excerpt(), 20, '…');
+                                                    $post_date = get_the_date('M j, Y');
+                                                    $read_time = blogar_reading_time($post_id);
+                                                    $thumb_url = blogar_thumbnail_url($post_id, 'blogar-card');
+                                                    $thumb_alt = blogar_thumbnail_alt($post_id);
+                                                    $author_id = (int) get_the_author_meta('ID');
+                                                    $author_name = get_the_author();
+                                                    $author_url = get_author_posts_url($author_id);
+                                                    $author_avatar = get_avatar_url($author_id, array('size' => 40));
+                                                    ?>
+
+                                        <div class="slick-single-layout">
+                                            <div class="content-block modern-post-style">
+
+                                                <!-- ── Image (top) ───────────── -->
+                                                <div class="modern-card-thumb post-thumbnail">
+                                                    <a href="<?php echo esc_url($post_url); ?>">
+                                                        <img loading="lazy" decoding="async" width="390" height="260"
+                                                            src="<?php echo esc_url($thumb_url); ?>"
+                                                            alt="<?php echo esc_attr($thumb_alt); ?>">
                                                     </a>
-                                                </h6>
-                                                <ul class="post-meta-list">
-                                                    <li class="post-meta-date"><?php echo esc_html($list_post_date); ?>
-                                                    </li>
-                                                    <li class="post-meta-reading-time">
-                                                        <?php echo esc_html(blogar_reading_time($list_post_id)); ?></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <ul class="social-share-transparent justify-content-end">
-                                            <li><a href="<?php echo esc_url($list_share_urls['facebook']); ?>"
-                                                    target="_blank" rel="noopener nofollow"
-                                                    aria-label="Facebook"><?php echo $svg_fb; // phpcs:ignore ?></a>
-                                            </li>
-                                            <li><a href="<?php echo esc_url($list_share_urls['twitter']); ?>"
-                                                    target="_blank" rel="noopener nofollow"
-                                                    aria-label="Twitter"><?php echo $svg_tw; // phpcs:ignore ?></a></li>
-                                            <li><a href="<?php echo esc_url($list_share_urls['linkedin']); ?>"
-                                                    target="_blank" rel="noopener nofollow"
-                                                    aria-label="LinkedIn"><?php echo $svg_li; // phpcs:ignore ?></a>
-                                            </li>
-                                            <li><button class="axilcopyLink"
-                                                    data-link="<?php echo esc_url($list_post_url); ?>"
-                                                    aria-label="Copy link"><?php echo $svg_lk; // phpcs:ignore ?></button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endwhile; ?>
-                            <?php wp_reset_postdata(); ?>
-                            <?php else: ?>
-                            <div class="content-block post-list-view axil-control mt--30">
-                                <div class="post-thumbnail">
-                                    <a href="#">
-                                        <img loading="lazy" decoding="async" width="300" height="169"
-                                            src="<?php echo esc_url(blogar_thumbnail_url(0, 'blogar-list')); ?>"
-                                            alt="<?php esc_attr_e('Placeholder image', 'blogar'); ?>">
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <h4 class="title">
-                                        <?php esc_html_e('No posts available for this section yet.', 'blogar'); ?></h4>
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                        </div>
-                    </div><!-- .post-list-main -->
+                                                </div>
 
-                    <!-- Sidebar -->
-                    <aside class="widgets-sidebar">
+                                                <!-- ── Card body ─────────────── -->
+                                                <div class="modern-card-body post-content">
 
-                        <!-- Search widget -->
-                        <div class="search-2 widget-sidebar widget widget_search">
-                            <div class="widget-title">
-                                <h3>Search</h3>
-                            </div>
-                            <div class="inner">
-                                <form action="<?php echo esc_url(home_url('/')); ?>" method="GET" class="blog-search">
-                                    <div class="axil-search form-group">
-                                        <button type="submit" class="search-button"
-                                            aria-label="<?php esc_attr_e('Search', 'blogar'); ?>">
-                                            <?php echo $svg_search; // phpcs:ignore ?>
-                                        </button>
-                                        <input type="search" name="s"
-                                            placeholder="<?php echo esc_attr__('Search ...', 'blogar'); ?>"
-                                            value="<?php echo esc_attr(get_search_query()); ?>">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                                                    <!-- Category -->
+                                                    <div class="post-cat">
+                                                        <div class="post-cat-list">
+                                                            <?php echo blogar_post_categories_html($post_id, 1); // phpcs:ignore ?>
+                                                        </div>
+                                                    </div>
 
-                        <!-- Recent posts widget -->
-                        <div class="blogar_recent_post widget-sidebar widget widget_blogar_recent_post">
-                            <div class="widget-title">
-                                <h3><?php echo esc_html($post_list_sidebar_data['recent_title']); ?></h3>
-                            </div>
-                            <?php if ($post_list_sidebar_data['recent_query']->have_posts()): ?>
-                            <?php while ($post_list_sidebar_data['recent_query']->have_posts()):
-                                $post_list_sidebar_data['recent_query']->the_post();
-                                $recent_post_id = get_the_ID();
-                                $recent_post_url = get_permalink($recent_post_id);
-                                $recent_post_title = get_the_title($recent_post_id);
-                                $recent_thumb_url = blogar_thumbnail_url($recent_post_id, 'blogar-thumb');
-                                $recent_thumb_alt = blogar_thumbnail_alt($recent_post_id);
-                                ?>
-                            <div class="content-block post-medium mb--20">
-                                <div class="post-thumbnail">
-                                    <a href="<?php echo esc_url($recent_post_url); ?>">
-                                        <img loading="lazy" decoding="async" width="150" height="150"
-                                            src="<?php echo esc_url($recent_thumb_url); ?>"
-                                            alt="<?php echo esc_attr($recent_thumb_alt); ?>">
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <h6 class="title"><a
-                                            href="<?php echo esc_url($recent_post_url); ?>"><?php echo esc_html($recent_post_title); ?></a>
-                                    </h6>
-                                    <div class="post-meta">
-                                        <ul class="post-meta-list">
-                                            <li><?php echo esc_html(get_the_date('', $recent_post_id)); ?></li>
-                                            <li><?php echo esc_html(blogar_reading_time($recent_post_id)); ?></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endwhile; ?>
-                            <?php wp_reset_postdata(); ?>
-                            <?php else: ?>
-                            <div class="content-block post-medium mb--20">
-                                <div class="post-thumbnail">
-                                    <a href="#">
-                                        <img loading="lazy" decoding="async" width="150" height="150"
-                                            src="<?php echo esc_url(blogar_thumbnail_url(0, 'blogar-thumb')); ?>"
-                                            alt="<?php esc_attr_e('Placeholder image', 'blogar'); ?>">
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <h6 class="title"><?php esc_html_e('No recent posts available.', 'blogar'); ?></h6>
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                        </div>
+                                                    <!-- Title -->
+                                                    <h4 class="title">
+                                                        <a href="<?php echo esc_url($post_url); ?>">
+                                                            <?php echo esc_html($post_title); ?>
+                                                        </a>
+                                                    </h4>
 
-                        <!-- Social widget -->
-                        <div class="blobar_social_widget widget-sidebar widget">
-                            <div class="widget-title">
-                                <h3>Stay In Touch</h3>
-                            </div>
-                            <ul class="social-icon md-size">
-                                <li><a href="#" aria-label="Facebook"><?php echo $svg_fb; // phpcs:ignore ?></a></li>
-                                <li><a href="#" aria-label="Twitter"><?php echo $svg_tw; // phpcs:ignore ?></a></li>
-                                <li><a href="#" aria-label="Instagram"><?php echo $svg_ig; // phpcs:ignore ?></a></li>
-                                <li><a href="#" aria-label="Pinterest"><?php echo $svg_pi; // phpcs:ignore ?></a></li>
-                                <li><a href="#" aria-label="LinkedIn"><?php echo $svg_li; // phpcs:ignore ?></a></li>
-                            </ul>
-                        </div>
+                                                    <!-- Excerpt -->
+                                                    <?php if ($post_excerpt): ?>
+                                                    <p class="modern-card-excerpt">
+                                                        <?php echo esc_html($post_excerpt); ?>
+                                                    </p>
+                                                    <?php endif; ?>
 
-                        <!-- Gallery widget -->
-                        <div class="media_gallery widget-sidebar widget widget_media_gallery">
-                            <div class="widget-title">
-                                <h3>Gallery</h3>
-                            </div>
-                            <div class="gallery gallery-columns-3">
-                                <?php
-                                $gallery_imgs = array(
-                                    array('img' => 'demo_image-26-150x150.jpg', 'alt' => 'demo_image-26'),
-                                    array('img' => 'post-column-01-13-150x150.jpg', 'alt' => 'post-column-01-13'),
-                                    array('img' => 'demo_image-6-150x150.jpg', 'alt' => 'demo_image-6'),
-                                    array('img' => 'demo_image-38-1-150x150.jpg', 'alt' => 'demo_image-38-1'),
-                                    array('img' => 'post-column-01-4-150x150.jpg', 'alt' => 'post-column-01-4'),
-                                    array('img' => 'demo_image-28-150x150.jpg', 'alt' => 'demo_image-28'),
-                                );
-                                foreach ($gallery_imgs as $gi): ?>
-                                <figure class="gallery-item">
-                                    <div class="gallery-icon">
-                                        <a href="#">
-                                            <img loading="lazy" decoding="async" width="150" height="150"
-                                                src="<?php echo esc_url($img . $gi['img']); ?>"
-                                                alt="<?php echo esc_attr($gi['alt']); ?>">
-                                        </a>
-                                    </div>
-                                </figure>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
+                                                    <!-- Author + meta (pinned to bottom) -->
+                                                    <div class="modern-card-meta">
+                                                        <img class="modern-card-avatar"
+                                                            src="<?php echo esc_url($author_avatar); ?>"
+                                                            alt="<?php echo esc_attr($author_name); ?>" width="32"
+                                                            height="32" loading="lazy">
+                                                        <div class="modern-card-author-info">
+                                                            <a class="hover-flip-item-wrapper modern-card-author-name"
+                                                                href="<?php echo esc_url($author_url); ?>">
+                                                                <span class="hover-flip-item">
+                                                                    <span
+                                                                        data-text="<?php echo esc_attr($author_name); ?>">
+                                                                        <?php echo esc_html($author_name); ?>
+                                                                    </span>
+                                                                </span>
+                                                            </a>
+                                                            <div class="modern-card-meta-sub">
+                                                                <span><?php echo esc_html($post_date); ?></span>
+                                                                <span class="meta-dot" aria-hidden="true">·</span>
+                                                                <span><?php echo esc_html($read_time); ?></span>
+                                                            </div>
+                                                        </div>
+                                                    </div><!-- .modern-card-meta -->
 
-                    </aside><!-- .widgets-sidebar -->
+                                                </div><!-- .modern-card-body -->
+                                            </div><!-- .content-block.modern-post-style -->
+                                        </div><!-- .slick-single-layout -->
 
-                </div><!-- .post-list-layout -->
-            </div><!-- .container -->
+                                        <?php endwhile;
+                                                wp_reset_postdata(); ?>
+
+                                    </div><!-- .carousel-track -->
+                                </div><!-- .carousel-viewport -->
+
+                                <button class="slide-arrow prev-arrow"
+                                    aria-label="<?php esc_attr_e('Previous', 'blogar'); ?>">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M19 12H5M12 5l-7 7 7 7" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                                <button class="slide-arrow next-arrow"
+                                    aria-label="<?php esc_attr_e('Next', 'blogar'); ?>">
+                                    <svg viewBox="0 0 24 24">
+                                        <path d="M5 12h14M12 19l7-7-7-7" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                            </div><!-- .modern-post-activation -->
+
+                        </div><!-- .single-tab-content -->
+                        <?php endforeach; ?>
+                    </div><!-- .tab-content -->
+
+                </div><!-- .container -->
+            </div><!-- .wrapper -->
         </section>
-
+        <?php endif; ?>
 
         <!-- ================================================================
      SECTION 10 — FEATURED VIDEO
@@ -1091,8 +885,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                         ?>
                     <div class="content-block post-default image-rounded mt--30 axil-big-post-image">
                         <div class="post-thumbnail">
-                            <a href="<?php echo esc_url($video_big_url); ?>"
-                                class="video-post-link">
+                            <a href="<?php echo esc_url($video_big_url); ?>" class="video-post-link">
                                 <img loading="lazy" decoding="async" width="600" height="500"
                                     src="<?php echo esc_url($video_big_thumb_url); ?>"
                                     alt="<?php echo esc_attr($video_big_thumb_alt); ?>">
@@ -1111,8 +904,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                 <div class="post-meta">
                                     <div class="post-author-avatar border-rounded">
                                         <img alt="<?php echo esc_attr($video_big_author); ?>"
-                                            src="<?php echo esc_url($video_big_avatar); ?>"
-                                            width="50" height="50">
+                                            src="<?php echo esc_url($video_big_avatar); ?>" width="50" height="50">
                                     </div>
                                     <div class="content">
                                         <h6 class="post-author-name">
@@ -1124,9 +916,11 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                         </h6>
                                         <ul class="post-meta-list">
                                             <li class="post-meta-date">
-                                                <?php echo esc_html(get_the_date('', $video_big_id)); ?></li>
+                                                <?php echo esc_html(get_the_date('', $video_big_id)); ?>
+                                            </li>
                                             <li class="post-meta-reading-time">
-                                                <?php echo esc_html(blogar_reading_time($video_big_id)); ?></li>
+                                                <?php echo esc_html(blogar_reading_time($video_big_id)); ?>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -1140,8 +934,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                     <li><a href="<?php echo esc_url($video_big_share_urls['linkedin']); ?>"
                                             target="_blank" rel="noopener nofollow"
                                             aria-label="LinkedIn"><?php echo $svg_li; // phpcs:ignore ?></a></li>
-                                    <li><button class="axilcopyLink"
-                                            data-link="<?php echo esc_url($video_big_url); ?>"
+                                    <li><button class="axilcopyLink" data-link="<?php echo esc_url($video_big_url); ?>"
                                             aria-label="Copy link"><?php echo $svg_lk; // phpcs:ignore ?></button></li>
                                 </ul>
                             </div>
@@ -1168,12 +961,12 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                         <div class="content-block post-default image-rounded mt--30 axil-small-post-image">
                             <div class="post-thumbnail">
                                 <?php if ($video_small_post instanceof WP_Post):
-                                    $video_small_id = $video_small_post->ID;
-                                    $video_small_url = get_permalink($video_small_id);
-                                    $video_small_title = get_the_title($video_small_id);
-                                    $video_small_thumb_url = blogar_thumbnail_url($video_small_id, 'blogar-video-small');
-                                    $video_small_thumb_alt = blogar_thumbnail_alt($video_small_id);
-                                    ?>
+                                        $video_small_id = $video_small_post->ID;
+                                        $video_small_url = get_permalink($video_small_id);
+                                        $video_small_title = get_the_title($video_small_id);
+                                        $video_small_thumb_url = blogar_thumbnail_url($video_small_id, 'blogar-video-small');
+                                        $video_small_thumb_alt = blogar_thumbnail_alt($video_small_id);
+                                        ?>
                                 <a href="<?php echo esc_url($video_small_url); ?>" class="video-post-link">
                                     <img loading="lazy" decoding="async" width="285" height="190"
                                         src="<?php echo esc_url($video_small_thumb_url); ?>"
@@ -1191,10 +984,10 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                 <div class="post-cat">
                                     <div class="post-cat-list">
                                         <?php
-                                        if ($video_small_post instanceof WP_Post) {
-                                            echo blogar_post_categories_html($video_small_post->ID, 1); // phpcs:ignore
-                                        }
-                                        ?>
+                                            if ($video_small_post instanceof WP_Post) {
+                                                echo blogar_post_categories_html($video_small_post->ID, 1); // phpcs:ignore
+                                            }
+                                            ?>
                                     </div>
                                 </div>
                                 <?php if ($video_small_post instanceof WP_Post): ?>
@@ -1214,51 +1007,12 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 
 
 
-        <!-- ================================================================
-     SECTION 11 — INSTAGRAM
-     ================================================================ -->
-        <section class="axil-instagram-area axil-section-gap bg-color-grey">
-            <div class="container">
-                <div class="section-title">
-                    <h2 class="title">Instagram</h2>
-                </div>
-                <div class="blogar-instagram-header mt--30">
-                    <a class="blogar-instagram-profile" href="https://www.instagram.com/axilthemes/" target="_blank"
-                        rel="noopener nofollow" aria-label="Instagram axilthemes">
-                        <span class="blogar-instagram-profile-icon"
-                            aria-hidden="true"><?php echo $svg_ig; // phpcs:ignore ?></span>
-                        <span class="blogar-instagram-profile-name">axilthemes</span>
-                    </a>
-                </div>
-                <div class="instagram-post-list blogar-instagram-grid mt--30">
-                    <?php
-            $grams = array(
-                array('img' => 'demo_image-26-300x300.jpg', 'alt' => 'Instagram 1'),
-                array('img' => 'post-column-01-13-300x300.jpg', 'alt' => 'Instagram 2'),
-                array('img' => 'demo_image-6-300x300.jpg', 'alt' => 'Instagram 3'),
-                array('img' => 'demo_image-38-1-300x300.jpg', 'alt' => 'Instagram 4'),
-                array('img' => 'post-column-01-4-300x300.jpg', 'alt' => 'Instagram 5'),
-                array('img' => 'demo_image-28-300x300.jpg', 'alt' => 'Instagram 6'),
-            );
-            foreach ($grams as $g): ?>
-                    <article class="single-post">
-                        <a class="instagram-post-link" href="https://www.instagram.com/axilthemes/" target="_blank"
-                            rel="noopener nofollow">
-                            <img src="<?php echo esc_url($img . $g['img']); ?>"
-                                alt="<?php echo esc_attr($g['alt']); ?>">
-                            <span class="instagram-overlay" aria-hidden="true"></span>
-                            <span class="instagram-button"
-                                aria-hidden="true"><?php echo $svg_ig; // phpcs:ignore ?></span>
-                        </a>
-                    </article>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </section>
 
 
     </div><!-- .main-wrapper -->
-</div><!-- .blogar-front-page-shell -->
+</div>
+
+
 
 
 <?php get_footer(); ?>

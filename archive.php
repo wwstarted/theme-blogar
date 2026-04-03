@@ -197,37 +197,7 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                                     </div>
                                 </div>
 
-                                <!-- Social share -->
-                                <ul class="social-share-transparent justify-content-end">
-                                    <li>
-                                        <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo rawurlencode(get_permalink()); ?>"
-                                            target="_blank" rel="noopener noreferrer" class="aw-facebook"
-                                            aria-label="<?php esc_attr_e('Share on Facebook', 'blogar'); ?>">
-                                            <?php echo $svg_fb; // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="https://twitter.com/share?url=<?php echo rawurlencode(get_permalink()); ?>&amp;text=<?php echo rawurlencode(get_the_title()); ?>"
-                                            target="_blank" rel="noopener noreferrer" class="aw-twitter"
-                                            aria-label="<?php esc_attr_e('Share on Twitter', 'blogar'); ?>">
-                                            <?php echo $svg_tw; // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="https://www.linkedin.com/shareArticle?url=<?php echo rawurlencode(get_permalink()); ?>&amp;title=<?php echo rawurlencode(get_the_title()); ?>"
-                                            target="_blank" rel="noopener noreferrer" class="aw-linkdin"
-                                            aria-label="<?php esc_attr_e('Share on LinkedIn', 'blogar'); ?>">
-                                            <?php echo $svg_li; // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <button class="axilcopyLink" title="<?php esc_attr_e('Copy Link', 'blogar'); ?>"
-                                            data-link="<?php echo esc_attr(get_permalink()); ?>"
-                                            aria-label="<?php esc_attr_e('Copy link', 'blogar'); ?>">
-                                            <?php echo $svg_lk; // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                                        </button>
-                                    </li>
-                                </ul>
+
                             </div><!-- .post-meta-wrapper -->
 
                         </div><!-- .post-content -->
@@ -349,69 +319,6 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                         </div>
                     </div>
 
-                    <!-- ④ Stay In Touch (social icons) -->
-                    <div class="blogar_social_widget-1 axil-single-widget mt--30">
-                        <h5 class="widget-title"><?php esc_html_e('Stay In Touch', 'blogar'); ?></h5>
-                        <ul class="social-icon md-size justify-content-center">
-                            <li>
-                                <a href="#" aria-label="<?php esc_attr_e('Facebook', 'blogar'); ?>">
-                                    <?php echo $svg_fb; // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" aria-label="<?php esc_attr_e('Twitter', 'blogar'); ?>">
-                                    <?php echo $svg_tw; // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" aria-label="<?php esc_attr_e('Instagram', 'blogar'); ?>">
-                                    <?php echo $svg_ig; // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" aria-label="<?php esc_attr_e('Pinterest', 'blogar'); ?>">
-                                    <?php echo $svg_pi; // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" aria-label="<?php esc_attr_e('LinkedIn', 'blogar'); ?>">
-                                    <?php echo $svg_li; // phpcs:ignore WordPress.Security.EscapeOutput ?>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- ⑤ Gallery -->
-                    <div class="media_gallery-1 axil-single-widget widget_media_gallery mt--30">
-                        <h5 class="widget-title"><?php esc_html_e('Gallery', 'blogar'); ?></h5>
-                        <?php
-                        // Pull 6 recent post thumbnails for gallery
-                        $gallery_posts = get_posts(
-                            array(
-                                'numberposts' => 6,
-                                'post_status' => 'publish',
-                                'meta_key' => '_thumbnail_id',
-                            )
-                        );
-                        if ($gallery_posts):
-                            ?>
-                        <div class="gallery gallery-columns-3">
-                            <?php foreach ($gallery_posts as $gp): ?>
-                            <figure class="gallery-item">
-                                <div class="gallery-icon">
-                                    <a href="<?php echo esc_url(get_permalink($gp->ID)); ?>">
-                                        <img loading="lazy" decoding="async" width="150" height="150"
-                                            src="<?php echo esc_url(get_the_post_thumbnail_url($gp->ID, 'thumbnail')); ?>"
-                                            alt="<?php echo esc_attr($gp->post_title); ?>">
-                                    </a>
-                                </div>
-                            </figure>
-                            <?php endforeach;
-                                wp_reset_postdata(); ?>
-                        </div>
-                        <?php endif; ?>
-                    </div>
-
                     <!-- ⑥ Featured Videos -->
                     <div class="blogar_featured_posts-1 axil-single-widget widget_blogar_featured_posts mt--30">
                         <h5 class="widget-title"><?php esc_html_e('Featured Videos', 'blogar'); ?></h5>
@@ -467,14 +374,6 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                             );
                             ?>
                         </div>
-                    </div>
-
-                    <!-- ⑧ Ad banner image (sidebar) -->
-                    <div class="media_image-1 axil-single-widget widget_media_image mt--30">
-                        <a href="<?php echo esc_url(home_url('/')); ?>">
-                            <img loading="lazy" decoding="async" src="<?php echo esc_url($img . 'banner-03.png'); ?>"
-                                alt="<?php echo esc_attr(get_bloginfo('name')); ?>" style="max-width:100%;height:auto;">
-                        </a>
                     </div>
 
                 </aside><!-- .col-lg-4 -->

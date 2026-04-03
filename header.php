@@ -55,7 +55,6 @@ $cart_count = blogar_get_cart_count();
                             </nav>
                         </div>
 
-                        <!-- Hamburger (hidden ≥1200px via CSS) -->
                         <button class="hamburger-menu" type="button" aria-expanded="false"
                             aria-controls="blogar-mobile-menu" aria-label="<?php esc_attr_e('Open menu', 'blogar'); ?>">
                             <span class="hamburger-inner">
@@ -92,7 +91,8 @@ $cart_count = blogar_get_cart_count();
                                 </div>
                             </form>
 
-                            <ul class="metabar-block">
+                            <!-- 
+                            
                                 <li class="icon">
                                     <a href="<?php echo esc_url(function_exists('wc_get_cart_url') ? wc_get_cart_url() : '#'); ?>"
                                         aria-label="<?php esc_attr_e('Cart', 'blogar'); ?>">
@@ -108,7 +108,7 @@ $cart_count = blogar_get_cart_count();
                                         </span>
                                     </a>
                                 </li>
-                            </ul>
+                            </ul> -->
 
                         </div>
                     </div>
@@ -156,7 +156,7 @@ $cart_count = blogar_get_cart_count();
                                 </div>
                             </form>
 
-                            <ul class="metabar-block">
+                            <!-- <ul class="metabar-block">
                                 <li class="icon">
                                     <a href="<?php echo esc_url(function_exists('wc_get_cart_url') ? wc_get_cart_url() : '#'); ?>"
                                         aria-label="<?php esc_attr_e('Cart', 'blogar'); ?>">
@@ -172,7 +172,7 @@ $cart_count = blogar_get_cart_count();
                                         </span>
                                     </a>
                                 </li>
-                            </ul>
+                            </ul> -->
 
                         </div>
                     </div>
@@ -216,6 +216,5 @@ $cart_count = blogar_get_cart_count();
                     ]);
                     ?>
                 </nav>
-
-            </div><!-- .inner -->
-        </div><!-- .popup-mobilemenu-area -->
+            </div>
+        </div>
