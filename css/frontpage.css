@@ -24,7 +24,6 @@
 }
 .blogar-front-page-shell .axil-section-gap:not(.slider-area) {
   padding: var(--blogar-home-section-gap) 0;
-  padding-top: 20px;
 }
 .blogar-front-page-shell .bg-color-grey,
 .blogar-front-page-shell .bg-color-white {
@@ -4346,8 +4345,9 @@
 
 /* ── Section wrapper ─────────────────────────────────────────── */
 .axil-fvg2-area {
-  background: #1a1a1a; /* dark bg cho toàn section — giống mẫu */
-  padding-bottom: 0;
+  background: #1a1a1a;
+  padding-top: var(--blogar-home-section-gap);
+  padding-bottom: var(--blogar-home-section-gap);
 }
 
 .axil-fvg2-area .container {
@@ -5135,6 +5135,7 @@
   transform: skewY(0);
 }
 
+/* Title links — base state */
 .blogar-front-page-shell .post-content .title a,
 .blogar-front-page-shell .lp-card__title a,
 .blogar-front-page-shell .blogar-dual-latest-body .title a,
@@ -5144,32 +5145,16 @@
   color: inherit;
   display: inline;
   text-decoration: none;
-  background-image: linear-gradient(currentColor, currentColor);
-  background-repeat: no-repeat;
-  background-position: left calc(100% - 1px);
-  background-size: 0 2px;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-  transition:
-    color 0.25s ease,
-    background-size 0.45s var(--blogar-home-ease);
+  transition: color 0.25s ease;
 }
 
+/* Title links — hover: đổi màu primary, không gạch chân */
 .blogar-front-page-shell .content-block:hover .post-content .title a,
 .blogar-front-page-shell .lp-card:hover .lp-card__title a,
 .blogar-front-page-shell .blogar-dual-latest-item:hover .blogar-dual-latest-body .title a,
 .blogar-front-page-shell .blogar-news-highlight-card:hover .title a,
-.blogar-front-page-shell .blogar-news-highlight-ticker-item a:hover,
-.blogar-front-page-shell .single-cat:hover .blogar-home-title-fill,
-.blogar-front-page-shell .fvg-card:hover .blogar-home-title-fill,
-.blogar-front-page-shell .fvg2-card:hover .blogar-home-title-fill {
-  background-size: 100% 2px;
-}
-
-.blogar-front-page-shell .lp-card:hover .lp-card__title a,
-.blogar-front-page-shell .blogar-dual-latest-body .title a:hover,
 .blogar-front-page-shell .blogar-news-highlight-ticker-item a:hover {
-  color: inherit;
+  color: var(--blogar-home-link-hover);
 }
 
 .blogar-front-page-shell .blogar-news-highlight-ticker,
@@ -5410,6 +5395,11 @@
 
   .blogar-front-page-shell .axil-highlight-showcase-area.axil-section-gap {
     padding-top: var(--blogar-home-section-gap-mobile);
+  }
+
+  .axil-fvg2-area {
+    padding-top: var(--blogar-home-section-gap-mobile);
+    padding-bottom: var(--blogar-home-section-gap-mobile);
   }
 
   .blogar-front-page-shell .section-title .title {

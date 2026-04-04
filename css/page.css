@@ -1,15 +1,14 @@
 /* =============================================================================
-   PAGE.CSS — Blogar Theme  v2
+   PAGE.CSS — Blogar Theme  v3
    Template: page.php (About Us, Privacy Policy, Terms, Contact…)
 
-   Changes v2:
-     - Banner .inner: text-align:center + margin:0 auto (FIX 3)
-     - Removed page-featured-image block styles (FIX 1)
-     - Removed sidebar widget styles for Gallery/Videos/Tags/Ad (FIX 2)
-     - Responsive updated accordingly
+   Changes v3:
+     - Removed .page-sidebar .single-sidebar-sticky block (FIX sidebar sync).
+       Sidebar giờ dùng .archive-sidebar-inner — sticky/responsive
+       xử lý hoàn toàn bởi archive.css (đã load trước file này).
 
    Dependencies (loaded before this file):
-     archive.css  → sidebar widgets, search, newsletter, social icon
+     archive.css  → sidebar widgets, .archive-sidebar-inner sticky
      single.css   → .single-post-content prose
 
    Breakpoints:
@@ -56,11 +55,11 @@
   z-index: 1;
 }
 
-/* ── FIX 3: Center the inner block ─────────────────────────────── */
+/* Center the inner block */
 .axil-banner.banner-style-1.page-banner .inner {
   max-width: 740px;
-  margin: 0 auto; /* center horizontally inside container */
-  text-align: center; /* center text */
+  margin: 0 auto;
+  text-align: center;
 }
 
 /* h1 — ONE h1 per page */
@@ -75,7 +74,7 @@
 
 /* Description */
 .axil-banner.banner-style-1.page-banner .inner .description {
-  margin: 0 auto; /* center the description paragraph */
+  margin: 0 auto;
   color: rgba(255, 255, 255, 0.82);
   font-size: 16px;
   line-height: 1.75;
@@ -107,15 +106,12 @@
 
 /* =============================================================================
    PAGE CONTENT PROSE
-   Dùng lại .single-post-content từ single.css — không viết lại.
    ============================================================================= */
 
-/* Không có ảnh trước content nên margin-top = 0 */
 .page-article .single-post-content.page-content {
   margin-top: 0;
 }
 
-/* Images trong Gutenberg content */
 .page-content .wp-block-image img,
 .page-content img {
   max-width: 100%;
@@ -124,7 +120,6 @@
   border-radius: var(--radius, 10px);
 }
 
-/* wp-block-columns */
 .page-content .wp-block-columns {
   display: flex;
   flex-wrap: wrap;
@@ -136,7 +131,6 @@
   min-width: 0;
 }
 
-/* Gutenberg button */
 .page-content .wp-block-button__link {
   display: inline-block;
   padding: 10px 28px;
@@ -157,7 +151,6 @@
   outline: 2px solid var(--color-primary, #3858f6);
 }
 
-/* wp-block-table */
 .page-content .wp-block-table table {
   width: 100%;
   border-collapse: collapse;
@@ -178,7 +171,6 @@
   color: var(--color-heading);
 }
 
-/* wp-block-quote */
 .page-content .wp-block-quote {
   margin: 1.6em 0;
   padding: 20px 30px;
@@ -203,7 +195,6 @@
   font-style: normal;
 }
 
-/* wp-block-separator */
 .page-content .wp-block-separator {
   border: 0;
   border-top: 1px solid var(--color-lighter, #e9ecef);
@@ -298,20 +289,12 @@
 }
 
 /* =============================================================================
-   SIDEBAR — sticky (reuse single.php pattern)
-   FIX 2: Only 4 widgets remain — sidebar is naturally shorter now.
+   SIDEBAR
+   NOTE: .archive-sidebar-inner sticky/responsive hoàn toàn xử lý bởi
+   archive.css — không cần thêm rule ở đây.
+   .page-sidebar chỉ cần align-self: flex-start (đã có trong archive.css
+   qua .archive-sidebar selector).
    ============================================================================= */
-.page-sidebar .single-sidebar-sticky {
-  position: sticky;
-  top: 90px;
-  max-height: none;
-  overflow: visible;
-  scrollbar-width: none;
-}
-
-.page-sidebar .single-sidebar-sticky::-webkit-scrollbar {
-  display: none;
-}
 
 /* =============================================================================
    RESPONSIVE
@@ -326,7 +309,6 @@
 
 /* ── Tablet: ≤ 1199px ─────────────────────────────────────────── */
 @media only screen and (max-width: 1199px) {
-  /* Banner */
   .axil-banner.banner-style-1.page-banner {
     padding: 70px 0;
   }
@@ -346,25 +328,16 @@
   .page-sidebar {
     margin-top: 40px;
   }
-
-  /* Sidebar not sticky on tablet */
-  .page-sidebar .single-sidebar-sticky {
-    position: static;
-    max-height: none;
-    overflow: visible;
-  }
 }
 
 /* ── Mobile: ≤ 767px ──────────────────────────────────────────── */
 @media only screen and (max-width: 767px) {
-  /* Banner */
   .axil-banner.banner-style-1.page-banner {
     padding: 50px 0;
   }
 
   .axil-banner.banner-style-1.page-banner .inner {
     max-width: 100%;
-    /* still text-align:center — looks good on mobile too */
   }
 
   .axil-banner.banner-style-1.page-banner .inner .title {
@@ -379,7 +352,6 @@
     max-width: 100%;
   }
 
-  /* Layout */
   .axil-post-list-area .row--40 {
     margin: 0 -12px;
   }
@@ -388,12 +360,10 @@
     padding: 0 12px;
   }
 
-  /* Page content */
   .page-article .single-post-content.page-content {
     font-size: 15px;
   }
 
-  /* wp-block-columns stack */
   .page-content .wp-block-columns {
     flex-direction: column;
     gap: 16px;
@@ -408,7 +378,6 @@
     padding: 14px 18px;
   }
 
-  /* Sidebar */
   .page-sidebar {
     margin-top: 30px;
   }
