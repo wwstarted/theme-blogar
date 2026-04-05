@@ -59,7 +59,7 @@
   min-width: 0;
 }
 .single-post-meta .post-author-name {
-  margin-bottom: 4px;
+  margin: 0 0 4px;
 }
 
 .single-post-meta .post-meta-list {
@@ -656,6 +656,32 @@
 }
 
 /* =============================================================================
+   SINGLE LAYOUT MODES
+   ============================================================================= */
+.single-layout-full .single-main-column {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.single-layout-full .single-post-article {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.single-layout-full .single-post-title {
+  font-size: 42px;
+}
+
+.single-layout-full .single-post-content {
+  font-size: 17px;
+  line-height: 1.82;
+}
+
+.single-layout-full .single-post-thumbnail {
+  aspect-ratio: 16 / 8.6;
+}
+
+/* =============================================================================
    RELATED POSTS — full-width 4-col section
    ============================================================================= */
 .single-related-section {
@@ -703,6 +729,7 @@
 }
 
 .related-post-card .post-content .title {
+  margin: 0;
   font-size: 16px;
   font-weight: 700;
   line-height: 1.4;
@@ -838,6 +865,14 @@
     font-size: 34px;
   }
 
+  .single-layout-full .single-post-article {
+    max-width: 940px;
+  }
+
+  .single-layout-full .single-post-title {
+    font-size: 38px;
+  }
+
   .single-sidebar-sticky {
     top: 84px;
     max-height: none;
@@ -848,6 +883,22 @@
 @media only screen and (max-width: 1199px) {
   .single-post-title {
     font-size: 28px;
+  }
+
+  .single-layout-full .single-post-article {
+    max-width: 860px;
+  }
+
+  .single-layout-full .single-post-title {
+    font-size: 32px;
+  }
+
+  .single-layout-full .single-post-content {
+    font-size: 16px;
+  }
+
+  .single-layout-full .single-post-thumbnail {
+    aspect-ratio: 16 / 9;
   }
 
   /* Sidebar stops being sticky below 1200px — sidebar goes below content */
@@ -913,6 +964,23 @@
   .single-post-meta .social-share-transparent.justify-content-end {
     margin-left: 0;
     justify-content: flex-start;
+  }
+
+  .single-layout-full .single-post-article {
+    max-width: 100%;
+  }
+
+  .single-layout-full .single-post-title {
+    font-size: 24px;
+  }
+
+  .single-layout-full .single-post-content {
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .single-layout-full .single-post-thumbnail {
+    aspect-ratio: 16 / 9;
   }
 
   .single-post-content {
@@ -983,6 +1051,10 @@
 
 /* ── Mobile XS: ≤ 575px ────────────────────────────────── */
 @media only screen and (max-width: 575px) {
+  .single-layout-full .single-post-title {
+    font-size: 22px;
+  }
+
   .single-post-title {
     font-size: 19px;
   }

@@ -130,6 +130,10 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                 <!-- ── POST LIST COL ──────────────────────────────── -->
                 <div class="col-lg-8 col-md-12 col-12 order-1 order-lg-2">
 
+                    <div class="blogar-visually-hidden">
+                        <h2><?php esc_html_e('Author posts', 'blogar'); ?></h2>
+                    </div>
+
                     <?php if (have_posts()): ?>
 
                     <?php while (have_posts()):
@@ -165,9 +169,9 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                             </div>
                             <?php endif; ?>
 
-                            <h2 class="title">
+                            <h3 class="title">
                                 <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                            </h2>
+                            </h3>
 
                             <?php if (has_excerpt() || get_the_excerpt()): ?>
                             <p class="post-description">
@@ -178,7 +182,7 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                             <div class="post-meta-wrapper">
                                 <div class="post-meta">
                                     <div class="content">
-                                        <h6 class="post-author-name">
+                                        <p class="post-author-name">
                                             <a class="hover-flip-item-wrapper"
                                                 href="<?php echo esc_url($author_url); ?>">
                                                 <span class="hover-flip-item">
@@ -187,7 +191,7 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                                                     </span>
                                                 </span>
                                             </a>
-                                        </h6>
+                                        </p>
                                         <ul class="post-meta-list">
                                             <li class="post-meta-date">
                                                 <?php echo esc_html(get_the_date()); ?>
@@ -250,10 +254,9 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                     aria-label="<?php esc_attr_e('Sidebar', 'blogar'); ?>">
 
                     <div class="archive-sidebar-inner">
-
                         <!-- ① Popular Posts -->
                         <div class="blogar-widget widget-popular-posts mt--30">
-                            <h5 class="widget-title"><?php esc_html_e('Popular Posts', 'blogar'); ?></h5>
+                            <h2 class="widget-title"><?php esc_html_e('Popular Posts', 'blogar'); ?></h2>
                             <?php
                             $popular_posts = get_posts(array(
                                 'numberposts' => 5,
@@ -278,10 +281,10 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                                         </a>
                                     </div>
                                     <div class="popular-post-text">
-                                        <h6 class="popular-post-title">
+                                        <h3 class="popular-post-title">
                                             <a
                                                 href="<?php echo esc_url($pp_url); ?>"><?php echo esc_html($pp_title); ?></a>
-                                        </h6>
+                                        </h3>
                                         <div class="popular-post-meta">
                                             <time datetime="<?php echo esc_attr(get_the_date('c', $pp->ID)); ?>">
                                                 <?php echo esc_html(get_the_date('', $pp->ID)); ?>
@@ -296,7 +299,7 @@ $img = get_template_directory_uri() . '/images/frontpage/';
 
                         <!-- ② Categories -->
                         <div class="blogar-widget widget-sidebar-cats mt--30">
-                            <h5 class="widget-title"><?php esc_html_e('Categories', 'blogar'); ?></h5>
+                            <h2 class="widget-title"><?php esc_html_e('Categories', 'blogar'); ?></h2>
                             <?php
                             $sidebar_cats = get_categories(array(
                                 'hide_empty' => true,
@@ -321,7 +324,7 @@ $img = get_template_directory_uri() . '/images/frontpage/';
 
                         <!-- ③ Subscribe Newsletter -->
                         <div class="blogar-widget widget-sidebar-newsletter mt--30">
-                            <h5 class="widget-title"><?php esc_html_e('Subscribe Newsletter', 'blogar'); ?></h5>
+                            <h2 class="widget-title"><?php esc_html_e('Subscribe Newsletter', 'blogar'); ?></h2>
                             <div class="sidebar-newsletter-inner">
                                 <p class="sidebar-newsletter-desc">
                                     <?php esc_html_e('Subscribe our newsletter for latest news &amp; updates. Let\'s stay updated!', 'blogar'); ?>

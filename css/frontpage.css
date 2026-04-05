@@ -1017,6 +1017,7 @@
 }
 
 .single-cat .content .title {
+  display: block;
   margin-bottom: 0;
   color: var(--color-white);
   font-size: 14px;

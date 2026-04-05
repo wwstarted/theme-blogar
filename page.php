@@ -72,6 +72,9 @@ rewind_posts();
                         the_post(); ?>
 
                     <article id="page-<?php the_ID(); ?>" <?php post_class('page-article'); ?>>
+                        <div class="blogar-visually-hidden">
+                            <h2><?php esc_html_e('Page content', 'blogar'); ?></h2>
+                        </div>
 
                         <!-- Page prose content -->
                         <div class="single-post-content page-content entry-content">
@@ -100,10 +103,9 @@ rewind_posts();
                               archive-sidebar page-sidebar" aria-label="<?php esc_attr_e('Sidebar', 'blogar'); ?>">
 
                     <div class="archive-sidebar-inner">
-
                         <!-- ① Popular Posts -->
                         <div class="blogar-widget widget-popular-posts mt--30">
-                            <h5 class="widget-title"><?php esc_html_e('Popular Posts', 'blogar'); ?></h5>
+                            <h2 class="widget-title"><?php esc_html_e('Popular Posts', 'blogar'); ?></h2>
                             <?php
                             $popular_posts = get_posts(array(
                                 'numberposts' => 5,
@@ -128,10 +130,10 @@ rewind_posts();
                                         </a>
                                     </div>
                                     <div class="popular-post-text">
-                                        <h6 class="popular-post-title">
+                                        <h3 class="popular-post-title">
                                             <a
                                                 href="<?php echo esc_url($pp_url); ?>"><?php echo esc_html($pp_title); ?></a>
-                                        </h6>
+                                        </h3>
                                         <div class="popular-post-meta">
                                             <time datetime="<?php echo esc_attr(get_the_date('c', $pp->ID)); ?>">
                                                 <?php echo esc_html(get_the_date('', $pp->ID)); ?>
@@ -146,7 +148,7 @@ rewind_posts();
 
                         <!-- ② Categories -->
                         <div class="blogar-widget widget-sidebar-cats mt--30">
-                            <h5 class="widget-title"><?php esc_html_e('Categories', 'blogar'); ?></h5>
+                            <h2 class="widget-title"><?php esc_html_e('Categories', 'blogar'); ?></h2>
                             <?php
                             $sidebar_cats = get_categories(array(
                                 'hide_empty' => true,
@@ -171,7 +173,7 @@ rewind_posts();
 
                         <!-- ③ Subscribe Newsletter -->
                         <div class="blogar-widget widget-sidebar-newsletter mt--30">
-                            <h5 class="widget-title"><?php esc_html_e('Subscribe Newsletter', 'blogar'); ?></h5>
+                            <h2 class="widget-title"><?php esc_html_e('Subscribe Newsletter', 'blogar'); ?></h2>
                             <div class="sidebar-newsletter-inner">
                                 <p class="sidebar-newsletter-desc">
                                     <?php esc_html_e('Subscribe our newsletter for latest news &amp; updates. Let\'s stay updated!', 'blogar'); ?>

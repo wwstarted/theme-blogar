@@ -1066,7 +1066,7 @@ function blogar_category_add_thumbnail_field()
         <?php esc_html_e('This image is used first for the Trending Topics carousel in Section 5.', 'blogar'); ?>
     </p>
 </div>
-    <?php
+<?php
 }
 add_action('category_add_form_fields', 'blogar_category_add_thumbnail_field');
 
@@ -1106,7 +1106,7 @@ function blogar_category_edit_thumbnail_field($term)
         </p>
     </td>
 </tr>
-    <?php
+<?php
 }
 add_action('category_edit_form_fields', 'blogar_category_edit_thumbnail_field');
 
@@ -1147,13 +1147,13 @@ function blogar_category_thumbnail_admin_js()
     }
     ?>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
     var wrappers = document.querySelectorAll(".blogar-category-thumbnail-wrap");
     if (!wrappers.length || typeof wp === "undefined" || !wp.media) {
         return;
     }
 
-    wrappers.forEach(function (wrapper) {
+    wrappers.forEach(function(wrapper) {
         var input = wrapper.querySelector("#blogar-category-image-id");
         var preview = wrapper.querySelector(".blogar-category-thumbnail-preview");
         var uploadBtn = wrapper.querySelector(".blogar-category-image-upload");
@@ -1173,11 +1173,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             preview.innerHTML =
-                '<img src="' + attachment.url + '" alt="" style="display:block;width:120px;height:120px;object-fit:cover;border-radius:8px">';
+                '<img src="' + attachment.url +
+                '" alt="" style="display:block;width:120px;height:120px;object-fit:cover;border-radius:8px">';
             removeBtn.style.display = "";
         }
 
-        uploadBtn.addEventListener("click", function (event) {
+        uploadBtn.addEventListener("click", function(event) {
             event.preventDefault();
 
             if (frame) {
@@ -1187,11 +1188,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             frame = wp.media({
                 title: "Select category thumbnail",
-                button: { text: "Use image" },
+                button: {
+                    text: "Use image"
+                },
                 multiple: false
             });
 
-            frame.on("select", function () {
+            frame.on("select", function() {
                 var attachment = frame.state().get("selection").first().toJSON();
                 input.value = attachment.id || "";
                 renderPreview(attachment);
@@ -1200,7 +1203,7 @@ document.addEventListener("DOMContentLoaded", function () {
             frame.open();
         });
 
-        removeBtn.addEventListener("click", function (event) {
+        removeBtn.addEventListener("click", function(event) {
             event.preventDefault();
             input.value = "";
             renderPreview(null);
@@ -1208,7 +1211,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
-    <?php
+<?php
 }
 add_action('admin_footer-edit-tags.php', 'blogar_category_thumbnail_admin_js');
 add_action('admin_footer-term.php', 'blogar_category_thumbnail_admin_js');
@@ -1283,8 +1286,291 @@ function blogar_render_options_page()
                 }
                 submit_button(__('Lưu cài đặt', 'blogar'));
                 ?>
+
         </form>
+        <?php do_action('blogar_settings_page_extra_sections'); ?>
     </div>
+</div>
+<?php
+}
+
+
+/**
+ * ARCHIVE LAYOUT SETTINGS
+ * ─────────────────────────────────────────────────────────────────
+ * Thêm đoạn code này vào file inc/theme-options.php của bạn.
+ *
+ * Nó đăng ký:
+ *  - 1 settings section "Archive Layout" trong trang Blogar Settings
+ *  - 1 field radio: "With Sidebar" | "Full Width (no sidebar)"
+ *  - Option key: blogar_archive_layout  ('sidebar' | 'full')
+ *
+ * Cách đọc option trong template:
+ *   $layout = get_option( 'blogar_archive_layout', 'sidebar' );
+ * ─────────────────────────────────────────────────────────────────
+ */
+
+// ── 1. Register setting + section + field ─────────────────────────
+add_action('admin_init', 'blogar_register_archive_layout_setting');
+
+function blogar_register_archive_layout_setting()
+{
+
+    register_setting(
+        'blogar_archive_options_group',   // option group (dùng cho settings_fields())
+        'blogar_archive_layout',          // option name
+        array(
+            'type' => 'string',
+            'sanitize_callback' => 'blogar_sanitize_archive_layout',
+            'default' => 'sidebar',
+        )
+    );
+
+    add_settings_section(
+        'blogar_archive_layout_section',          // section id
+        __('Archive Page Layout', 'blogar'),    // title
+        'blogar_archive_layout_section_cb',       // callback
+        'blogar-settings'                         // page slug — khớp với page slug của Blogar Settings
+    );
+
+    add_settings_field(
+        'blogar_archive_layout_field',            // field id
+        __('Select Layout', 'blogar'),          // label
+        'blogar_archive_layout_field_cb',         // callback
+        'blogar-settings',                        // page slug
+        'blogar_archive_layout_section'           // section id
+    );
+}
+
+// ── 2. Sanitize ───────────────────────────────────────────────────
+function blogar_sanitize_archive_layout($value)
+{
+    $allowed = array('sidebar', 'full');
+    return in_array($value, $allowed, true) ? $value : 'sidebar';
+}
+
+// ── 3. Section description ────────────────────────────────────────
+function blogar_archive_layout_section_cb()
+{
+    echo '<p style="color:#666;margin-top:0;">'
+        . esc_html__('Choose how the Archive / Category pages display posts.', 'blogar')
+        . '</p>';
+}
+
+// ── 4. Field markup ───────────────────────────────────────────────
+function blogar_archive_layout_field_cb()
+{
+    $current = get_option('blogar_archive_layout', 'sidebar');
+    $options = array(
+        'sidebar' => array(
+            'label' => __('With Sidebar', 'blogar'),
+            'desc' => __('Post list (col-8) + sticky sidebar (col-4) with Popular Posts, Categories, Newsletter.', 'blogar'),
+            'icon' => '⬜⬜⬛',  // visual hint
+        ),
+        'full' => array(
+            'label' => __('Full Width — No Sidebar', 'blogar'),
+            'desc' => __('Responsive card grid using the full container width. Desktop shows 3 posts per row, then 2 on tablet and 1 on mobile.', 'blogar'),
+            'icon' => '⬜⬜⬜⬜',
+        ),
+    );
+    ?>
+<div style="display:flex;gap:24px;flex-wrap:wrap;">
+    <?php foreach ($options as $value => $opt):
+            $checked = checked($current, $value, false);
+            $is_active = ($current === $value);
+            $border = $is_active ? '2px solid #3858f6' : '2px solid #ddd';
+            $bg = $is_active ? '#f0f4ff' : '#fff';
+            ?>
+    <label for="blogar_archive_layout_<?php echo esc_attr($value); ?>" style="display:flex;flex-direction:column;gap:8px;padding:16px 20px;
+                      border:<?php echo $border; ?>;border-radius:8px;background:<?php echo $bg; ?>;
+                      cursor:pointer;min-width:220px;max-width:280px;transition:border-color .2s;">
+        <div style="display:flex;align-items:center;gap:10px;">
+            <input type="radio" id="blogar_archive_layout_<?php echo esc_attr($value); ?>" name="blogar_archive_layout"
+                value="<?php echo esc_attr($value); ?>" <?php echo $checked; ?>>
+            <strong style="font-size:14px;color:#1a1a1a;"><?php echo esc_html($opt['label']); ?></strong>
+        </div>
+        <!-- Mini preview -->
+        <div style="height:56px;background:#f5f5f5;border-radius:4px;overflow:hidden;display:flex;gap:4px;padding:6px;">
+            <?php if ($value === 'sidebar'): ?>
+            <div style="flex:2;background:#c0c8f8;border-radius:3px;"></div>
+            <div style="flex:1;background:#dde3fb;border-radius:3px;"></div>
+            <?php else: ?>
+            <div style="flex:1;background:#c0c8f8;border-radius:3px;"></div>
+            <div style="flex:1;background:#c0c8f8;border-radius:3px;"></div>
+            <?php endif; ?>
+        </div>
+        <p style="margin:0;font-size:12px;color:#666;line-height:1.5;">
+            <?php echo esc_html($opt['desc']); ?>
+        </p>
+    </label>
+    <?php endforeach; ?>
+</div>
+
+<?php
+    // Live border highlight on change (pure JS, no dependency)
+    ?>
+<script>
+(function() {
+    document.querySelectorAll('[name="blogar_archive_layout"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            document.querySelectorAll('[name="blogar_archive_layout"]').forEach(function(r) {
+                var lbl = r.closest('label');
+                lbl.style.borderColor = '#ddd';
+                lbl.style.background = '#fff';
+            });
+            var active = document.querySelector('[name="blogar_archive_layout"]:checked');
+            if (active) {
+                var lbl = active.closest('label');
+                lbl.style.borderColor = '#3858f6';
+                lbl.style.background = '#f0f4ff';
+            }
+        });
+    });
+})();
+</script>
+<?php
+}
+
+
+// ── 5. Render section inside existing Blogar Settings page ────────
+/**
+ * QUAN TRỌNG: Trang Blogar Settings của bạn trong theme-options.php
+ * cần gọi thêm 2 dòng này trong form để section này hiển thị:
+ *
+ *   settings_fields( 'blogar_archive_options_group' );
+ *   do_settings_sections( 'blogar-settings' );
+ *
+ * Nếu trang Settings của bạn dùng một options group khác (ví dụ
+ * 'blogar_options_group'), hãy thay 'blogar_archive_options_group'
+ * ở register_setting() phía trên bằng group đó.
+ *
+ * Nếu Blogar Settings page của bạn tự render field riêng (không qua
+ * do_settings_sections), thêm hook sau:
+ */
+add_action('blogar_settings_page_extra_sections', 'blogar_render_archive_layout_standalone');
+
+function blogar_render_archive_layout_standalone()
+{
+    ?>
+<div class="blogar-settings-section" style="margin-top:30px;padding-top:24px;border-top:1px solid #e5e5e5;">
+    <form method="post" action="options.php">
+        <?php
+        // options.php only processes one settings group per submit, so this
+        // standalone section needs its own nonce and option_page payload.
+        settings_fields('blogar_archive_options_group');
+        ?>
+        <h2 style="font-size:16px;margin:0 0 4px;"><?php esc_html_e('Archive Page Layout', 'blogar'); ?></h2>
+        <?php blogar_archive_layout_section_cb(); ?>
+        <?php blogar_archive_layout_field_cb(); ?>
+        <?php submit_button(__('Save Archive Layout', 'blogar')); ?>
+    </form>
+</div>
+<?php
+}
+
+
+// Single page layout setting: with sidebar | no sidebar
+add_action('admin_init', 'blogar_register_single_layout_setting');
+
+function blogar_register_single_layout_setting()
+{
+    register_setting(
+        'blogar_single_options_group',
+        'blogar_single_layout',
+        array(
+            'type' => 'string',
+            'sanitize_callback' => 'blogar_sanitize_archive_layout',
+            'default' => 'sidebar',
+        )
+    );
+}
+
+function blogar_single_layout_section_cb()
+{
+    echo '<p style="color:#666;margin-top:0;">'
+        . esc_html__('Choose how single post pages display the main article content.', 'blogar')
+        . '</p>';
+}
+
+function blogar_single_layout_field_cb()
+{
+    $current = get_option('blogar_single_layout', 'sidebar');
+    $options = array(
+        'sidebar' => array(
+            'label' => __('With Sidebar', 'blogar'),
+            'desc' => __('Main content with the existing sticky sidebar widgets on the right.', 'blogar'),
+        ),
+        'full' => array(
+            'label' => __('No Sidebar', 'blogar'),
+            'desc' => __('Centered reading layout without sidebar. The post content becomes wider while staying comfortable to read on desktop, tablet, and mobile.', 'blogar'),
+        ),
+    );
+    ?>
+<div style="display:flex;gap:24px;flex-wrap:wrap;">
+    <?php foreach ($options as $value => $opt):
+        $checked = checked($current, $value, false);
+        $is_active = ($current === $value);
+        $border = $is_active ? '2px solid #3858f6' : '2px solid #ddd';
+        $bg = $is_active ? '#f0f4ff' : '#fff';
+        ?>
+    <label for="blogar_single_layout_<?php echo esc_attr($value); ?>" style="display:flex;flex-direction:column;gap:8px;padding:16px 20px;
+                      border:<?php echo $border; ?>;border-radius:8px;background:<?php echo $bg; ?>;
+                      cursor:pointer;min-width:220px;max-width:320px;transition:border-color .2s;">
+        <div style="display:flex;align-items:center;gap:10px;">
+            <input type="radio" id="blogar_single_layout_<?php echo esc_attr($value); ?>" name="blogar_single_layout"
+                value="<?php echo esc_attr($value); ?>" <?php echo $checked; ?>>
+            <strong style="font-size:14px;color:#1a1a1a;"><?php echo esc_html($opt['label']); ?></strong>
+        </div>
+        <div style="height:56px;background:#f5f5f5;border-radius:4px;overflow:hidden;display:flex;gap:4px;padding:6px;">
+            <?php if ($value === 'sidebar'): ?>
+            <div style="flex:2;background:#c0c8f8;border-radius:3px;"></div>
+            <div style="flex:1;background:#dde3fb;border-radius:3px;"></div>
+            <?php else: ?>
+            <div style="flex:1;background:#c0c8f8;border-radius:3px;"></div>
+            <?php endif; ?>
+        </div>
+        <p style="margin:0;font-size:12px;color:#666;line-height:1.5;">
+            <?php echo esc_html($opt['desc']); ?>
+        </p>
+    </label>
+    <?php endforeach; ?>
+</div>
+
+<script>
+(function() {
+    document.querySelectorAll('[name="blogar_single_layout"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            document.querySelectorAll('[name="blogar_single_layout"]').forEach(function(r) {
+                var lbl = r.closest('label');
+                lbl.style.borderColor = '#ddd';
+                lbl.style.background = '#fff';
+            });
+            var active = document.querySelector('[name="blogar_single_layout"]:checked');
+            if (active) {
+                var lbl = active.closest('label');
+                lbl.style.borderColor = '#3858f6';
+                lbl.style.background = '#f0f4ff';
+            }
+        });
+    });
+})();
+</script>
+<?php
+}
+
+add_action('blogar_settings_page_extra_sections', 'blogar_render_single_layout_standalone');
+
+function blogar_render_single_layout_standalone()
+{
+    ?>
+<div class="blogar-settings-section" style="margin-top:30px;padding-top:24px;border-top:1px solid #e5e5e5;">
+    <form method="post" action="options.php">
+        <?php settings_fields('blogar_single_options_group'); ?>
+        <h2 style="font-size:16px;margin:0 0 4px;"><?php esc_html_e('Single Page Layout', 'blogar'); ?></h2>
+        <?php blogar_single_layout_section_cb(); ?>
+        <?php blogar_single_layout_field_cb(); ?>
+        <?php submit_button(__('Save Single Layout', 'blogar')); ?>
+    </form>
 </div>
 <?php
 }

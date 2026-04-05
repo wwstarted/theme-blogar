@@ -30,6 +30,11 @@ $svg_ig = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect
 $svg_pi = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.04-2.83.18-.77 1.22-5.17 1.22-5.17s-.31-.63-.31-1.56c0-1.46.85-2.55 1.9-2.55.9 0 1.33.67 1.33 1.48 0 .9-.58 2.26-.87 3.52-.25 1.05.52 1.9 1.55 1.9 1.86 0 3.3-1.96 3.3-4.8 0-2.51-1.8-4.26-4.38-4.26-2.98 0-4.73 2.23-4.73 4.54 0 .9.35 1.86.78 2.39.09.1.1.19.07.29-.08.33-.26 1.05-.29 1.19-.05.19-.16.23-.37.14-1.39-.65-2.26-2.68-2.26-4.32 0-3.51 2.55-6.74 7.35-6.74 3.86 0 6.86 2.75 6.86 6.42 0 3.83-2.41 6.9-5.76 6.9-1.13 0-2.19-.59-2.55-1.28l-.69 2.59c-.25.96-.93 2.17-1.38 2.9.04.01.08.01.12.01.96.29 1.97.45 3.02.45 5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>';
 
 $img = get_template_directory_uri() . '/images/frontpage/';
+$single_layout = get_option('blogar_single_layout', 'sidebar');
+$is_single_full = ('full' === $single_layout);
+$single_content_col_class = $is_single_full
+    ? 'col-lg-12 col-md-12 col-12 order-1 order-lg-1 single-main-column'
+    : 'col-lg-8 col-md-12 col-12 order-1 order-lg-1 single-main-column';
 
 /* ================================================================
    TOC HELPER — không thay đổi
@@ -152,15 +157,15 @@ function blogar_process_toc($content)
 
 
 <!-- ================================================================
-     MAIN 2-COL: content col-lg-8  +  sticky sidebar col-lg-4
+     MAIN LAYOUT: sidebar mode or centered no-sidebar mode
      ================================================================ -->
 <div class="main-wrapper">
-    <div class="axil-blog-area axil-section-gap bg-color-white">
+    <div class="axil-blog-area axil-section-gap bg-color-white single-layout-<?php echo esc_attr($single_layout); ?>">
         <div class="container">
             <div class="row row--40">
 
-                <!-- ── POST CONTENT col-lg-8 ───────────────────── -->
-                <div class="col-lg-8 col-md-12 col-12 order-1 order-lg-1">
+                <!-- ── POST CONTENT ─────────────────────────────── -->
+                <div class="<?php echo esc_attr($single_content_col_class); ?>">
 
                     <?php
                     $current_post_id = 0;
@@ -189,7 +194,7 @@ function blogar_process_toc($content)
                         $toc_result = blogar_process_toc($raw_content);
                         ?>
 
-                    <article id="post-<?php the_ID(); ?>" <?php post_class('single-post-article'); ?>>
+                    <article id="post-<?php the_ID(); ?>" <?php post_class('single-post-article' . ($is_single_full ? ' single-post-article-full' : '')); ?>>
 
                         <!-- Featured Image -->
                         <div class="single-post-thumbnail">
@@ -228,7 +233,7 @@ function blogar_process_toc($content)
                                             src="<?php echo esc_url($author_avatar); ?>" width="50" height="50">
                                     </div>
                                     <div class="content">
-                                        <h6 class="post-author-name">
+                                        <p class="post-author-name">
                                             <a class="hover-flip-item-wrapper"
                                                 href="<?php echo esc_url($author_url); ?>">
                                                 <span class="hover-flip-item">
@@ -237,7 +242,7 @@ function blogar_process_toc($content)
                                                     </span>
                                                 </span>
                                             </a>
-                                        </h6>
+                                        </p>
                                         <ul class="post-meta-list">
                                             <li class="post-meta-date"><?php echo esc_html($post_date); ?></li>
                                             <li class="post-meta-reading-time"><?php echo esc_html($read_time); ?></li>
@@ -317,7 +322,7 @@ function blogar_process_toc($content)
                         </div>
 
                         <!-- Author Box -->
-                        <div class="single-author-box">
+                        <section class="single-author-box" aria-labelledby="single-author-box-heading">
                             <div class="author-avatar">
                                 <a href="<?php echo esc_url($author_url); ?>">
                                     <img src="<?php echo esc_url($author_avatar); ?>"
@@ -325,8 +330,13 @@ function blogar_process_toc($content)
                                 </a>
                             </div>
                             <div class="author-info">
+                                <div class="blogar-visually-hidden">
+                                    <h2 id="single-author-box-heading">
+                                        <?php esc_html_e('About the author', 'blogar'); ?>
+                                    </h2>
+                                </div>
                                 <span class="author-label"><?php esc_html_e('Written By', 'blogar'); ?></span>
-                                <h5 class="author-name">
+                                <h3 class="author-name">
                                     <a class="hover-flip-item-wrapper" href="<?php echo esc_url($author_url); ?>">
                                         <span class="hover-flip-item">
                                             <span data-text="<?php echo esc_attr($author_name); ?>">
@@ -334,7 +344,7 @@ function blogar_process_toc($content)
                                             </span>
                                         </span>
                                     </a>
-                                </h5>
+                                </h3>
                                 <p class="author-bio">
                                     <?php
                                         if (!empty(trim($author_bio))) {
@@ -361,7 +371,7 @@ function blogar_process_toc($content)
                                     </svg>
                                 </a>
                             </div>
-                        </div>
+                        </section>
 
                         <!-- Post Navigation -->
                         <nav class="single-post-navigation"
@@ -426,6 +436,9 @@ function blogar_process_toc($content)
                         <!-- Comments -->
                         <?php if (comments_open() || get_comments_number()): ?>
                         <div class="single-post-comments mt--40">
+                            <div class="blogar-visually-hidden">
+                                <h2><?php esc_html_e('Comments', 'blogar'); ?></h2>
+                            </div>
                             <?php comments_template(); ?>
                         </div>
                         <?php endif; ?>
@@ -434,9 +447,10 @@ function blogar_process_toc($content)
 
                     <?php endwhile; ?>
 
-                </div><!-- .col-lg-8 -->
+                </div><!-- .single-main-column -->
 
 
+                <?php if (!$is_single_full): ?>
                 <!-- ================================================================
                      SIDEBAR — đồng bộ với archive.php
                      3 widgets: Popular Posts | Categories | Newsletter
@@ -447,9 +461,8 @@ function blogar_process_toc($content)
 
                     <div class="archive-sidebar-inner">
 
-                        <!-- ① Popular Posts -->
                         <div class="blogar-widget widget-popular-posts">
-                            <h5 class="widget-title"><?php esc_html_e('Popular Posts', 'blogar'); ?></h5>
+                            <h2 class="widget-title"><?php esc_html_e('Popular Posts', 'blogar'); ?></h2>
                             <?php
                             $popular_posts = get_posts(array(
                                 'numberposts' => 5,
@@ -475,11 +488,11 @@ function blogar_process_toc($content)
                                         </a>
                                     </div>
                                     <div class="popular-post-text">
-                                        <h6 class="popular-post-title">
+                                        <h3 class="popular-post-title">
                                             <a href="<?php echo esc_url($pp_url); ?>">
                                                 <?php echo esc_html($pp_title); ?>
                                             </a>
-                                        </h6>
+                                        </h3>
                                         <div class="popular-post-meta">
                                             <time datetime="<?php echo esc_attr(get_the_date('c', $pp->ID)); ?>">
                                                 <?php echo esc_html(get_the_date('', $pp->ID)); ?>
@@ -492,9 +505,9 @@ function blogar_process_toc($content)
                             wp_reset_postdata(); ?>
                         </div>
 
-                        <!-- ② Categories -->
+
                         <div class="blogar-widget widget-sidebar-cats mt--30">
-                            <h5 class="widget-title"><?php esc_html_e('Categories', 'blogar'); ?></h5>
+                            <h2 class="widget-title"><?php esc_html_e('Categories', 'blogar'); ?></h2>
                             <?php
                             $sidebar_cats = get_categories(array(
                                 'hide_empty' => true,
@@ -517,9 +530,9 @@ function blogar_process_toc($content)
                             <?php endif; ?>
                         </div>
 
-                        <!-- ③ Newsletter -->
+
                         <div class="blogar-widget widget-sidebar-newsletter mt--30">
-                            <h5 class="widget-title"><?php esc_html_e('Subscribe Newsletter', 'blogar'); ?></h5>
+                            <h2 class="widget-title"><?php esc_html_e('Subscribe Newsletter', 'blogar'); ?></h2>
                             <div class="sidebar-newsletter-inner">
                                 <p class="sidebar-newsletter-desc">
                                     <?php esc_html_e("Subscribe our newsletter for latest news & updates. Let's stay updated!", 'blogar'); ?>
@@ -542,8 +555,9 @@ function blogar_process_toc($content)
                             </div>
                         </div>
 
-                    </div><!-- .archive-sidebar-inner -->
-                </aside><!-- .archive-sidebar -->
+                    </div>
+                </aside>
+                <?php endif; ?>
 
             </div><!-- .row -->
         </div><!-- .container -->
@@ -598,9 +612,9 @@ $related_query = new WP_Query($related_args);
                             <?php echo blogar_post_categories_html($rel_id, 1); // phpcs:ignore ?>
                         </div>
                     </div>
-                    <h5 class="title">
+                    <h3 class="title">
                         <a href="<?php echo esc_url($rel_url); ?>"><?php echo esc_html($rel_title); ?></a>
-                    </h5>
+                    </h3>
                     <div class="post-meta mt--10">
                         <ul class="post-meta-list">
                             <li class="post-meta-date"><?php echo esc_html($rel_date); ?></li>

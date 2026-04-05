@@ -24,7 +24,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
         <!-- ================================================================
      SECTION 11 — NEWS HIGHLIGHT BLOCK
      SEO: h1 duy nhất của trang nằm ở đây — title của featured post lớn.
-          Hierarchy: h1 (featured) → h3 (small cards) → h2 (section titles)
+          Hierarchy: h1 (featured) → h2 (sub-group) → h3 (small cards)
      ================================================================ -->
         <?php
         $news_highlight_data = blogar_get_news_highlight_block_data();
@@ -159,6 +159,10 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                             </div>
                         </article>
 
+                        <div class="blogar-visually-hidden">
+                            <h2><?php esc_html_e('More top stories', 'blogar'); ?></h2>
+                        </div>
+
                         <div class="blogar-news-highlight-stack">
                             <?php foreach ($news_highlight_small_posts as $small_post): ?>
                             <article class="blogar-news-highlight-card blogar-news-highlight-card-small">
@@ -223,7 +227,8 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 
         <!-- ================================================================
      SECTION 5 — TRENDING TOPICS (categories carousel)
-     h2: section label (dưới h1 featured post)
+     h2: section label
+     span: category labels
      ================================================================ -->
         <?php
         $topics_data = blogar_get_trending_topics_data();
@@ -256,9 +261,9 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                                 alt="<?php echo esc_attr($cat['thumb_alt']); ?>">
                                         </div>
                                         <div class="content">
-                                            <h5 class="title">
+                                            <span class="title">
                                                 <?php echo blogar_hover_flip_text_html($cat['name'], 'blogar-card-flip-text blogar-card-flip-text--light'); // phpcs:ignore ?>
-                                            </h5>
+                                            </span>
                                         </div>
                                     </a>
                                 </div>
@@ -287,8 +292,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
         <!-- ================================================================
      SECTION 13 — FEATURED GRID 2+3
      h2: dark header section title
-     h3: top cards (2 equal)
-     h4: bottom cards (3 equal)
+     h3: all post card titles
      ================================================================ -->
         <?php
         $fvg2_posts = get_posts(array(
@@ -365,7 +369,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                         <?php endforeach; ?>
                     </div><!-- .fvg2-row--top -->
 
-                    <!-- Row 2: 3 equal bottom cards — h4 -->
+                    <!-- Row 2: 3 equal bottom cards — h3 -->
                     <div class="fvg2-row fvg2-row--bottom">
                         <?php
                             $bot_posts = array_slice($fvg2_posts, 2, 3);
@@ -389,9 +393,9 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                             <div class="fvg2-card__overlay" aria-hidden="true"></div>
 
                             <div class="fvg2-card__content">
-                                <h4 class="fvg2-card__title">
+                                <h3 class="fvg2-card__title">
                                     <span class="blogar-home-title-fill"><?php echo esc_html($bp_title); ?></span>
-                                </h4>
+                                </h3>
                                 <div class="fvg2-card__meta">
                                     <span class="fvg2-meta-by">
                                         <?php esc_html_e('by', 'blogar'); ?>
@@ -532,9 +536,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
         <!-- ================================================================
      SECTION 12 — FEATURED GRID THIS WEEK
      h2: section title
-     h3: big card
-     h4: medium card
-     h5: small cards (3)
+     h3: all post card titles
      ================================================================ -->
         <?php
         $fvg_posts = get_posts(array(
@@ -603,7 +605,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                     <!-- RIGHT COLUMN -->
                     <div class="fvg-right">
 
-                        <!-- Medium post: h4 -->
+                        <!-- Medium post: h3 -->
                         <?php if ($fvg_medium):
                                 $med_id = $fvg_medium->ID;
                                 $med_url = get_permalink($med_id);
@@ -629,9 +631,9 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                     <?php if ($med_cats): ?>
                                     <?php echo blogar_hover_flip_text_html($med_cats[0]->name, 'fvg-card-cat blogar-card-flip-text blogar-card-flip-text--badge'); // phpcs:ignore ?>
                                     <?php endif; ?>
-                                    <h4 class="fvg-card-title"><span
+                                    <h3 class="fvg-card-title"><span
                                             class="blogar-home-title-fill"><?php echo esc_html($med_title); ?></span>
-                                    </h4>
+                                    </h3>
                                     <div class="fvg-card-meta">
                                         <span><?php echo esc_html($med_date); ?></span>
                                         <span class="fvg-dot" aria-hidden="true">·</span>
@@ -643,7 +645,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                         </div><!-- .fvg-right-top -->
                         <?php endif; ?>
 
-                        <!-- 3 small posts: h5 -->
+                        <!-- 3 small posts: h3 -->
                         <?php if (!empty($fvg_smalls)): ?>
                         <div class="fvg-right-bottom">
                             <?php foreach ($fvg_smalls as $sp):
@@ -669,9 +671,9 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                     <?php if ($sp_cats): ?>
                                     <?php echo blogar_hover_flip_text_html($sp_cats[0]->name, 'fvg-card-cat blogar-card-flip-text blogar-card-flip-text--badge'); // phpcs:ignore ?>
                                     <?php endif; ?>
-                                    <h5 class="fvg-card-title"><span
+                                    <h3 class="fvg-card-title"><span
                                             class="blogar-home-title-fill"><?php echo esc_html($sp_title); ?></span>
-                                    </h5>
+                                    </h3>
                                     <div class="fvg-card-meta">
                                         <span><?php echo esc_html($sp_date); ?></span>
                                     </div>
@@ -695,7 +697,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
         <!-- ================================================================
      SECTION 4 — INNOVATION & TECH (tabs + carousel)
      h2: section title
-     h4: individual card titles inside carousel
+     h3: individual card titles inside carousel
      ================================================================ -->
         <?php
         $inno_data = blogar_get_innovation_data();
@@ -783,11 +785,11 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                                         </div>
                                                     </div>
 
-                                                    <h4 class="title">
+                                                    <h3 class="title">
                                                         <a href="<?php echo esc_url($post_url); ?>">
                                                             <?php echo esc_html($post_title); ?>
                                                         </a>
-                                                    </h4>
+                                                    </h3>
 
                                                     <?php if ($post_excerpt): ?>
                                                     <p class="modern-card-excerpt">
@@ -856,8 +858,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
         <!-- ================================================================
      SECTION 10 — FEATURED VIDEO
      h2: section title
-     h4: big post title
-     h5: small post titles (4)
+     h3: big and small post titles
      ================================================================ -->
         <?php $featured_video_data = blogar_get_featured_video_data(); ?>
         <section class="axil-video-post-area axil-section-gap bg-color-black">
@@ -893,9 +894,9 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                     <?php echo blogar_post_categories_html($video_big_id, 1); // phpcs:ignore ?>
                                 </div>
                             </div>
-                            <h4 class="title"><a
+                            <h3 class="title"><a
                                     href="<?php echo esc_url($video_big_url); ?>"><?php echo esc_html($video_big_title); ?></a>
-                            </h4>
+                            </h3>
                             <div class="post-meta-wrapper">
                                 <div class="post-meta">
                                     <div class="post-author-avatar border-rounded">
@@ -903,13 +904,13 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                             src="<?php echo esc_url($video_big_avatar); ?>" width="50" height="50">
                                     </div>
                                     <div class="content">
-                                        <h6 class="post-author-name">
+                                        <p class="post-author-name">
                                             <a class="hover-flip-item-wrapper"
                                                 href="<?php echo esc_url($video_big_author_url); ?>">
                                                 <span class="hover-flip-item"><span
                                                         data-text="<?php echo esc_attr($video_big_author); ?>"><?php echo esc_html($video_big_author); ?></span></span>
                                             </a>
-                                        </h6>
+                                        </p>
                                         <ul class="post-meta-list">
                                             <li class="post-meta-date">
                                                 <?php echo esc_html(get_the_date('', $video_big_id)); ?>
@@ -946,12 +947,12 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                             </a>
                         </div>
                         <div class="post-content">
-                            <h4 class="title"><?php esc_html_e('No featured post selected yet.', 'blogar'); ?></h4>
+                            <h3 class="title"><?php esc_html_e('No featured post selected yet.', 'blogar'); ?></h3>
                         </div>
                     </div>
                     <?php endif; ?>
 
-                    <!-- Small posts: h5 -->
+                    <!-- Small posts: h3 -->
                     <div class="video-posts-right">
                         <?php foreach ($featured_video_data['small_posts'] as $video_small_post): ?>
                         <div class="content-block post-default image-rounded mt--30 axil-small-post-image">
@@ -987,11 +988,11 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                     </div>
                                 </div>
                                 <?php if ($video_small_post instanceof WP_Post): ?>
-                                <h5 class="title"><a
+                                <h3 class="title"><a
                                         href="<?php echo esc_url($video_small_url); ?>"><?php echo esc_html($video_small_title); ?></a>
-                                </h5>
+                                </h3>
                                 <?php else: ?>
-                                <h5 class="title"><?php esc_html_e('No post selected yet.', 'blogar'); ?></h5>
+                                <h3 class="title"><?php esc_html_e('No post selected yet.', 'blogar'); ?></h3>
                                 <?php endif; ?>
                             </div>
                         </div>

@@ -54,7 +54,7 @@ $bottom_links = array('Contact Us', 'Terms of Use', 'Advertise with Us', 'Blogar
                         class="footer-widget-item<?php echo 1 === $index ? ' axil-border-right' : ''; ?><?php echo $index >= 4 ? ' widget-last' : ''; ?>">
                         <section class="footer-widget-item widget widget_nav_menu"
                             aria-label="<?php echo esc_attr($title); ?>">
-                            <h5 class="widget-title"><?php echo esc_html($title); ?></h5>
+                            <p class="widget-title"><?php echo esc_html($title); ?></p>
                             <ul class="menu">
                                 <?php foreach ($links as $link): ?>
                                 <li class="menu-item">
@@ -86,7 +86,7 @@ $bottom_links = array('Contact Us', 'Terms of Use', 'Advertise with Us', 'Blogar
 
                 <div class="footer-top-social">
                     <div class="footer-social-wrap">
-                        <h5 class="follow-title">Follow us</h5>
+                        <p class="follow-title">Follow us</p>
                         <ul class="social-icon color-tertiary md-size justify-content-start">
                             <?php foreach ($social_links as $social): ?>
                             <li>

@@ -157,6 +157,7 @@ Luu y:
   - Render 11 section homepage.
   - Mot phan da dynamic qua `theme-options.php` + `helpers.php`.
   - Van reuse rat nhieu class/layout tu source goc.
+  - SEO heading hien tai: 1 `h1` o featured post hero, `h2` cho section/sub-group title, post card title dung `h3`, category label o Trending Topics dung `span`, author/meta va footer nav labels khong dung heading.
 
 Section status hien tai:
 
@@ -189,6 +190,8 @@ Section status hien tai:
   - Dung main WordPress loop.
   - Co breadcrumb + 1 `h1`.
   - Post list layout + sidebar widgets.
+  - Layout full-width khong sidebar hien tai dung grid responsive: desktop 3 card / hang, tablet 2 card / hang, mobile 1 card / hang.
+  - Outline SEO hien tai: `h1` o breadcrumb, `h2` an cho nhom post, title post dung `h3`; sidebar khong co `h2` an rieng, widget title dung `h2`, title bai nho trong widget dung `h3`, author/meta khong dung heading.
   - Share buttons va copy-link co hoat dong.
 
 ### Search
@@ -197,6 +200,7 @@ Section status hien tai:
   - Dung main WordPress search query.
   - Clone gan nhu `archive.php`.
   - 1 `h1` trong breadcrumb area.
+  - Outline SEO hien tai: `h1` o breadcrumb, `h2` an cho nhom ket qua, sidebar khong co `h2` an rieng; widget title dung `h2`, title post + title bai nho trong widget dung `h3`, author/meta khong dung heading.
   - Sidebar widget stack giong archive.
 
 ### Single
@@ -204,11 +208,13 @@ Section status hien tai:
 - `single.php`
   - 1 `h1` la post title.
   - Featured image, category, meta, share.
+  - Ho tro 2 layout: co sidebar mac dinh hoac no-sidebar centered reading layout thong qua theme option.
   - TOC auto parse tu `h2/h3` trong content, inject sau doan 3.
   - Author box co fallback text.
   - Prev/next post navigation.
   - Comments template.
   - Related posts section full width ben duoi main 2-col layout.
+  - Outline SEO hien tai: `h1` cho post title, author/meta khong dung heading, author box/comments/related posts co `h2` section-level; sidebar khong co `h2` an rieng, widget title dung `h2`, con title ben trong dung `h3`.
   - Co inline JS rieng cho TOC toggle + smooth scroll.
 
 ### Page
@@ -217,6 +223,7 @@ Section status hien tai:
   - Hero banner lay featured image lam background, fallback anh local neu khong co thumbnail.
   - 1 `h1` trong hero banner.
   - `the_content()` render o cot trai.
+  - Outline SEO hien tai: `h1` trong hero, `h2` an cho page content, sidebar khong co `h2` an rieng; widget title dung `h2`, title bai nho trong sidebar dung `h3`.
   - Sidebar dung lai pattern cua single/archive.
 
 ### Author
@@ -225,6 +232,7 @@ Section status hien tai:
   - Author archive rieng, khong rely vao `archive.php`.
   - Co breadcrumb + 1 `h1`.
   - Co them author info block: avatar, bio, post count.
+  - Outline SEO hien tai: `h1` o breadcrumb, `h2` cho author info + nhom post; sidebar khong co `h2` an rieng, widget title dung `h2`, title bai viet + title bai nho trong sidebar dung `h3`, author/meta khong dung heading.
   - Post list layout clone tu archive.
 
 ## 6. Shared Helpers and Patterns
