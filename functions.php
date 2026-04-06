@@ -9,6 +9,7 @@ if (!defined('ABSPATH')) {
 
 require_once get_template_directory() . '/inc/helpers.php';
 require_once get_template_directory() . '/inc/theme-options.php';
+require_once get_template_directory() . '/inc/mega-menu-walker.php';
 
 
 // ================================================================
@@ -199,6 +200,22 @@ function blogar_enqueue_assets()
             blogar_asset_version('css/page-contact.css')
         );
     }
+
+    // Mega menu — load trên tất cả page (header xuất hiện ở mọi nơi)
+    wp_enqueue_style(
+        'blogar-mega-menu',
+        get_template_directory_uri() . '/css/mega-menu.css',
+        array('blogar-header'),          // load sau header.css
+        blogar_asset_version('css/mega-menu.css')
+    );
+
+    wp_enqueue_script(
+        'blogar-mega-menu',
+        get_template_directory_uri() . '/js/mega-menu.js',
+        array(),
+        blogar_asset_version('js/mega-menu.js'),
+        true                              // load ở footer
+    );
 }
 add_action('wp_enqueue_scripts', 'blogar_enqueue_assets');
 

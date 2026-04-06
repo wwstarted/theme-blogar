@@ -50,6 +50,7 @@ $cart_count = blogar_get_cart_count();
                                     'menu_class' => 'mainmenu',
                                     'container' => false,
                                     'fallback_cb' => 'blogar_primary_menu_fallback',
+                                    'walker' => new Blogar_Mega_Menu_Walker(),
                                 ]);
                                 ?>
                             </nav>
@@ -213,6 +214,7 @@ $cart_count = blogar_get_cart_count();
                         'menu_class' => 'mainmenu-item',
                         'container' => false,
                         'fallback_cb' => 'blogar_primary_menu_fallback',
+                        'walker' => new Blogar_Mega_Menu_Walker(),
                     ]);
                     ?>
                 </nav>
