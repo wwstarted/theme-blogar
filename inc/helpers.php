@@ -208,7 +208,7 @@ function blogar_get_innovation_data()
             continue;
         }
         $args = array(
-            'posts_per_page' => $count,
+            'numberposts' => $count,
             'post_status' => 'publish',
             'ignore_sticky_posts' => true,
             'orderby' => 'date',
@@ -219,7 +219,7 @@ function blogar_get_innovation_data()
         }
         $tabs[] = array(
             'label' => $label ?: sprintf(__('Tab %d', 'blogar'), $i),
-            'query' => new WP_Query($args),
+            'posts' => get_posts($args),
         );
     }
 
@@ -229,7 +229,7 @@ function blogar_get_innovation_data()
         foreach ($categories as $cat) {
             $tabs[] = array(
                 'label' => $cat->name,
-                'query' => new WP_Query(array('posts_per_page' => 4, 'post_status' => 'publish', 'ignore_sticky_posts' => true, 'cat' => $cat->term_id)),
+                'posts' => get_posts(array('numberposts' => 4, 'post_status' => 'publish', 'ignore_sticky_posts' => true, 'cat' => $cat->term_id)),
             );
         }
     }
@@ -444,7 +444,7 @@ function blogar_get_featured_grid_this_week_data()
 
 function blogar_get_featured_grid_2plus3_data()
 {
-    $title = get_option('blogar_s13_title', 'Featured Videos In This Week');
+    $title = get_option('blogar_s13_title', 'Top Stories This Week');
     $cat_id = (int) get_option('blogar_s13_cat', 0);
     $selected_ids = array(
         (int) get_option('blogar_s13_post_1', 0),  // top row post 1
@@ -496,7 +496,7 @@ function blogar_get_latest_posts_data()
     // Fallback: no thumbnail filter if count is too low.
     if (count($posts) < 4) {
         $fallback = $args;
-        $fallback['meta_key'] = '';
+        unset($fallback['meta_key']);
         $posts = get_posts($fallback);
     }
 

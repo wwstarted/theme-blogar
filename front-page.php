@@ -18,6 +18,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
         <!-- ================================================================
              SECTION 11 — NEWS HIGHLIGHT BLOCK
              ================================================================ -->
+        <?php if (get_option('blogar_s11_enabled', '1')): ?>
         <?php
         $news_highlight_data = blogar_get_news_highlight_block_data();
         $news_highlight_ticker_posts = isset($news_highlight_data['ticker_posts']) ? $news_highlight_data['ticker_posts'] : array();
@@ -200,11 +201,13 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                 </div><!-- /.blogar-news-highlight-shell -->
             </div>
         </section>
+        <?php endif; // s11_enabled ?>
 
 
         <!-- ================================================================
              SECTION 5 — TRENDING TOPICS (categories carousel)
              ================================================================ -->
+        <?php if (get_option('blogar_s5_enabled', '1')): ?>
         <?php
         $topics_data = blogar_get_trending_topics_data();
         $topics = $topics_data['categories'];
@@ -259,11 +262,13 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
             </div>
         </section>
         <?php endif; ?>
+        <?php endif; // s5_enabled ?>
 
 
         <!-- ================================================================
              SECTION 13 — FEATURED GRID 2+3 (dark, fvg2)
              ================================================================ -->
+        <?php if (get_option('blogar_s13_enabled', '1')): ?>
         <?php $fvg2_data = blogar_get_featured_grid_2plus3_data(); ?>
         <?php if (!empty($fvg2_data['top_posts']) || !empty($fvg2_data['bottom_posts'])): ?>
         <section class="axil-fvg2-area">
@@ -347,11 +352,13 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
             </div>
         </section>
         <?php endif; ?>
+        <?php endif; // s13_enabled ?>
 
 
         <!-- ================================================================
              SECTION 14 — LATEST POSTS GRID
              ================================================================ -->
+        <?php if (get_option('blogar_s14_enabled', '1')): ?>
         <?php $lp_data = blogar_get_latest_posts_data(); ?>
         <?php if (!empty($lp_data['posts'])): ?>
         <section class="axil-latest-posts-area axil-section-gap bg-color-white">
@@ -430,11 +437,13 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
             </div>
         </section>
         <?php endif; ?>
+        <?php endif; // s14_enabled ?>
 
 
         <!-- ================================================================
              SECTION 12 — FEATURED GRID THIS WEEK (asymmetric fvg)
              ================================================================ -->
+        <?php if (get_option('blogar_s12_enabled', '1')): ?>
         <?php $fvg_data = blogar_get_featured_grid_this_week_data(); ?>
         <?php if ($fvg_data['big'] instanceof WP_Post): ?>
         <section class="axil-featured-grid-area axil-section-gap bg-color-white">
@@ -562,11 +571,13 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
             </div>
         </section>
         <?php endif; ?>
+        <?php endif; // s12_enabled ?>
 
 
         <!-- ================================================================
              SECTION 4 — INNOVATION & TECH (tabs + carousel)
              ================================================================ -->
+        <?php if (get_option('blogar_s4_enabled', '1')): ?>
         <?php
         $inno_data = blogar_get_innovation_data();
         $inno_tabs = $inno_data['tabs'];
@@ -617,8 +628,8 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                 <div class="carousel-viewport">
                                     <div class="carousel-track">
 
-                                        <?php while ($tab['query']->have_posts()):
-                                                        $tab['query']->the_post();
+                                        <?php foreach ($tab['posts'] as $post):
+                                                        setup_postdata($post);
                                                         $post_id = get_the_ID();
                                                         $post_url = get_permalink();
                                                         $post_title = get_the_title();
@@ -675,7 +686,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                                                 </div>
                                             </div>
                                         </div>
-                                        <?php endwhile;
+                                        <?php endforeach;
                                                     wp_reset_postdata(); ?>
 
                                     </div>
@@ -704,11 +715,13 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
             </div>
         </section>
         <?php endif; ?>
+        <?php endif; // s4_enabled ?>
 
 
         <!-- ================================================================
              SECTION 10 — FEATURED VIDEO
              ================================================================ -->
+        <?php if (get_option('blogar_s10_enabled', '1')): ?>
         <?php $featured_video_data = blogar_get_featured_video_data(); ?>
         <section class="axil-video-post-area axil-section-gap bg-color-black">
             <div class="container">
@@ -840,6 +853,7 @@ $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
                 </div>
             </div>
         </section>
+        <?php endif; // s10_enabled ?>
 
     </div><!-- /.main-wrapper -->
 </div><!-- /.blogar-front-page-shell -->

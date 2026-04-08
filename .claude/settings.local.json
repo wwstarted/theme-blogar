@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(python3 -c ':*)",
-      "Bash(node -e ':*)"
+      "Bash(node -e ':*)",
+      "Bash(rm \"d:/XAMPP/htdocs/theme_blogar/wordpress-6.8.3-vi/wordpress/wp-content/ai1wm-backups/localhost-themeblogar-wordpress-683-vi-wordpress-20260406-043223-kayyahiziolv.wpress\")",
+      "Bash(rm \"d:/XAMPP/htdocs/theme_blogar/wordpress-6.8.3-vi/wordpress/wp-content/ai1wm-backups/localhost-themeblogar-wordpress-683-vi-wordpress-20260406-045855-r0d7sn23eoar.wpress\")"
     ]
   }
 }

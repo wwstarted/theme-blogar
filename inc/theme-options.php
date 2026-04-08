@@ -33,6 +33,7 @@ function blogar_register_settings()
 {
 
     // ── Section 4: Innovation & Tech ─────────────────────────────
+    register_setting('blogar_s4_settings', 'blogar_s4_enabled', array('sanitize_callback' => 'absint', 'default' => 1));
     register_setting('blogar_s4_settings', 'blogar_s4_title', array('sanitize_callback' => 'sanitize_text_field'));
     register_setting('blogar_s4_settings', 'blogar_s4_post_count', array('sanitize_callback' => 'absint'));
 
@@ -42,6 +43,8 @@ function blogar_register_settings()
     }
 
     add_settings_section('blogar_s4_section', __('Innovation & Tech', 'blogar'), 'blogar_s4_section_cb', 'blogar-s4');
+
+    add_settings_field('blogar_s4_enabled', __('Display section', 'blogar'), 'blogar_section_toggle_field_cb', 'blogar-s4', 'blogar_s4_section', array('option_name' => 'blogar_s4_enabled'));
 
     add_settings_field('blogar_s4_title', __('Tiêu đề section', 'blogar'), 'blogar_text_field_cb', 'blogar-s4', 'blogar_s4_section', array(
         'option_name' => 'blogar_s4_title',
@@ -67,11 +70,14 @@ function blogar_register_settings()
     }
 
     // ── Section 5: Trending Topics ───────────────────────────────
+    register_setting('blogar_s5_settings', 'blogar_s5_enabled', array('sanitize_callback' => 'absint', 'default' => 1));
     register_setting('blogar_s5_settings', 'blogar_s5_title', array('sanitize_callback' => 'sanitize_text_field'));
     register_setting('blogar_s5_settings', 'blogar_s5_count', array('sanitize_callback' => 'absint'));
     register_setting('blogar_s5_settings', 'blogar_s5_categories', array('sanitize_callback' => 'blogar_sanitize_term_ids'));
 
     add_settings_section('blogar_s5_section', __('Trending Topics', 'blogar'), 'blogar_s5_section_cb', 'blogar-s5');
+
+    add_settings_field('blogar_s5_enabled', __('Display section', 'blogar'), 'blogar_section_toggle_field_cb', 'blogar-s5', 'blogar_s5_section', array('option_name' => 'blogar_s5_enabled'));
 
     add_settings_field('blogar_s5_title', __('Section title', 'blogar'), 'blogar_text_field_cb', 'blogar-s5', 'blogar_s5_section', array(
         'option_name' => 'blogar_s5_title',
@@ -93,6 +99,7 @@ function blogar_register_settings()
     ));
 
     // ── Section 10: Featured Video ───────────────────────────────
+    register_setting('blogar_s10_settings', 'blogar_s10_enabled', array('sanitize_callback' => 'absint', 'default' => 1));
     register_setting('blogar_s10_settings', 'blogar_s10_title', array('sanitize_callback' => 'sanitize_text_field'));
     register_setting('blogar_s10_settings', 'blogar_s10_main_post', array('sanitize_callback' => 'absint'));
 
@@ -101,6 +108,8 @@ function blogar_register_settings()
     }
 
     add_settings_section('blogar_s10_section', __('Featured Video', 'blogar'), 'blogar_s10_section_cb', 'blogar-s10');
+
+    add_settings_field('blogar_s10_enabled', __('Display section', 'blogar'), 'blogar_section_toggle_field_cb', 'blogar-s10', 'blogar_s10_section', array('option_name' => 'blogar_s10_enabled'));
 
     add_settings_field('blogar_s10_title', __('Section title', 'blogar'), 'blogar_text_field_cb', 'blogar-s10', 'blogar_s10_section', array(
         'option_name' => 'blogar_s10_title',
@@ -121,6 +130,7 @@ function blogar_register_settings()
     }
 
     // ── Section 11: News Highlight Block ─────────────────────────
+    register_setting('blogar_s11_settings', 'blogar_s11_enabled', array('sanitize_callback' => 'absint', 'default' => 1));
     register_setting('blogar_s11_settings', 'blogar_s11_ticker_title', array('sanitize_callback' => 'sanitize_text_field'));
     register_setting('blogar_s11_settings', 'blogar_s11_cat', array('sanitize_callback' => 'absint'));
     register_setting('blogar_s11_settings', 'blogar_s11_main_post', array('sanitize_callback' => 'absint'));
@@ -130,6 +140,8 @@ function blogar_register_settings()
     }
 
     add_settings_section('blogar_s11_section', __('News Highlight Block', 'blogar'), 'blogar_s11_section_cb', 'blogar-s11');
+
+    add_settings_field('blogar_s11_enabled', __('Display section', 'blogar'), 'blogar_section_toggle_field_cb', 'blogar-s11', 'blogar_s11_section', array('option_name' => 'blogar_s11_enabled'));
 
     add_settings_field('blogar_s11_ticker_title', __('Ticker label', 'blogar'), 'blogar_text_field_cb', 'blogar-s11', 'blogar_s11_section', array(
         'option_name' => 'blogar_s11_ticker_title',
@@ -156,6 +168,7 @@ function blogar_register_settings()
 
     // ── Section 12: Featured Grid — This Week (asymmetric fvg) ───
     // Layout: 1 big left | 1 medium top-right + 3 small bottom-right
+    register_setting('blogar_s12_settings', 'blogar_s12_enabled', array('sanitize_callback' => 'absint', 'default' => 1));
     register_setting('blogar_s12_settings', 'blogar_s12_title', array('sanitize_callback' => 'sanitize_text_field'));
     register_setting('blogar_s12_settings', 'blogar_s12_big_post', array('sanitize_callback' => 'absint'));
     register_setting('blogar_s12_settings', 'blogar_s12_medium_post', array('sanitize_callback' => 'absint'));
@@ -165,6 +178,8 @@ function blogar_register_settings()
     }
 
     add_settings_section('blogar_s12_section', __('Featured Grid — This Week', 'blogar'), 'blogar_s12_section_cb', 'blogar-s12');
+
+    add_settings_field('blogar_s12_enabled', __('Display section', 'blogar'), 'blogar_section_toggle_field_cb', 'blogar-s12', 'blogar_s12_section', array('option_name' => 'blogar_s12_enabled'));
 
     add_settings_field('blogar_s12_title', __('Section title', 'blogar'), 'blogar_text_field_cb', 'blogar-s12', 'blogar_s12_section', array(
         'option_name' => 'blogar_s12_title',
@@ -192,6 +207,7 @@ function blogar_register_settings()
     // ── Section 13: Featured Grid 2+3 (fvg2 dark) ───────────────
     // Layout: 2 equal top cards | 3 equal bottom cards
     // Can use category filter OR pick individual posts
+    register_setting('blogar_s13_settings', 'blogar_s13_enabled', array('sanitize_callback' => 'absint', 'default' => 1));
     register_setting('blogar_s13_settings', 'blogar_s13_title', array('sanitize_callback' => 'sanitize_text_field'));
     register_setting('blogar_s13_settings', 'blogar_s13_cat', array('sanitize_callback' => 'absint'));
 
@@ -201,10 +217,12 @@ function blogar_register_settings()
 
     add_settings_section('blogar_s13_section', __('Featured Grid 2+3 (Dark)', 'blogar'), 'blogar_s13_section_cb', 'blogar-s13');
 
+    add_settings_field('blogar_s13_enabled', __('Display section', 'blogar'), 'blogar_section_toggle_field_cb', 'blogar-s13', 'blogar_s13_section', array('option_name' => 'blogar_s13_enabled'));
+
     add_settings_field('blogar_s13_title', __('Section title', 'blogar'), 'blogar_text_field_cb', 'blogar-s13', 'blogar_s13_section', array(
         'option_name' => 'blogar_s13_title',
-        'default' => 'Featured Videos In This Week',
-        'placeholder' => 'Featured Videos In This Week',
+        'default' => 'Top Stories This Week',
+        'placeholder' => 'Top Stories This Week',
     ));
 
     add_settings_field('blogar_s13_cat', __('Category filter (fallback)', 'blogar'), 'blogar_category_select_field', 'blogar-s13', 'blogar_s13_section', array(
@@ -227,11 +245,14 @@ function blogar_register_settings()
 
     // ── Section 14: Latest Posts Grid ────────────────────────────
     // Layout: uniform card grid (4 cols desktop)
+    register_setting('blogar_s14_settings', 'blogar_s14_enabled', array('sanitize_callback' => 'absint', 'default' => 1));
     register_setting('blogar_s14_settings', 'blogar_s14_title', array('sanitize_callback' => 'sanitize_text_field'));
     register_setting('blogar_s14_settings', 'blogar_s14_count', array('sanitize_callback' => 'absint'));
     register_setting('blogar_s14_settings', 'blogar_s14_cat', array('sanitize_callback' => 'absint'));
 
     add_settings_section('blogar_s14_section', __('Latest Posts Grid', 'blogar'), 'blogar_s14_section_cb', 'blogar-s14');
+
+    add_settings_field('blogar_s14_enabled', __('Display section', 'blogar'), 'blogar_section_toggle_field_cb', 'blogar-s14', 'blogar_s14_section', array('option_name' => 'blogar_s14_enabled'));
 
     add_settings_field('blogar_s14_title', __('Section title', 'blogar'), 'blogar_text_field_cb', 'blogar-s14', 'blogar_s14_section', array(
         'option_name' => 'blogar_s14_title',
@@ -313,6 +334,24 @@ function blogar_s14_section_cb()
 // ================================================================
 
 /**
+ * Section enabled/disabled toggle.
+ */
+function blogar_section_toggle_field_cb($args)
+{
+    $option = $args['option_name'];
+    $enabled = (bool) get_option($option, 1);
+    ?>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;font-weight:500;">
+        <input type="hidden" name="<?php echo esc_attr($option); ?>" value="0">
+        <input type="checkbox" id="<?php echo esc_attr($option); ?>"
+            name="<?php echo esc_attr($option); ?>" value="1"
+            <?php checked($enabled, true); ?>>
+        <span><?php esc_html_e('Show this section on the homepage', 'blogar'); ?></span>
+    </label>
+    <?php
+}
+
+/**
  * Generic text input field.
  */
 function blogar_text_field_cb($args)
@@ -356,6 +395,18 @@ function blogar_number_field_cb($args)
 }
 
 /**
+ * Returns all categories, cached for the current request.
+ */
+function blogar_get_all_categories_cached()
+{
+    static $cache = null;
+    if ($cache === null) {
+        $cache = get_categories(array('hide_empty' => false, 'orderby' => 'name', 'order' => 'ASC'));
+    }
+    return $cache;
+}
+
+/**
  * Tab field: text label + category dropdown.
  */
 function blogar_tab_field_cb($args)
@@ -385,7 +436,7 @@ function blogar_tab_field_cb($args)
         esc_html__('Category', 'blogar')
     );
 
-    $categories = get_categories(array('hide_empty' => false, 'orderby' => 'name'));
+    $categories = blogar_get_all_categories_cached();
 
     echo '<select id="' . esc_attr($cat_key) . '" name="' . esc_attr($cat_key) . '" style="min-width:220px">';
     echo '<option value="0">' . esc_html__('— Tất cả bài viết —', 'blogar') . '</option>';
@@ -416,7 +467,7 @@ function blogar_category_select_field($args)
     $selected_id = (int) get_option($option_name, 0);
     $description = isset($args['description']) ? $args['description'] : '';
 
-    $categories = get_categories(array('hide_empty' => false, 'orderby' => 'name', 'order' => 'ASC'));
+    $categories = blogar_get_all_categories_cached();
 
     echo '<select name="' . esc_attr($option_name) . '" id="' . esc_attr($option_name) . '" style="min-width:280px;max-width:100%">';
     echo '<option value="0">' . esc_html__('— All categories —', 'blogar') . '</option>';
@@ -447,25 +498,48 @@ function blogar_post_select_field($args)
     $selected_id = (int) get_option($option_name, 0);
     $description = isset($args['description']) ? $args['description'] : '';
 
-    $posts = get_posts(array(
-        'numberposts' => -1,
-        'post_status' => 'publish',
-        'orderby' => 'date',
-        'order' => 'DESC',
-        'post_type' => 'post',
-    ));
+    static $cached_posts = null;
+    if ($cached_posts === null) {
+        $cached_posts = get_posts(array(
+            'numberposts' => 100,
+            'post_status' => 'publish',
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'post_type' => 'post',
+        ));
+    }
+    $posts = $cached_posts;
+
+    // Nếu bài đang được chọn không nằm trong 100 bài mới nhất, thêm vào đầu danh sách.
+    if ($selected_id) {
+        $ids_in_list = wp_list_pluck($posts, 'ID');
+        if (!in_array($selected_id, $ids_in_list, true)) {
+            $extra = get_post($selected_id);
+            if ($extra && $extra->post_status === 'publish') {
+                $posts = array_merge(array($extra), $posts);
+            }
+        }
+    }
 
     echo '<select name="' . esc_attr($option_name) . '" id="' . esc_attr($option_name) . '" style="min-width:380px;max-width:100%">';
     echo '<option value="0">' . esc_html__('— Auto (latest post) —', 'blogar') . '</option>';
 
+    $current_year = '';
     foreach ($posts as $post) {
-        $label = esc_html($post->post_title);
-        $label .= ' (' . esc_html(get_the_date('d/m/Y', $post->ID)) . ')';
-
-        echo '<option value="' . esc_attr($post->ID) . '" '
-            . selected($selected_id, $post->ID, false) . '>'
-            . $label
-            . '</option>';
+        $year = get_the_date('Y', $post->ID);
+        if ($year !== $current_year) {
+            if ($current_year !== '') {
+                echo '</optgroup>';
+            }
+            echo '<optgroup label="' . esc_attr($year) . '">';
+            $current_year = $year;
+        }
+        $label = esc_html($post->post_title) . ' (' . esc_html(get_the_date('d/m', $post->ID)) . ')';
+        echo '<option value="' . esc_attr($post->ID) . '" ' . selected($selected_id, $post->ID, false) . '>'
+            . $label . '</option>';
+    }
+    if ($current_year !== '') {
+        echo '</optgroup>';
     }
 
     echo '</select>';
@@ -491,7 +565,7 @@ function blogar_categories_multiselect_field($args)
     $selected_ids = is_array($selected_ids) ? array_map('absint', $selected_ids) : array();
     $description = isset($args['description']) ? $args['description'] : '';
 
-    $categories = get_categories(array('hide_empty' => false, 'orderby' => 'name', 'order' => 'ASC'));
+    $categories = blogar_get_all_categories_cached();
 
     echo '<input type="hidden" name="' . esc_attr($option_name) . '[]" value="" />';
     echo '<select name="' . esc_attr($option_name) . '[]" id="' . esc_attr($option_name) . '" multiple size="10" style="min-width:380px;max-width:100%">';
@@ -675,42 +749,46 @@ function blogar_render_options_page()
         return;
     }
 
-    // Tab order matches homepage top-to-bottom section order
+    // Tab order matches homepage top-to-bottom section order (1 → 7)
     $tabs = array(
         's11_news_highlight' => array(
-            'label' => __('⑪ News Highlight', 'blogar'),
+            'label' => __('① News Highlight', 'blogar'),
             'settings_group' => 'blogar_s11_settings',
             'page_slug' => 'blogar-s11',
         ),
         's5_topics' => array(
-            'label' => __('⑤ Trending Topics', 'blogar'),
+            'label' => __('② Trending Topics', 'blogar'),
             'settings_group' => 'blogar_s5_settings',
             'page_slug' => 'blogar-s5',
         ),
         's13_grid_2plus3' => array(
-            'label' => __('⑬ Featured Grid 2+3', 'blogar'),
+            'label' => __('③ Featured Grid 2+3', 'blogar'),
             'settings_group' => 'blogar_s13_settings',
             'page_slug' => 'blogar-s13',
         ),
         's14_latest_posts' => array(
-            'label' => __('⑭ Latest Posts', 'blogar'),
+            'label' => __('④ Latest Posts', 'blogar'),
             'settings_group' => 'blogar_s14_settings',
             'page_slug' => 'blogar-s14',
         ),
         's12_featured_grid' => array(
-            'label' => __('⑫ Featured Grid', 'blogar'),
+            'label' => __('⑤ Featured Grid', 'blogar'),
             'settings_group' => 'blogar_s12_settings',
             'page_slug' => 'blogar-s12',
         ),
         's4_innovation' => array(
-            'label' => __('④ Innovation & Tech', 'blogar'),
+            'label' => __('⑥ Innovation & Tech', 'blogar'),
             'settings_group' => 'blogar_s4_settings',
             'page_slug' => 'blogar-s4',
         ),
         's10_featured_video' => array(
-            'label' => __('⑩ Featured Video', 'blogar'),
+            'label' => __('⑦ Featured Video', 'blogar'),
             'settings_group' => 'blogar_s10_settings',
             'page_slug' => 'blogar-s10',
+        ),
+        'layouts' => array(
+            'label' => __('⊞ Layout', 'blogar'),
+            'custom_render' => 'blogar_render_layout_tab',
         ),
     );
 
@@ -740,6 +818,9 @@ function blogar_render_options_page()
 
     <div
         style="background:#fff;border:1px solid #c3c4c7;border-top:none;padding:20px 24px 8px;border-radius:0 0 4px 4px">
+        <?php if (!empty($tabs[$active_tab]['custom_render'])): ?>
+            <?php call_user_func($tabs[$active_tab]['custom_render']); ?>
+        <?php else: ?>
         <form method="post" action="options.php">
             <?php
                 if (isset($tabs[$active_tab])) {
@@ -749,8 +830,7 @@ function blogar_render_options_page()
                 submit_button(__('Save Settings', 'blogar'));
                 ?>
         </form>
-
-        <?php do_action('blogar_settings_page_extra_sections'); ?>
+        <?php endif; ?>
     </div>
 </div>
 <?php
@@ -767,15 +847,12 @@ function blogar_register_archive_layout_setting()
 {
     register_setting('blogar_archive_options_group', 'blogar_archive_layout', array(
         'type' => 'string',
-        'sanitize_callback' => 'blogar_sanitize_archive_layout',
+        'sanitize_callback' => 'blogar_sanitize_layout_option',
         'default' => 'sidebar',
     ));
-
-    add_settings_section('blogar_archive_layout_section', __('Archive Page Layout', 'blogar'), 'blogar_archive_layout_section_cb', 'blogar-settings');
-    add_settings_field('blogar_archive_layout_field', __('Select Layout', 'blogar'), 'blogar_archive_layout_field_cb', 'blogar-settings', 'blogar_archive_layout_section');
 }
 
-function blogar_sanitize_archive_layout($value)
+function blogar_sanitize_layout_option($value)
 {
     return in_array($value, array('sidebar', 'full'), true) ? $value : 'sidebar';
 }
@@ -848,12 +925,11 @@ function blogar_archive_layout_field_cb()
 <?php
 }
 
-add_action('blogar_settings_page_extra_sections', 'blogar_render_archive_layout_standalone');
-
-function blogar_render_archive_layout_standalone()
+function blogar_render_layout_tab()
 {
     ?>
-<div class="blogar-settings-section" style="margin-top:30px;padding-top:24px;border-top:1px solid #e5e5e5;">
+<div style="display:grid;gap:0;">
+
     <form method="post" action="options.php">
         <?php settings_fields('blogar_archive_options_group'); ?>
         <h2 style="font-size:16px;margin:0 0 4px;"><?php esc_html_e('Archive Page Layout', 'blogar'); ?></h2>
@@ -861,6 +937,17 @@ function blogar_render_archive_layout_standalone()
         <?php blogar_archive_layout_field_cb(); ?>
         <?php submit_button(__('Save Archive Layout', 'blogar')); ?>
     </form>
+
+    <div style="border-top:1px solid #e5e5e5;padding-top:24px;margin-top:8px;">
+        <form method="post" action="options.php">
+            <?php settings_fields('blogar_single_options_group'); ?>
+            <h2 style="font-size:16px;margin:0 0 4px;"><?php esc_html_e('Single Post Layout', 'blogar'); ?></h2>
+            <?php blogar_single_layout_section_cb(); ?>
+            <?php blogar_single_layout_field_cb(); ?>
+            <?php submit_button(__('Save Single Layout', 'blogar')); ?>
+        </form>
+    </div>
+
 </div>
 <?php
 }
@@ -876,7 +963,7 @@ function blogar_register_single_layout_setting()
 {
     register_setting('blogar_single_options_group', 'blogar_single_layout', array(
         'type' => 'string',
-        'sanitize_callback' => 'blogar_sanitize_archive_layout',
+        'sanitize_callback' => 'blogar_sanitize_layout_option',
         'default' => 'sidebar',
     ));
 }
@@ -948,19 +1035,3 @@ function blogar_single_layout_field_cb()
 <?php
 }
 
-add_action('blogar_settings_page_extra_sections', 'blogar_render_single_layout_standalone');
-
-function blogar_render_single_layout_standalone()
-{
-    ?>
-<div class="blogar-settings-section" style="margin-top:30px;padding-top:24px;border-top:1px solid #e5e5e5;">
-    <form method="post" action="options.php">
-        <?php settings_fields('blogar_single_options_group'); ?>
-        <h2 style="font-size:16px;margin:0 0 4px;"><?php esc_html_e('Single Page Layout', 'blogar'); ?></h2>
-        <?php blogar_single_layout_section_cb(); ?>
-        <?php blogar_single_layout_field_cb(); ?>
-        <?php submit_button(__('Save Single Layout', 'blogar')); ?>
-    </form>
-</div>
-<?php
-}
