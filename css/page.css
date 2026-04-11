@@ -105,9 +105,21 @@
 }
 
 /* =============================================================================
+   CONTENT-SIDEBAR ALIGNMENT
+   article.page-article has no padding/border, so single.css's
+   .single-post-content { margin-top: 36px } can collapse outward and push
+   the article down — breaking alignment with the sidebar's first widget (y=0).
+   Explicitly zero both the article and its content top margin.
+   ============================================================================= */
+.axil-post-list-area article.page-article {
+  margin-top: 0;
+}
+
+/* =============================================================================
    PAGE CONTENT PROSE
    ============================================================================= */
 
+.axil-post-list-area .page-article .single-post-content,
 .page-article .single-post-content.page-content {
   margin-top: 0;
 }

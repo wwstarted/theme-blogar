@@ -92,7 +92,12 @@ function blogar_process_toc($content)
     $toc = '<div class="single-toc toc-open" id="single-toc"'
         . ' aria-label="' . esc_attr__('Table of Contents', 'blogar') . '">';
     $toc .= '<div class="toc-header">';
-    $toc .= '<span class="toc-title">' . esc_html__('Table of Contents', 'blogar') . '</span>';
+    $toc .= '<span class="toc-title">'
+        . '<svg class="toc-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">'
+        . '<path d="M3 5h14M3 10h14M3 15h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>'
+        . '</svg>'
+        . esc_html__('Table of Contents', 'blogar')
+        . '</span>';
     $toc .= '<button class="toc-toggle" aria-expanded="true" aria-controls="toc-list">';
     $toc .= '<span class="toc-toggle-label">' . esc_html__('Hide', 'blogar') . '</span>';
     $toc .= '<svg class="toc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
@@ -336,7 +341,7 @@ function blogar_process_toc($content)
                                     </h2>
                                 </div>
                                 <span class="author-label"><?php esc_html_e('Written By', 'blogar'); ?></span>
-                                <h3 class="author-name">
+                                <div class="author-name">
                                     <a class="hover-flip-item-wrapper" href="<?php echo esc_url($author_url); ?>">
                                         <span class="hover-flip-item">
                                             <span data-text="<?php echo esc_attr($author_name); ?>">
@@ -344,7 +349,7 @@ function blogar_process_toc($content)
                                             </span>
                                         </span>
                                     </a>
-                                </h3>
+                                </div>
                                 <p class="author-bio">
                                     <?php
                                         if (!empty(trim($author_bio))) {
@@ -450,114 +455,9 @@ function blogar_process_toc($content)
                 </div><!-- .single-main-column -->
 
 
-                <?php if (!$is_single_full): ?>
-                <!-- ================================================================
-                     SIDEBAR — đồng bộ với archive.php
-                     3 widgets: Popular Posts | Categories | Newsletter
-                     Sticky: .archive-sidebar-inner (CSS từ archive.css)
-                     ================================================================ -->
-                <aside class="col-lg-4 col-md-12 col-12 order-2 order-lg-2 archive-sidebar"
-                    aria-label="<?php esc_attr_e('Sidebar', 'blogar'); ?>">
-
-                    <div class="archive-sidebar-inner">
-
-                        <div class="blogar-widget widget-popular-posts">
-                            <h2 class="widget-title"><?php esc_html_e('Popular Posts', 'blogar'); ?></h2>
-                            <?php
-                            $popular_posts = get_posts(array(
-                                'numberposts' => 5,
-                                'post_status' => 'publish',
-                                'orderby' => 'comment_count',
-                                'order' => 'DESC',
-                                'ignore_sticky_posts' => true,
-                                'post__not_in' => array($current_post_id),
-                            ));
-                            foreach ($popular_posts as $pp):
-                                $pp_url = get_permalink($pp->ID);
-                                $pp_thumb = blogar_thumbnail_url($pp->ID, 'blogar-thumb');
-                                $pp_alt = blogar_thumbnail_alt($pp->ID);
-                                $pp_title = wp_trim_words($pp->post_title, 9, '...');
-                                ?>
-                            <div class="popular-post-item">
-                                <div class="popular-post-inner">
-                                    <div class="popular-post-thumb">
-                                        <a href="<?php echo esc_url($pp_url); ?>">
-                                            <img loading="lazy" decoding="async" width="110" height="83"
-                                                src="<?php echo esc_url($pp_thumb); ?>"
-                                                alt="<?php echo esc_attr($pp_alt); ?>">
-                                        </a>
-                                    </div>
-                                    <div class="popular-post-text">
-                                        <h3 class="popular-post-title">
-                                            <a href="<?php echo esc_url($pp_url); ?>">
-                                                <?php echo esc_html($pp_title); ?>
-                                            </a>
-                                        </h3>
-                                        <div class="popular-post-meta">
-                                            <time datetime="<?php echo esc_attr(get_the_date('c', $pp->ID)); ?>">
-                                                <?php echo esc_html(get_the_date('', $pp->ID)); ?>
-                                            </time>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endforeach;
-                            wp_reset_postdata(); ?>
-                        </div>
-
-
-                        <div class="blogar-widget widget-sidebar-cats mt--30">
-                            <h2 class="widget-title"><?php esc_html_e('Categories', 'blogar'); ?></h2>
-                            <?php
-                            $sidebar_cats = get_categories(array(
-                                'hide_empty' => true,
-                                'orderby' => 'count',
-                                'order' => 'DESC',
-                                'number' => 10,
-                            ));
-                            if ($sidebar_cats):
-                                ?>
-                            <ul class="sidebar-cat-list">
-                                <?php foreach ($sidebar_cats as $sc): ?>
-                                <li>
-                                    <a href="<?php echo esc_url(get_category_link($sc->term_id)); ?>">
-                                        <?php echo esc_html($sc->name); ?>
-                                    </a>
-                                    <span class="sidebar-cat-count"><?php echo (int) $sc->count; ?></span>
-                                </li>
-                                <?php endforeach; ?>
-                            </ul>
-                            <?php endif; ?>
-                        </div>
-
-
-                        <div class="blogar-widget widget-sidebar-newsletter mt--30">
-                            <h2 class="widget-title"><?php esc_html_e('Subscribe Newsletter', 'blogar'); ?></h2>
-                            <div class="sidebar-newsletter-inner">
-                                <p class="sidebar-newsletter-desc">
-                                    <?php esc_html_e("Subscribe our newsletter for latest news & updates. Let's stay updated!", 'blogar'); ?>
-                                </p>
-                                <form class="sidebar-newsletter-form" action="#" method="post">
-                                    <div class="form-group">
-                                        <input type="text" name="FNAME"
-                                            placeholder="<?php esc_attr_e('Your name...', 'blogar'); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="email" name="EMAIL"
-                                            placeholder="<?php esc_attr_e('Your email...', 'blogar'); ?>" required>
-                                    </div>
-                                    <div class="form-submit">
-                                        <button type="submit" class="sidebar-newsletter-btn">
-                                            <?php esc_html_e('Subscribe', 'blogar'); ?>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                    </div>
-                </aside>
-                <?php endif; ?>
+                <?php if (!$is_single_full):
+                    get_template_part('template-parts/sidebar', null, array('exclude_post_id' => $current_post_id));
+                endif; ?>
 
             </div><!-- .row -->
         </div><!-- .container -->

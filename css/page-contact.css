@@ -1,12 +1,3 @@
-/* =============================================================================
-   CONTACT FORM — page-contact.php
-   Append to bottom of css/page.css
-
-   Scope: .contact-form-section và .axil-contact-form
-   Grid nội bộ: .cf-row / .cf-col (tách khỏi grid chính tránh conflict)
-   Không ảnh hưởng tới layout chung của page.php hay bất kỳ template khác.
-   ============================================================================= */
-
 /* ── Section wrapper ──────────────────────────────────────────── */
 .contact-form-section {
   margin-top: 40px;
@@ -119,9 +110,6 @@
   margin-top: 8px;
 }
 
-/* Reuse .axil-button.button-rounded.btn-primary từ frontpage.css nếu có.
-   Selector dưới là fallback an toàn nếu class chưa được định nghĩa
-   cho button element (frontpage.css có thể chỉ target <a>). */
 .axil-contact-form button[type="submit"].axil-button {
   display: inline-flex;
   align-items: center;
@@ -151,9 +139,6 @@
 
 /* ── Responsive ───────────────────────────────────────────────── */
 
-/* Tablet: ≤ 1199px — layout section vẫn full-width vì grid chính
-   đã collapse về 1 cột, form grid giữ nguyên (3 cột vẫn ổn). */
-
 /* Mobile: ≤ 767px — 3 cột collapse về 1 cột */
 @media only screen and (max-width: 767px) {
   .cf-col.cf-col-3 {
@@ -181,15 +166,6 @@
     min-height: 110px;
   }
 }
-
-/* ================================================================
-   SIDEBAR RECENT POSTS — LANDSCAPE FIX
-   Override: 1:1 square → 4:3 landscape cho .post-medium thumbnail.
-   Áp dụng cho: archive.php, single.php, page.php, page-contact.php
-   (tất cả đều dùng .archive-sidebar từ archive.css).
-   Scoped hoàn toàn trong .archive-sidebar.
-   ================================================================ */
-
 .archive-sidebar .content-block.post-medium .post-thumbnail {
   height: auto; /* bỏ height: 100px cứng */
   aspect-ratio: 4 / 3; /* 100px wide → ~75px tall, landscape */

@@ -90,9 +90,9 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                             <?php esc_html_e('Written By', 'blogar'); ?>
                         </span>
 
-                        <h2 class="author-info-name">
+                        <div class="author-info-name">
                             <?php echo esc_html($author_name); ?>
-                        </h2>
+                        </div>
 
                         <?php if (!empty(trim($author_bio))): ?>
                         <p class="author-info-bio">
@@ -130,10 +130,6 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                 <!-- ── POST LIST COL ──────────────────────────────── -->
                 <div class="col-lg-8 col-md-12 col-12 order-1 order-lg-2">
 
-                    <div class="blogar-visually-hidden">
-                        <h2><?php esc_html_e('Author posts', 'blogar'); ?></h2>
-                    </div>
-
                     <?php if (have_posts()): ?>
 
                     <?php while (have_posts()):
@@ -169,9 +165,9 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                             </div>
                             <?php endif; ?>
 
-                            <h3 class="title">
+                            <h2 class="title">
                                 <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                            </h3>
+                            </h2>
 
                             <?php if (has_excerpt() || get_the_excerpt()): ?>
                             <p class="post-description">
@@ -249,107 +245,7 @@ $img = get_template_directory_uri() . '/images/frontpage/';
 
 
                 <!-- ── SIDEBAR ─────────────────────────────────────── -->
-                <!-- Đồng bộ với archive.php: 3 widgets chuẩn. -->
-                <aside class="col-lg-4 col-md-12 col-12 order-2 order-lg-2 archive-sidebar"
-                    aria-label="<?php esc_attr_e('Sidebar', 'blogar'); ?>">
-
-                    <div class="archive-sidebar-inner">
-                        <!-- ① Popular Posts -->
-                        <div class="blogar-widget widget-popular-posts mt--30">
-                            <h2 class="widget-title"><?php esc_html_e('Popular Posts', 'blogar'); ?></h2>
-                            <?php
-                            $popular_posts = get_posts(array(
-                                'numberposts' => 5,
-                                'post_status' => 'publish',
-                                'orderby' => 'comment_count',
-                                'order' => 'DESC',
-                                'ignore_sticky_posts' => true,
-                            ));
-                            foreach ($popular_posts as $pp):
-                                $pp_url = get_permalink($pp->ID);
-                                $pp_thumb = blogar_thumbnail_url($pp->ID, 'blogar-thumb');
-                                $pp_alt = blogar_thumbnail_alt($pp->ID);
-                                $pp_title = wp_trim_words($pp->post_title, 9, '...');
-                                ?>
-                            <div class="popular-post-item">
-                                <div class="popular-post-inner">
-                                    <div class="popular-post-thumb">
-                                        <a href="<?php echo esc_url($pp_url); ?>">
-                                            <img loading="lazy" decoding="async" width="110" height="83"
-                                                src="<?php echo esc_url($pp_thumb); ?>"
-                                                alt="<?php echo esc_attr($pp_alt); ?>">
-                                        </a>
-                                    </div>
-                                    <div class="popular-post-text">
-                                        <h3 class="popular-post-title">
-                                            <a
-                                                href="<?php echo esc_url($pp_url); ?>"><?php echo esc_html($pp_title); ?></a>
-                                        </h3>
-                                        <div class="popular-post-meta">
-                                            <time datetime="<?php echo esc_attr(get_the_date('c', $pp->ID)); ?>">
-                                                <?php echo esc_html(get_the_date('', $pp->ID)); ?>
-                                            </time>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endforeach;
-                            wp_reset_postdata(); ?>
-                        </div>
-
-                        <!-- ② Categories -->
-                        <div class="blogar-widget widget-sidebar-cats mt--30">
-                            <h2 class="widget-title"><?php esc_html_e('Categories', 'blogar'); ?></h2>
-                            <?php
-                            $sidebar_cats = get_categories(array(
-                                'hide_empty' => true,
-                                'orderby' => 'count',
-                                'order' => 'DESC',
-                                'number' => 10,
-                            ));
-                            if ($sidebar_cats):
-                                ?>
-                            <ul class="sidebar-cat-list">
-                                <?php foreach ($sidebar_cats as $sc): ?>
-                                <li>
-                                    <a href="<?php echo esc_url(get_category_link($sc->term_id)); ?>">
-                                        <?php echo esc_html($sc->name); ?>
-                                    </a>
-                                    <span class="sidebar-cat-count"><?php echo (int) $sc->count; ?></span>
-                                </li>
-                                <?php endforeach; ?>
-                            </ul>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- ③ Subscribe Newsletter -->
-                        <div class="blogar-widget widget-sidebar-newsletter mt--30">
-                            <h2 class="widget-title"><?php esc_html_e('Subscribe Newsletter', 'blogar'); ?></h2>
-                            <div class="sidebar-newsletter-inner">
-                                <p class="sidebar-newsletter-desc">
-                                    <?php esc_html_e('Subscribe our newsletter for latest news &amp; updates. Let\'s stay updated!', 'blogar'); ?>
-                                </p>
-                                <form class="sidebar-newsletter-form" action="#" method="post">
-                                    <div class="form-group">
-                                        <input type="text" name="FNAME"
-                                            placeholder="<?php esc_attr_e('Your name...', 'blogar'); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="email" name="EMAIL"
-                                            placeholder="<?php esc_attr_e('Your email...', 'blogar'); ?>" required>
-                                    </div>
-                                    <div class="form-submit">
-                                        <button type="submit" class="sidebar-newsletter-btn">
-                                            <?php esc_html_e('Subscribe', 'blogar'); ?>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                    </div><!-- .archive-sidebar-inner -->
-
-                </aside><!-- .archive-sidebar -->
+                <?php get_template_part('template-parts/sidebar'); ?>
 
             </div><!-- .row -->
         </div><!-- .container -->

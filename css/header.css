@@ -10,7 +10,10 @@
 
 /* ===================== TOKENS ===================== */
 :root {
-  --blogar-header-padding-x: 60px;
+  /* On large screens: grows so header stays ~75px wider than the 1230px
+     content container on each side (slight stickout), never touches screen
+     edges on 2K/4K.  Floor: 30px keeps desktop-SM comfortable. */
+  --blogar-header-padding-x: max(30px, calc((100vw - 1230px) / 2 - 60px));
 }
 
 /* ===================== BASE ===================== */
@@ -56,8 +59,8 @@ body.header-sticky-now .main-content {
 
 /* ===================== COLUMNS — DESKTOP ===================== */
 .header-branding {
-  flex: 0 0 16.666667%;
-  max-width: 16.666667%;
+  flex: 0 0 13%;
+  max-width: 13%;
 }
 
 .header-navigation {
@@ -65,13 +68,13 @@ body.header-sticky-now .main-content {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 0 0 50%;
-  max-width: 50%;
+  flex: 0 0 55%;
+  max-width: 55%;
 }
 
 .header-actions {
-  flex: 0 0 33.333333%;
-  max-width: 33.333333%;
+  flex: 0 0 32%;
+  max-width: 32%;
 }
 
 /* Mobile actions hidden on desktop */
@@ -120,13 +123,14 @@ body.header-sticky-now .main-content {
 .mainmenu {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
-  margin: 0 -18px;
+  flex-wrap: nowrap;
+  gap: 20px;
+  margin: 0;
 }
 
 .mainmenu > li {
   position: relative;
-  margin: 0 18px;
+  margin: 0;
 }
 
 .mainmenu > li > a {
@@ -567,16 +571,10 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
    DESKTOP SMALL: 1200px – 1599px
    ============================================================================= */
 @media only screen and (min-width: 1200px) and (max-width: 1599px) {
-  :root {
-    --blogar-header-padding-x: 30px;
-  }
+  /* Token handled by max() formula — no override needed */
 
   .mainmenu {
-    margin: 0 -12px;
-  }
-
-  .mainmenu > li {
-    margin: 0 12px;
+    gap: 16px;
   }
 
   /* FIX: was 143px — too narrow */
@@ -637,18 +635,16 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
     justify-content: flex-end;
     flex: 0 0 auto;
     max-width: none;
-    margin-left: 0; /* ← BỎ auto, chuyển xuống actions-mobile */
-    order: 3; /* ← hamburger luôn ngoài cùng phải */
+    margin-left: 0;
+    order: 3;
   }
 
-  /* Actions: natural width, don't grow */
   .header-actions {
     flex: 0 0 auto;
     max-width: none;
     min-width: 0;
   }
 
-  /* Remove logo top/bottom padding on tablet */
   .axil-header .logo {
     padding: 0;
   }
@@ -666,7 +662,7 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
 
   .hamburger-menu {
     display: inline-flex;
-    margin-left: 0; /* ← BỎ, tránh double gap */
+    margin-left: 0;
   }
 
   /* Swap desktop ↔ mobile action panels */
@@ -675,7 +671,7 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
   }
 
   .header-actions-mobile {
-    display: flex; /* ← override display: none từ base */
+    display: flex;
     align-items: center;
     order: 2;
     margin-left: auto;

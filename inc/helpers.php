@@ -197,26 +197,41 @@ function blogar_get_configured_posts($count, $cat_id = 0, $selected_ids = array(
 
 function blogar_get_innovation_data()
 {
-    $title = get_option('blogar_s4_title', 'Innovation & Tech');
-    $count = max(1, (int) get_option('blogar_s4_post_count', 4));
-    $tabs = array();
+    $title     = get_option('blogar_s4_title', 'Innovation & Tech');
+    $subtitle  = get_option('blogar_s4_subtitle', '');
+    $count     = max(1, (int) get_option('blogar_s4_post_count', 4));
+    $tab_count = max(1, min(6, (int) get_option('blogar_s4_tab_count', 3)));
+    $tabs      = array();
 
-    for ($i = 1; $i <= 3; $i++) {
-        $label = get_option("blogar_s4_tab_{$i}_label", '');
-        $cat_id = (int) get_option("blogar_s4_tab_{$i}_cat", 0);
-        if (!$label && !$cat_id) {
+    for ($i = 1; $i <= $tab_count; $i++) {
+        $label        = get_option("blogar_s4_tab_{$i}_label", '');
+        $render_type  = get_option("blogar_s4_tab_{$i}_render_type", 'category');
+        $cat_id       = (int) get_option("blogar_s4_tab_{$i}_cat", 0);
+        $post_ids_raw = get_option("blogar_s4_tab_{$i}_post_ids", '');
+
+        if (!$label && !$cat_id && !$post_ids_raw) {
             continue;
         }
+
         $args = array(
-            'numberposts' => $count,
-            'post_status' => 'publish',
+            'numberposts'        => $count,
+            'post_status'        => 'publish',
             'ignore_sticky_posts' => true,
-            'orderby' => 'date',
-            'order' => 'DESC',
+            'orderby'            => 'date',
+            'order'              => 'DESC',
         );
-        if ($cat_id) {
+
+        if ($render_type === 'posts' && $post_ids_raw) {
+            $ids = array_filter(array_map('intval', explode(',', $post_ids_raw)));
+            if (!empty($ids)) {
+                $args['post__in']    = $ids;
+                $args['orderby']     = 'post__in';
+                $args['numberposts'] = count($ids);
+            }
+        } elseif ($cat_id) {
             $args['cat'] = $cat_id;
         }
+
         $tabs[] = array(
             'label' => $label ?: sprintf(__('Tab %d', 'blogar'), $i),
             'posts' => get_posts($args),
@@ -234,7 +249,7 @@ function blogar_get_innovation_data()
         }
     }
 
-    return array('title' => $title, 'tabs' => $tabs);
+    return array('title' => $title, 'subtitle' => $subtitle, 'tabs' => $tabs);
 }
 
 

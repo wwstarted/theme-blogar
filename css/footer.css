@@ -1,19 +1,34 @@
 /* =============================================================================
    FOOTER — Blogar Theme
+   Layout  : 4-column grid + copyright bar
+   Theme   : Dark background (CSS custom properties, overridable via inline style)
    Breakpoints:
-     Desktop     : ≥ 1200px (default)
-     Desktop-SM  : 1200–1599px
-     Tablet-LG   : 992–1199px
-     Tablet      : 768–991px
-     Mobile      : ≤ 767px
-     Mobile-XS   : ≤ 575px
+     Desktop  : ≥ 992px  — 4 cột
+     Tablet   : 768–991px — 2 cột
+     Mobile   : ≤ 767px  — 1 cột
+     Mobile XS: ≤ 575px  — padding thu hẹp
    ============================================================================= */
 
-/* ===================== CONTAINER ===================== */
-.axil-footer-area {
-  background: #fff;
+/* ===================== CSS CUSTOM PROPERTIES =====================
+   Defaults: dark teal. Overridden via inline style on .site-footer.
+   --f-bg   : background color      (set from admin → Footer settings)
+   --f-text : body / muted text     (set from admin → Footer settings)
+   --f-head : heading / title color (always white — not settable)
+   --f-brd  : border / divider      (semi-transparent white)
+   --f-inp  : newsletter input bg   (semi-transparent white)
+   ============================================================================= */
+.site-footer {
+  --f-bg:   #0f1c1e;
+  --f-text: #a8bfc2;
+  --f-head: #ffffff;
+  --f-brd:  rgba(255, 255, 255, 0.10);
+  --f-inp:  rgba(255, 255, 255, 0.07);
+
+  background: var(--f-bg);
+  border-top: none;
 }
 
+/* ===================== CONTAINER ===================== */
 .footer-container {
   width: 100%;
   max-width: 1230px;
@@ -21,378 +36,332 @@
   padding: 0 15px;
 }
 
-/* ===================== FOOTER MAINMENU ===================== */
-.footer-mainmenu {
-  padding-top: 90px;
-  padding-bottom: 25px;
+/* ===================== MAIN SECTION ===================== */
+.footer-main {
+  padding: 68px 0 56px;
 }
 
-.footer-grid {
+/* ===================== 4-COLUMN GRID ===================== */
+.footer-cols {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 30px;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  gap: 52px 44px;
+  align-items: start;
 }
 
-.footer-widget-item {
-  height: 100%;
-}
-
-.footer-widget-item .widget-title {
-  margin: 0 0 20px;
-  padding-bottom: 7px;
-  color: var(--color-heading);
-  font-size: 18px;
+/* ===================== SHARED: COL TITLE ===================== */
+.footer-col-title {
+  margin: 0 0 22px;
+  color: var(--f-head);
+  font-size: 17px;
   font-weight: 700;
-  line-height: 1.24;
-  border-bottom: 1px solid var(--color-lighter);
+  line-height: 1.3;
+  padding-bottom: 11px;
+  border-bottom: 2px solid var(--color-primary);
+  display: inline-block;
 }
 
-.footer-widget-item .menu {
+/* ===================== COL 1: BRAND ===================== */
+.footer-col--brand .footer-logo {
+  margin-bottom: 18px;
+}
+
+.footer-col--brand .footer-logo a {
+  display: inline-block;
+}
+
+.footer-col--brand .footer-logo img {
+  max-height: 37px;
+  width: auto;
+}
+
+.footer-brand-desc {
+  margin: 0 0 22px;
+  color: var(--f-text);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+/* Contact info list */
+.footer-contact-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.footer-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  color: var(--f-text);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.footer-contact-icon {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  margin-top: 2px;
+  fill: var(--color-primary);
+}
+
+.footer-contact-item a {
+  color: var(--f-text);
+  transition: color 0.25s ease;
+}
+
+.footer-contact-item a:hover {
+  color: var(--f-head);
+}
+
+/* ===================== COL 2–3: NAV MENU ===================== */
+.footer-nav-list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.footer-widget-item .menu-item {
-  margin: 0 0 10px;
+.footer-nav-list .menu-item {
+  margin: 0 0 11px;
 }
 
-.footer-widget-item .menu-item:last-child {
+.footer-nav-list .menu-item:last-child {
   margin-bottom: 0;
 }
 
-.footer-widget-item .menu-item a {
-  color: var(--color-midgray);
+.footer-nav-list .menu-item a {
+  display: inline-block;
+  color: var(--f-text);
   font-size: 16px;
   line-height: 1.5;
-  transition: color 0.3s ease;
+  transition: color 0.25s ease, padding-left 0.2s ease;
 }
 
-.footer-widget-item .menu-item a:hover {
-  color: var(--color-primary);
+.footer-nav-list .menu-item a:hover {
+  color: var(--f-head);
+  padding-left: 4px;
 }
 
-/* ===================== FOOTER TOP ===================== */
-.footer-top {
+/* ===================== COL 4: CTA ===================== */
+.footer-cta-desc {
+  margin: -10px 0 20px;
+  color: var(--f-text);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* Newsletter form */
+.footer-newsletter-row {
+  display: flex;
+}
+
+.footer-newsletter-input-wrap {
   position: relative;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  flex: 1;
 }
 
-/* Divider lines above and below footer-top */
-.footer-top::before,
-.footer-top::after {
+.footer-nl-icon {
   position: absolute;
-  left: 50%;
-  width: calc(100% - 30px);
-  max-width: 1230px;
-  height: 1px;
-  content: "";
-  background: var(--color-lighter);
-  transform: translateX(-50%);
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  fill: var(--f-text);
+  pointer-events: none;
 }
 
-.footer-top::before {
-  top: 0;
+.footer-newsletter-input {
+  width: 100%;
+  padding: 12px 10px 12px 34px;
+  border: 1px solid var(--f-brd);
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  background: var(--f-inp);
+  color: var(--f-head);
+  font-size: 15px;
+  line-height: 1.5;
+  outline: none;
+  transition: border-color 0.25s ease, background 0.25s ease;
 }
 
-.footer-top::after {
-  bottom: 0;
+.footer-newsletter-input:focus {
+  border-color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.12);
 }
 
-.footer-top-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 30px;
+.footer-newsletter-input::placeholder {
+  color: var(--f-text);
+  opacity: 0.8;
 }
 
-.footer-top-brand {
-  flex: 0 0 33.333333%;
-  max-width: 33.333333%;
-}
-
-.footer-top-social {
-  flex: 0 0 66.666667%;
-  max-width: 66.666667%;
-}
-
-/* ===================== FOOTER LOGO ===================== */
-.axil-footer-area .logo a {
-  display: block;
-}
-
-.axil-footer-area .logo img {
-  max-height: 37px;
-}
-
-/* FIX: Ẩn light-logo phòng trường hợp vẫn còn trong markup */
-.axil-footer-area .logo .light-logo {
-  display: none;
-}
-
-/* ===================== SOCIAL ICONS ===================== */
-.footer-social-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-}
-
-.follow-title {
-  margin: 10px 20px 10px 0;
-  color: var(--color-heading);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.24;
-}
-
-.social-icon {
-  display: flex;
-  flex-wrap: wrap;
-  margin: -5px;
-  padding: 0;
-  list-style: none;
-}
-
-.social-icon li {
-  margin: 5px;
-}
-
-.social-icon li a {
+.footer-newsletter-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
-  color: var(--color-heading);
-  background: var(--color-lightest);
-  border-radius: 50%;
-  cursor: pointer; /* FIX: thiếu */
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  padding: 0 18px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+  flex-shrink: 0;
 }
 
-.social-icon li a svg {
+.footer-newsletter-btn:hover {
+  opacity: 0.85;
+}
+
+.footer-newsletter-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Newsletter feedback notice */
+.footer-nl-notice {
+  margin: 0 0 14px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.footer-nl-notice--ok {
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.footer-nl-notice--err {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+/* Social icons (col 4) */
+.footer-social-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Social icons below newsletter form */
+.footer-social-list--inline {
+  margin-top: 18px;
+}
+
+.footer-social-list li a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--f-inp);
+  color: var(--f-text);
+  border: 1px solid var(--f-brd);
+  border-radius: 50%;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.footer-social-list li a svg {
   width: 18px;
   height: 18px;
   fill: currentColor;
 }
 
-.social-icon li a:hover {
-  color: var(--color-white);
+.footer-social-list li a:hover {
   background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
 }
 
-/* md-size variant: dùng cho footer social */
-.social-icon.md-size li a {
-  width: 40px;
-  height: 40px;
+/* ===================== COPYRIGHT BAR ===================== */
+.footer-bottom {
+  border-top: 1px solid var(--f-brd);
+  padding: 22px 0;
 }
 
-/* ===================== COPYRIGHT AREA ===================== */
-.copyright-area {
-  padding-top: 40px;
-  padding-bottom: 40px;
-}
-
-.copyright-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 30px;
-}
-
-.copyright-left {
-  flex: 0 0 66.666667%;
-  max-width: 66.666667%;
-}
-
-.copyright-right {
-  flex: 0 0 33.333333%;
-  max-width: 33.333333%;
-  text-align: right;
-}
-
-/* Bottom nav links */
-.copyright-area .mainmenu {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  margin: 0 0 -10px; /* FIX: chỉ bottom bleed, không offset ngang */
-  padding: 0;
-  list-style: none;
-}
-
-.copyright-area .mainmenu li {
-  margin: 0 18px 10px;
-}
-
-.copyright-area .mainmenu li:first-child {
-  margin-left: 0;
-}
-
-.copyright-area .mainmenu li a {
-  color: var(--color-midgray);
-  font-size: 16px;
-  line-height: 22px;
-  transition: color 0.3s ease;
-}
-
-.copyright-area .mainmenu li a:hover {
-  color: var(--color-primary);
-}
-
-/* Copyright text */
-.copyright-area .copyright-right p {
+.footer-copyright {
   margin: 0;
-  color: var(--color-midgray);
-  font-size: 14px;
+  color: var(--f-text);
+  font-size: 15px;
   line-height: 1.6;
+  text-align: center;
+  opacity: 0.8;
 }
 
-.copyright-area .copyright-right p a {
-  color: var(--color-midgray);
-  transition: color 0.3s ease;
+.footer-copyright a {
+  color: var(--f-text);
+  transition: color 0.25s ease;
 }
 
-.copyright-area .copyright-right p a:hover {
-  color: var(--color-primary);
+.footer-copyright a:hover {
+  color: var(--f-head);
 }
 
 /* =============================================================================
    DESKTOP SM: 1200px – 1599px
-   Thu padding container, giảm gap social icon nhẹ
    ============================================================================= */
 @media only screen and (min-width: 1200px) and (max-width: 1599px) {
   .footer-container {
     padding: 0 30px;
   }
 
-  .social-icon {
-    margin: -4px;
-  }
-
-  .social-icon li {
-    margin: 4px;
+  .footer-cols {
+    gap: 44px 32px;
   }
 }
 
 /* =============================================================================
    TABLET LG: 992px – 1199px
-   Grid vẫn 6 cột nhưng gap và social icon thu lại
    ============================================================================= */
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
-  .footer-grid {
-    gap: 20px; /* FIX: thu gap từ 30px để không bị chật ở tầm này */
+  .footer-main {
+    padding: 56px 0 44px;
   }
 
-  .social-icon {
-    margin: -3px;
-  }
-
-  .social-icon li {
-    margin: 3px;
+  .footer-cols {
+    gap: 40px 24px;
   }
 }
 
 /* =============================================================================
-   TABLET: ≤ 991px
-   - Footer grid: 6 cột → 2 cột
-   - Footer top + copyright: stack dọc
+   TABLET: ≤ 991px  →  2 cột
    ============================================================================= */
 @media only screen and (max-width: 991px) {
-  .footer-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .footer-main {
+    padding: 52px 0 40px;
   }
 
-  /* Stack footer top: logo trên, social dưới */
-  .footer-top-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px; /* FIX: source dùng mt_sm--15 = 15px margin trên social */
-  }
-
-  .footer-top-brand,
-  .footer-top-social {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-
-  /* Social align về trái khi stack */
-  .footer-social-wrap {
-    justify-content: flex-start;
-  }
-
-  /* Stack copyright: links trên, text dưới */
-  .copyright-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0; /* Gap dùng margin-top trên right thay vì gap chung */
-  }
-
-  .copyright-left,
-  .copyright-right {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-
-  /* FIX: Source dùng mt_md--20 = 20px margin-top trên copyright-right khi stack */
-  .copyright-right {
-    margin-top: 20px;
-    text-align: left;
-  }
-
-  .copyright-area .mainmenu li {
-    margin: 0 8px 10px;
-  }
-
-  .copyright-area .mainmenu li:first-child {
-    margin-left: 0;
+  .footer-cols {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px 30px;
   }
 }
 
 /* =============================================================================
-   MOBILE: ≤ 767px
+   MOBILE: ≤ 767px  →  1 cột
    ============================================================================= */
 @media only screen and (max-width: 767px) {
-  .footer-mainmenu {
-    padding-top: 70px;
-    padding-bottom: 20px;
+  .footer-main {
+    padding: 44px 0 34px;
   }
 
-  .footer-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 35px;
+  .footer-cols {
+    grid-template-columns: 1fr;
+    gap: 30px;
   }
 
-  .footer-top {
-    padding-top: 25px;
-    padding-bottom: 25px;
-  }
-
-  .follow-title {
-    margin-right: 0;
-    margin-bottom: 14px;
-  }
-
-  .copyright-area {
-    padding-top: 30px;
-    padding-bottom: 30px;
-  }
-
-  /* FIX: reset mainmenu về đúng intent — chỉ items có margin */
-  .copyright-area .mainmenu {
-    margin: 0 0 -10px;
-  }
-
-  .copyright-area .mainmenu li {
-    margin: 0 5px 10px;
-  }
-
-  .copyright-area .mainmenu li:first-child {
-    margin-left: 0;
+  .footer-newsletter-btn {
+    padding: 0 14px;
   }
 }
 
@@ -400,12 +369,11 @@
    MOBILE XS: ≤ 575px
    ============================================================================= */
 @media only screen and (max-width: 575px) {
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-
   .footer-container {
     padding: 0 16px;
+  }
+
+  .footer-col-title {
+    font-size: 16px;
   }
 }

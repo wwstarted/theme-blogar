@@ -47,7 +47,14 @@
 }
 
 .axil-breadcrumb li.separator {
+  font-size: 0; /* ẩn &nbsp; gốc */
+}
+
+.axil-breadcrumb li.separator::before {
+  content: "»";
+  font-size: var(--font-size-b3, 14px);
   color: var(--color-midgray);
+  line-height: 1.5;
 }
 
 .axil-breadcrumb a.bread-link {
@@ -75,9 +82,6 @@
   color: var(--color-primary);
 }
 
-/* =============================================================================
-   BLOG AREA LAYOUT
-   ============================================================================= */
 .axil-blog-area {
   background: var(--color-white);
 }
@@ -106,7 +110,9 @@
   margin-top: 30px;
 }
 
-.axil-blog-area .content-block.post-list-view:first-child {
+/* :first-of-type thay vì :first-child vì .blogar-visually-hidden (div)
+   đứng trước các article, khiến :first-child không match được. */
+.axil-blog-area article.content-block.post-list-view:first-of-type {
   margin-top: 0 !important;
 }
 
@@ -116,7 +122,6 @@
   gap: 5px;
 }
 
-/* Thumbnail: fixed width, 4:3 ratio */
 .axil-blog-area .content-block.post-list-view .post-thumbnail {
   width: 295px;
   min-width: 295px;
@@ -144,7 +149,6 @@
   transform: scale(1.08);
 }
 
-/* Content: stretches to image height via flex, overflow hidden to lock height */
 .axil-blog-area .content-block.post-list-view .post-content {
   display: flex;
   flex-direction: column;
@@ -272,9 +276,6 @@
   height: auto;
 }
 
-/* =============================================================================
-   PAGINATION
-   ============================================================================= */
 .axil-pagination {
   margin-top: 30px;
 }
@@ -772,13 +773,9 @@
 
 /* =============================================================================
    ARCHIVE LAYOUT — FULL WIDTH (no sidebar)
-   Append these rules to the END of css/archive.css.
-
-   Kích hoạt: .archive-layout-full (class trên .axil-blog-area)
-   Tất cả rules đều scoped — không ảnh hưởng layout sidebar.
    ============================================================================= */
 
-/* ── Visually hidden utility (cho h2 "Archive posts" ẩn) ─────────── */
+/* ── Visually hidden utility ─────────────────────────────────────── */
 .blogar-visually-hidden {
   position: absolute;
   width: 1px;
@@ -1068,4 +1065,258 @@
     flex: 0 0 100%;
     max-width: 100%;
   }
+}
+
+/* =============================================================================
+   ARCHIVE INFO BLOCK — description + count pill
+   Thứ tự HTML: .archive-description → .archive-info-meta
+   ============================================================================= */
+
+.archive-info-block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.archive-info-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ── Post count pill ─────────────────────────────────────────── */
+.archive-count-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-radius: 40px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.archive-count-pill::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Archive description — redesigned ───────────────────────────
+   Không còn border-left.
+   Style mới: text nhẹ, có icon quote mờ ở góc trái làm điểm nhấn,
+   nền trong suốt, font italic nhỏ gọn, opacity cao hơn nền breadcrumb.
+   ─────────────────────────────────────────────────────────────── */
+.archive-description {
+  position: relative;
+  max-width: 680px;
+  padding: 0 0 0 28px; /* chỉ indent trái cho icon quote */
+  color: var(--color-body, #65676b);
+  font-size: 15px;
+  font-style: italic;
+  line-height: 1.75;
+}
+
+/* Dấu ngoặc kép lớn làm icon trang trí */
+.archive-description::before {
+  content: "\201C"; /* left double quotation mark " */
+  position: absolute;
+  left: 0;
+  top: -4px;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-primary);
+  opacity: 0.35;
+  pointer-events: none;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.archive-description p {
+  margin: 0 0 0.6em;
+}
+
+.archive-description p:last-child {
+  margin-bottom: 0;
+}
+
+.archive-description:empty {
+  display: none;
+}
+
+/* =============================================================================
+   RESPONSIVE — archive info block
+   ============================================================================= */
+
+/* Tablet ≤ 1199px */
+@media only screen and (max-width: 1199px) {
+  .archive-description {
+    max-width: 100%;
+    font-size: 14px;
+  }
+
+  .archive-info-block {
+    gap: 14px;
+  }
+}
+
+/* Mobile ≤ 767px */
+@media only screen and (max-width: 767px) {
+  .archive-info-block {
+    gap: 10px;
+  }
+
+  .archive-count-pill {
+    font-size: 11px;
+    padding: 4px 12px;
+  }
+
+  .archive-description {
+    font-size: 14px;
+    padding-left: 22px;
+    line-height: 1.65;
+  }
+
+  .archive-description::before {
+    font-size: 28px;
+  }
+}
+
+/* Mobile XS ≤ 575px */
+@media only screen and (max-width: 575px) {
+  .archive-description {
+    font-size: 13px;
+    padding-left: 20px;
+  }
+
+  .archive-description::before {
+    font-size: 24px;
+    top: -2px;
+  }
+
+  .archive-count-pill {
+    font-size: 11px;
+    padding: 4px 11px;
+  }
+}
+
+/* =============================================================================
+   SIDEBAR — NEW WIDGETS (search, tags, newsletter notice)
+   ============================================================================= */
+
+/* ── Newsletter notice ──────────────────────────────────────────── */
+.sidebar-nl-notice {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.sidebar-nl-notice--ok {
+  background: rgba(16, 185, 129, 0.1);
+  color: #065f46;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.sidebar-nl-notice--err {
+  background: rgba(239, 68, 68, 0.08);
+  color: #991b1b;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* ── Search widget ──────────────────────────────────────────────── */
+.sidebar-search-form {
+  margin: 0;
+}
+
+.sidebar-search-inner {
+  display: flex;
+  border: 1px solid var(--color-lighter, #e2e2e2);
+  border-radius: var(--radius, 10px);
+  overflow: hidden;
+  transition: border-color 0.25s ease;
+}
+
+.sidebar-search-inner:focus-within {
+  border-color: var(--color-primary);
+}
+
+.sidebar-search-inner input[type="search"] {
+  flex: 1;
+  min-width: 0;
+  height: 42px;
+  padding: 0 12px;
+  font-size: 14px;
+  color: var(--color-heading);
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.sidebar-search-inner input[type="search"]::placeholder {
+  color: var(--color-midgray);
+}
+
+.sidebar-search-inner button {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary);
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar-search-inner button:hover {
+  opacity: 0.85;
+}
+
+.sidebar-search-inner button svg {
+  width: 16px;
+  height: 16px;
+  stroke: #fff;
+}
+
+/* ── Tag cloud ──────────────────────────────────────────────────── */
+.sidebar-tagcloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sidebar-tagcloud a {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 13px !important; /* override wp_tag_cloud inline font-size */
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--color-body, #65676b);
+  background: var(--color-lightest, #f5f5f5);
+  border: 1px solid var(--color-lighter, #e2e2e2);
+  border-radius: 30px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.sidebar-tagcloud a:hover {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
 }

@@ -53,11 +53,6 @@
   transform: rotate(180deg);
 }
 
-/* =============================================================================
-   FIX 2 — PANEL: BACKGROUND FULL-WIDTH
-   left/right âm bù trừ padding header → box-shadow + border-top full-width
-   .mega-panel-inner có padding tương ứng để nội dung vẫn trong content space
-   ============================================================================= */
 .blogar-mega-panel {
   position: absolute;
   top: 100%;
@@ -86,9 +81,6 @@
   transform: translateY(0);
 }
 
-/* =============================================================================
-   PANEL INNER — padding bù lại, content nằm đúng trong content space
-   ============================================================================= */
 .mega-panel-inner {
   padding: 24px var(--blogar-header-padding-x, 60px);
   overflow: hidden;
@@ -306,7 +298,6 @@
     display: none;
   }
 
-  /* Hiện mobile toggle trong off-canvas (override base display:none) */
   .mainmenu-item li.blogar-has-mega .mega-mobile-toggle {
     display: inline-flex;
     align-items: center;
@@ -342,7 +333,6 @@
     transform: rotate(180deg);
   }
 
-  /* Hiện mobile panel khi is-open (override base display:none) */
   .mainmenu-item li.blogar-has-mega .mega-mobile-panel.is-open {
     display: flex;
     flex-direction: column;

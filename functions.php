@@ -20,7 +20,9 @@ function blogar_theme_setup()
 {
     register_nav_menus(
         array(
-            'primary' => __('Primary Menu', 'blogar'),
+            'primary'      => __('Primary Menu', 'blogar'),
+            'footer-col2'  => __('Footer: Category Menu', 'blogar'),
+            'footer-col3'  => __('Footer: Pages Menu', 'blogar'),
         )
     );
 
@@ -33,6 +35,9 @@ function blogar_theme_setup()
             'flex-width' => true,
         )
     );
+
+    // Cho phép WordPress (và plugin SEO như Rank Math) quản lý thẻ <title>.
+    add_theme_support('title-tag');
 
     // Hỗ trợ featured image cho posts.
     add_theme_support('post-thumbnails');
@@ -162,6 +167,15 @@ function blogar_enqueue_assets()
             get_template_directory_uri() . '/css/archive.css',
             array('blogar-frontpage'),
             blogar_asset_version('css/archive.css')
+        );
+    }
+
+    if (is_home() && !is_front_page()) {
+        wp_enqueue_style(
+            'blogar-home',
+            get_template_directory_uri() . '/css/home.css',
+            array('blogar-archive'),
+            blogar_asset_version('css/home.css')
         );
     }
 
@@ -343,6 +357,49 @@ function blogar_primary_menu_fallback($args)
 
 
 // ================================================================
+// AI1WM EXPORT EXCLUSIONS
+// ================================================================
+
+// Loại bỏ .git khỏi export All-in-One WP Migration (tránh file wpress bị phình to)
+add_filter('ai1wm_exclude_files_from_export', function ($excludes) {
+    $excludes[] = '.git';
+    return $excludes;
+});
+
+
+// ================================================================
+// NEWSLETTER FORM HANDLER
+// ================================================================
+
+add_action('admin_post_nopriv_blogar_newsletter', 'blogar_handle_newsletter');
+add_action('admin_post_blogar_newsletter', 'blogar_handle_newsletter');
+
+function blogar_handle_newsletter()
+{
+    if (!isset($_POST['_wpnonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_wpnonce'])), 'blogar_newsletter_nonce')) {
+        wp_die(esc_html__('Security check failed.', 'blogar'));
+    }
+
+    $email = isset($_POST['blogar_nl_email']) ? sanitize_email(wp_unslash($_POST['blogar_nl_email'])) : '';
+
+    $referer = wp_get_referer() ?: home_url('/');
+
+    if (!is_email($email)) {
+        wp_safe_redirect(add_query_arg('newsletter', 'invalid', $referer));
+        exit;
+    }
+
+    $admin_email = get_option('admin_email');
+    $subject     = sprintf('[%s] New Newsletter Subscription', get_bloginfo('name'));
+    $message     = "New subscription request:\n\nEmail: {$email}\n\nSent from: " . home_url('/');
+    wp_mail($admin_email, $subject, $message);
+
+    wp_safe_redirect(add_query_arg('newsletter', 'success', $referer));
+    exit;
+}
+
+
+// ================================================================
 // WOOCOMMERCE CART COUNT
 // ================================================================
 
@@ -353,4 +410,142 @@ function blogar_get_cart_count()
     }
 
     return 0;
+}
+
+
+// ================================================================
+// HOME PAGE — DESCRIPTION META BOX (trên edit screen của Posts Page)
+// ================================================================
+
+/**
+ * Chỉ thêm meta box khi đang edit đúng page được set làm "Posts page".
+ * Hook add_meta_boxes_page truyền $post object vào callback.
+ */
+add_action('add_meta_boxes_page', 'blogar_add_home_desc_meta_box');
+
+function blogar_add_home_desc_meta_box($post)
+{
+    $posts_page_id = (int) get_option('page_for_posts');
+    if (!$posts_page_id || $post->ID !== $posts_page_id) {
+        return;
+    }
+    add_meta_box(
+        'blogar_home_desc',
+        __('Blog Page Description', 'blogar'),
+        'blogar_home_desc_meta_box_cb',
+        'page',
+        'normal',
+        'high'
+    );
+}
+
+function blogar_home_desc_meta_box_cb($post)
+{
+    wp_nonce_field('blogar_home_desc_save', 'blogar_home_desc_nonce');
+    $desc = get_post_meta($post->ID, 'blogar_home_description', true);
+    ?>
+    <p style="color:#666;margin:0 0 8px;font-size:13px;line-height:1.5;">
+        <?php esc_html_e('Mô tả hiển thị trong vùng tiêu đề của trang Blog. Dùng làm fallback khi category được filter không có description riêng.', 'blogar'); ?>
+    </p>
+    <textarea name="blogar_home_description" rows="4"
+        style="width:100%;box-sizing:border-box;font-size:14px;line-height:1.6;padding:8px 10px;border:1px solid #ddd;border-radius:4px;resize:vertical;"
+        placeholder="<?php esc_attr_e('Nhập mô tả cho trang Blog...', 'blogar'); ?>"><?php echo esc_textarea($desc); ?></textarea>
+    <?php
+}
+
+add_action('save_post_page', 'blogar_save_home_desc_meta');
+
+function blogar_save_home_desc_meta($post_id)
+{
+    if (
+        !isset($_POST['blogar_home_desc_nonce']) ||
+        !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['blogar_home_desc_nonce'])), 'blogar_home_desc_save')
+    ) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (!current_user_can('edit_page', $post_id)) {
+        return;
+    }
+
+    // Chỉ lưu nếu đây là Posts Page
+    if ((int) get_option('page_for_posts') !== $post_id) {
+        return;
+    }
+
+    $desc = isset($_POST['blogar_home_description'])
+        ? sanitize_textarea_field(wp_unslash($_POST['blogar_home_description']))
+        : '';
+
+    if (!empty($desc)) {
+        update_post_meta($post_id, 'blogar_home_description', $desc);
+    } else {
+        delete_post_meta($post_id, 'blogar_home_description');
+    }
+}
+
+
+// ================================================================
+// HOME PAGE — CATEGORY FILTER (pre_get_posts)
+// Cho phép ?cat=ID hoạt động trên trang Posts Page (is_home).
+// ================================================================
+
+add_action('pre_get_posts', 'blogar_home_category_filter');
+
+function blogar_home_category_filter($query)
+{
+    if (is_admin() || !$query->is_main_query() || !$query->is_home()) {
+        return;
+    }
+
+    // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+    $cat_id = isset($_GET['cat']) ? absint($_GET['cat']) : 0;
+
+    if ($cat_id > 0) {
+        $query->set('cat', $cat_id);
+    }
+}
+
+
+// ================================================================
+// CONTENT FILTER — RESPONSIVE TABLE WRAPPER
+// Wraps every <table> in the_content() with a scrollable div so
+// wide tables don't overflow the content column on narrow screens.
+// ================================================================
+
+add_filter('the_content', 'blogar_wrap_tables');
+
+function blogar_wrap_tables($content)
+{
+    if (!is_single() && !is_page()) {
+        return $content;
+    }
+
+    $content = preg_replace(
+        '/(<table[\s>])/i',
+        '<div class="table-responsive">$1',
+        $content
+    );
+    $content = str_replace('</table>', '</table></div>', $content);
+
+    return $content;
+}
+
+
+// ================================================================
+// SEO — COMMENT FORM: replace <h3> reply title with <div>
+// WordPress default: <h3 id="reply-title" class="comment-reply-title">
+// ================================================================
+
+add_filter('comment_form_defaults', 'blogar_comment_form_heading_fix');
+
+function blogar_comment_form_heading_fix($defaults)
+{
+    $defaults['title_reply_before'] = '<div id="reply-title" class="comment-reply-title">';
+    $defaults['title_reply_after']  = '</div>';
+    return $defaults;
 }

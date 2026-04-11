@@ -55,6 +55,31 @@ if (is_category()) {
     $page_title = __('Blog', 'blogar');
 }
 
+// ── Archive description + post count ──────────────────────────────
+$archive_desc = '';
+$archive_count = '';
+
+if (is_category() || is_tag()) {
+    $term = get_queried_object();
+    $term_desc = term_description();
+    if (!empty(trim(strip_tags($term_desc)))) {
+        $archive_desc = $term_desc; // already wpautop'd + kses'd by WP
+    }
+    if ($term && isset($term->count)) {
+        $cnt = (int) $term->count;
+        $archive_count = sprintf(
+            /* translators: %s: formatted post count */
+            _n('%s article', '%s articles', $cnt, 'blogar'),
+            number_format_i18n($cnt)
+        );
+    }
+} elseif (is_author()) {
+    $bio = get_the_author_meta('description', get_queried_object_id());
+    if (!empty(trim($bio))) {
+        $archive_desc = wpautop(wp_kses_post($bio));
+    }
+}
+
 $img = get_template_directory_uri() . '/images/frontpage/';
 ?>
 
@@ -94,6 +119,19 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                         </ul>
                     </nav>
                     <h1 class="page-title"><?php echo wp_kses($page_title, array('span' => array())); ?></h1>
+
+                    <?php if (!empty($archive_count) || !empty($archive_desc)): ?>
+                        <div class="archive-info-block">
+                            <?php if (!empty($archive_desc)): ?>
+                                <div class="archive-description"><?php echo wp_kses_post($archive_desc); ?></div>
+                            <?php endif; ?>
+                            <?php if (!empty($archive_count)): ?>
+                                <div class="archive-info-meta">
+                                    <span class="archive-count-pill"><?php echo esc_html($archive_count); ?></span>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -115,159 +153,154 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                 <div
                     class="<?php echo $is_full ? 'col-lg-12 col-md-12 col-12' : 'col-lg-8 col-md-12 col-12 order-1 order-lg-2'; ?>">
 
-                    <div class="blogar-visually-hidden">
-                        <h2><?php esc_html_e('Archive posts', 'blogar'); ?></h2>
-                    </div>
-
                     <?php if (have_posts()): ?>
 
-                    <?php if ($is_full): ?>
-                    <!-- ── FULL-WIDTH: 2-col card grid ──────────── -->
-                    <div class="archive-full-grid">
-                        <?php endif; ?>
+                        <?php if ($is_full): ?>
+                            <!-- ── FULL-WIDTH: 2-col card grid ──────────── -->
+                            <div class="archive-full-grid">
+                            <?php endif; ?>
 
-                        <?php while (have_posts()):
+                            <?php while (have_posts()):
                                 the_post(); ?>
 
-                        <?php if ($is_full): ?>
-                        <!-- ── Card dọc (full-width layout) ───── -->
-                        <article id="post-<?php the_ID(); ?>" <?php post_class('archive-card-full'); ?>>
+                                <?php if ($is_full): ?>
+                                    <!-- ── Card dọc (full-width layout) ───── -->
+                                    <article id="post-<?php the_ID(); ?>" <?php post_class('archive-card-full'); ?>>
 
-                            <div class="archive-card-thumb">
-                                <a href="<?php the_permalink(); ?>">
-                                    <img loading="lazy" decoding="async"
-                                        src="<?php echo esc_url(blogar_thumbnail_url(get_the_ID(), 'blogar-card')); ?>"
-                                        alt="<?php echo esc_attr(blogar_thumbnail_alt(get_the_ID())); ?>" width="390"
-                                        height="260">
-                                </a>
-                            </div>
-
-                            <div class="archive-card-body">
-                                <?php $cats = get_the_category();
-                                            if ($cats): ?>
-                                <div class="post-cat">
-                                    <div class="post-cat-list">
-                                        <?php foreach ($cats as $cat): ?>
-                                        <a class="hover-flip-item-wrapper"
-                                            href="<?php echo esc_url(get_category_link($cat->term_id)); ?>">
-                                            <span class="hover-flip-item">
-                                                <span data-text="<?php echo esc_attr($cat->name); ?>">
-                                                    <?php echo esc_html($cat->name); ?>
-                                                </span>
-                                            </span>
-                                        </a>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                                <?php endif; ?>
-
-                                <h3 class="title">
-                                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                </h3>
-
-                                <?php if (get_the_excerpt()): ?>
-                                <p class="archive-card-excerpt">
-                                    <?php echo esc_html(wp_trim_words(get_the_excerpt(), 18, '…')); ?>
-                                </p>
-                                <?php endif; ?>
-
-                                <div class="archive-card-meta">
-                                    <span class="archive-card-author">
-                                        <?php echo esc_html(get_the_author()); ?>
-                                    </span>
-                                    <span class="archive-card-sep" aria-hidden="true">·</span>
-                                    <span class="archive-card-date">
-                                        <?php echo esc_html(get_the_date()); ?>
-                                    </span>
-                                    <span class="archive-card-sep" aria-hidden="true">·</span>
-                                    <span class="archive-card-read">
-                                        <?php echo esc_html(blogar_reading_time(get_the_ID())); ?>
-                                    </span>
-                                </div>
-                            </div>
-
-                        </article>
-
-                        <?php else: ?>
-                        <!-- ── Card ngang (sidebar layout, giữ nguyên) ── -->
-                        <article id="post-<?php the_ID(); ?>"
-                            <?php post_class('content-block post-list-view mt--30'); ?>>
-
-                            <div class="post-thumbnail">
-                                <a href="<?php the_permalink(); ?>">
-                                    <img loading="lazy" decoding="async" width="295" height="221"
-                                        src="<?php echo esc_url(blogar_thumbnail_url(get_the_ID(), 'blogar-list')); ?>"
-                                        alt="<?php echo esc_attr(blogar_thumbnail_alt(get_the_ID())); ?>">
-                                </a>
-                            </div>
-
-                            <div class="post-content">
-                                <?php $cats = get_the_category();
-                                            if ($cats): ?>
-                                <div class="post-cat">
-                                    <div class="post-cat-list">
-                                        <?php foreach ($cats as $cat): ?>
-                                        <a class="hover-flip-item-wrapper"
-                                            href="<?php echo esc_url(get_category_link($cat->term_id)); ?>">
-                                            <span class="hover-flip-item">
-                                                <span data-text="<?php echo esc_attr($cat->name); ?>">
-                                                    <?php echo esc_html($cat->name); ?>
-                                                </span>
-                                            </span>
-                                        </a>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                                <?php endif; ?>
-
-                                <h3 class="title">
-                                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                </h3>
-
-                                <?php if (has_excerpt() || get_the_excerpt()): ?>
-                                <p class="post-description">
-                                    <?php echo esc_html(wp_strip_all_tags(get_the_excerpt())); ?>
-                                </p>
-                                <?php endif; ?>
-
-                                <div class="post-meta-wrapper">
-                                    <div class="post-meta">
-                                        <div class="content">
-                                            <p class="post-author-name">
-                                                <a class="hover-flip-item-wrapper"
-                                                    href="<?php echo esc_url(get_author_posts_url(get_the_author_meta('ID'))); ?>">
-                                                    <span class="hover-flip-item">
-                                                        <span data-text="<?php echo esc_attr(get_the_author()); ?>">
-                                                            <?php echo esc_html(get_the_author()); ?>
-                                                        </span>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <ul class="post-meta-list">
-                                                <li class="post-meta-date"><?php echo esc_html(get_the_date()); ?>
-                                                </li>
-                                                <li class="post-meta-reading-time">
-                                                    <?php echo esc_html(blogar_reading_time(get_the_ID())); ?>
-                                                </li>
-                                            </ul>
+                                        <div class="archive-card-thumb">
+                                            <a href="<?php the_permalink(); ?>">
+                                                <img loading="lazy" decoding="async"
+                                                    src="<?php echo esc_url(blogar_thumbnail_url(get_the_ID(), 'blogar-card')); ?>"
+                                                    alt="<?php echo esc_attr(blogar_thumbnail_alt(get_the_ID())); ?>" width="390"
+                                                    height="260">
+                                            </a>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
 
-                        </article>
-                        <?php endif; // end $is_full card switch ?>
+                                        <div class="archive-card-body">
+                                            <?php $cats = get_the_category();
+                                            if ($cats): ?>
+                                                <div class="post-cat">
+                                                    <div class="post-cat-list">
+                                                        <?php foreach ($cats as $cat): ?>
+                                                            <a class="hover-flip-item-wrapper"
+                                                                href="<?php echo esc_url(get_category_link($cat->term_id)); ?>">
+                                                                <span class="hover-flip-item">
+                                                                    <span data-text="<?php echo esc_attr($cat->name); ?>">
+                                                                        <?php echo esc_html($cat->name); ?>
+                                                                    </span>
+                                                                </span>
+                                                            </a>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
 
-                        <?php endwhile; ?>
+                                            <h2 class="title">
+                                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                            </h2>
 
-                        <?php if ($is_full): ?>
-                    </div><!-- .archive-full-grid -->
-                    <?php endif; ?>
+                                            <?php if (get_the_excerpt()): ?>
+                                                <p class="archive-card-excerpt">
+                                                    <?php echo esc_html(wp_trim_words(get_the_excerpt(), 18, '…')); ?>
+                                                </p>
+                                            <?php endif; ?>
+
+                                            <div class="archive-card-meta">
+                                                <span class="archive-card-author">
+                                                    <?php echo esc_html(get_the_author()); ?>
+                                                </span>
+                                                <span class="archive-card-sep" aria-hidden="true">·</span>
+                                                <span class="archive-card-date">
+                                                    <?php echo esc_html(get_the_date()); ?>
+                                                </span>
+                                                <span class="archive-card-sep" aria-hidden="true">·</span>
+                                                <span class="archive-card-read">
+                                                    <?php echo esc_html(blogar_reading_time(get_the_ID())); ?>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </article>
+
+                                <?php else: ?>
+                                    <!-- ── Card ngang (sidebar layout, giữ nguyên) ── -->
+                                    <article id="post-<?php the_ID(); ?>" <?php post_class('content-block post-list-view mt--30'); ?>>
+
+                                        <div class="post-thumbnail">
+                                            <a href="<?php the_permalink(); ?>">
+                                                <img loading="lazy" decoding="async" width="295" height="221"
+                                                    src="<?php echo esc_url(blogar_thumbnail_url(get_the_ID(), 'blogar-list')); ?>"
+                                                    alt="<?php echo esc_attr(blogar_thumbnail_alt(get_the_ID())); ?>">
+                                            </a>
+                                        </div>
+
+                                        <div class="post-content">
+                                            <?php $cats = get_the_category();
+                                            if ($cats): ?>
+                                                <div class="post-cat">
+                                                    <div class="post-cat-list">
+                                                        <?php foreach ($cats as $cat): ?>
+                                                            <a class="hover-flip-item-wrapper"
+                                                                href="<?php echo esc_url(get_category_link($cat->term_id)); ?>">
+                                                                <span class="hover-flip-item">
+                                                                    <span data-text="<?php echo esc_attr($cat->name); ?>">
+                                                                        <?php echo esc_html($cat->name); ?>
+                                                                    </span>
+                                                                </span>
+                                                            </a>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+
+                                            <h2 class="title">
+                                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                            </h2>
+
+                                            <?php if (has_excerpt() || get_the_excerpt()): ?>
+                                                <p class="post-description">
+                                                    <?php echo esc_html(wp_strip_all_tags(get_the_excerpt())); ?>
+                                                </p>
+                                            <?php endif; ?>
+
+                                            <div class="post-meta-wrapper">
+                                                <div class="post-meta">
+                                                    <div class="content">
+                                                        <p class="post-author-name">
+                                                            <a class="hover-flip-item-wrapper"
+                                                                href="<?php echo esc_url(get_author_posts_url(get_the_author_meta('ID'))); ?>">
+                                                                <span class="hover-flip-item">
+                                                                    <span data-text="<?php echo esc_attr(get_the_author()); ?>">
+                                                                        <?php echo esc_html(get_the_author()); ?>
+                                                                    </span>
+                                                                </span>
+                                                            </a>
+                                                        </p>
+                                                        <ul class="post-meta-list">
+                                                            <li class="post-meta-date"><?php echo esc_html(get_the_date()); ?>
+                                                            </li>
+                                                            <li class="post-meta-reading-time">
+                                                                <?php echo esc_html(blogar_reading_time(get_the_ID())); ?>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </article>
+                                <?php endif; // end $is_full card switch ?>
+
+                            <?php endwhile; ?>
+
+                            <?php if ($is_full): ?>
+                            </div><!-- .archive-full-grid -->
+                        <?php endif; ?>
 
 
 
-                    <!-- Pagination -->
-                    <?php
+                        <!-- Pagination -->
+                        <?php
                         the_posts_pagination(array(
                             'mid_size' => 2,
                             'prev_text' => __('&larr; Previous', 'blogar'),
@@ -277,118 +310,18 @@ $img = get_template_directory_uri() . '/images/frontpage/';
                         ?>
 
                     <?php else: ?>
-                    <div class="no-posts-found mt--30">
-                        <p><?php esc_html_e('No posts found.', 'blogar'); ?></p>
-                    </div>
+                        <div class="no-posts-found mt--30">
+                            <p><?php esc_html_e('No posts found.', 'blogar'); ?></p>
+                        </div>
                     <?php endif; ?>
 
                 </div><!-- post list col -->
 
 
                 <!-- ── SIDEBAR (chỉ render khi layout = 'sidebar') ─── -->
-                <?php if (!$is_full): ?>
-                <aside class="col-lg-4 col-md-12 col-12 order-2 order-lg-2 archive-sidebar"
-                    aria-label="<?php esc_attr_e('Sidebar', 'blogar'); ?>">
-
-                    <div class="archive-sidebar-inner">
-
-                        <!-- ① Popular Posts -->
-                        <div class="blogar-widget widget-popular-posts mt--30">
-                            <h2 class="widget-title"><?php esc_html_e('Popular Posts', 'blogar'); ?></h2>
-                            <?php
-                                $popular_posts = get_posts(array(
-                                    'numberposts' => 5,
-                                    'post_status' => 'publish',
-                                    'orderby' => 'comment_count',
-                                    'order' => 'DESC',
-                                    'ignore_sticky_posts' => true,
-                                ));
-                                foreach ($popular_posts as $pp):
-                                    $pp_url = get_permalink($pp->ID);
-                                    $pp_thumb = blogar_thumbnail_url($pp->ID, 'blogar-thumb');
-                                    $pp_alt = blogar_thumbnail_alt($pp->ID);
-                                    $pp_title = wp_trim_words($pp->post_title, 9, '...');
-                                    ?>
-                            <div class="popular-post-item">
-                                <div class="popular-post-inner">
-                                    <div class="popular-post-thumb">
-                                        <a href="<?php echo esc_url($pp_url); ?>">
-                                            <img loading="lazy" decoding="async" width="110" height="83"
-                                                src="<?php echo esc_url($pp_thumb); ?>"
-                                                alt="<?php echo esc_attr($pp_alt); ?>">
-                                        </a>
-                                    </div>
-                                    <div class="popular-post-text">
-                                        <h3 class="popular-post-title">
-                                            <a href="<?php echo esc_url($pp_url); ?>">
-                                                <?php echo esc_html($pp_title); ?>
-                                            </a>
-                                        </h3>
-                                        <div class="popular-post-meta">
-                                            <time datetime="<?php echo esc_attr(get_the_date('c', $pp->ID)); ?>">
-                                                <?php echo esc_html(get_the_date('', $pp->ID)); ?>
-                                            </time>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php endforeach;
-                                wp_reset_postdata(); ?>
-                        </div>
-
-                        <!-- ② Categories -->
-                        <div class="blogar-widget widget-sidebar-cats mt--30">
-                            <h2 class="widget-title"><?php esc_html_e('Categories', 'blogar'); ?></h2>
-                            <?php
-                                $sidebar_cats = get_categories(array(
-                                    'hide_empty' => true,
-                                    'orderby' => 'count',
-                                    'order' => 'DESC',
-                                    'number' => 10,
-                                ));
-                                if ($sidebar_cats):
-                                    ?>
-                            <ul class="sidebar-cat-list">
-                                <?php foreach ($sidebar_cats as $sc): ?>
-                                <li>
-                                    <a href="<?php echo esc_url(get_category_link($sc->term_id)); ?>">
-                                        <?php echo esc_html($sc->name); ?>
-                                    </a>
-                                    <span class="sidebar-cat-count"><?php echo (int) $sc->count; ?></span>
-                                </li>
-                                <?php endforeach; ?>
-                            </ul>
-                            <?php endif; ?>
-                        </div>
-
-                        <!-- ③ Newsletter -->
-                        <div class="blogar-widget widget-sidebar-newsletter mt--30">
-                            <h2 class="widget-title"><?php esc_html_e('Subscribe Newsletter', 'blogar'); ?></h2>
-                            <div class="sidebar-newsletter-inner">
-                                <p class="sidebar-newsletter-desc">
-                                    <?php esc_html_e("Subscribe our newsletter for latest news & updates. Let's stay updated!", 'blogar'); ?>
-                                </p>
-                                <form class="sidebar-newsletter-form" action="#" method="post">
-                                    <div class="form-group">
-                                        <input type="text" name="FNAME"
-                                            placeholder="<?php esc_attr_e('Your name...', 'blogar'); ?>">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="email" name="EMAIL"
-                                            placeholder="<?php esc_attr_e('Your email...', 'blogar'); ?>" required>
-                                    </div>
-                                    <div class="form-submit">
-                                        <button type="submit" class="sidebar-newsletter-btn">
-                                            <?php esc_html_e('Subscribe', 'blogar'); ?>
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                    </div><!-- .archive-sidebar-inner -->
-                </aside>
-                <?php endif; // end sidebar ?>
+                <?php if (!$is_full):
+                    get_template_part('template-parts/sidebar');
+                endif; ?>
 
             </div><!-- .row -->
         </div><!-- .container -->
