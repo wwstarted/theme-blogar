@@ -20,9 +20,9 @@ function blogar_theme_setup()
 {
     register_nav_menus(
         array(
-            'primary'      => __('Primary Menu', 'blogar'),
-            'footer-col2'  => __('Footer: Category Menu', 'blogar'),
-            'footer-col3'  => __('Footer: Pages Menu', 'blogar'),
+            'primary' => __('Primary Menu', 'blogar'),
+            'footer-col2' => __('Footer: Category Menu', 'blogar'),
+            'footer-col3' => __('Footer: Pages Menu', 'blogar'),
         )
     );
 
@@ -215,6 +215,15 @@ function blogar_enqueue_assets()
         );
     }
 
+    if (is_404()) {
+        wp_enqueue_style(
+            'blogar-404',
+            get_template_directory_uri() . '/css/404.css',
+            array('blogar-global'),
+            blogar_asset_version('css/404.css')
+        );
+    }
+
     // Mega menu — load trên tất cả page (header xuất hiện ở mọi nơi)
     wp_enqueue_style(
         'blogar-mega-menu',
@@ -390,8 +399,8 @@ function blogar_handle_newsletter()
     }
 
     $admin_email = get_option('admin_email');
-    $subject     = sprintf('[%s] New Newsletter Subscription', get_bloginfo('name'));
-    $message     = "New subscription request:\n\nEmail: {$email}\n\nSent from: " . home_url('/');
+    $subject = sprintf('[%s] New Newsletter Subscription', get_bloginfo('name'));
+    $message = "New subscription request:\n\nEmail: {$email}\n\nSent from: " . home_url('/');
     wp_mail($admin_email, $subject, $message);
 
     wp_safe_redirect(add_query_arg('newsletter', 'success', $referer));
@@ -546,6 +555,6 @@ add_filter('comment_form_defaults', 'blogar_comment_form_heading_fix');
 function blogar_comment_form_heading_fix($defaults)
 {
     $defaults['title_reply_before'] = '<div id="reply-title" class="comment-reply-title">';
-    $defaults['title_reply_after']  = '</div>';
+    $defaults['title_reply_after'] = '</div>';
     return $defaults;
 }

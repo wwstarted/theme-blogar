@@ -785,7 +785,6 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
     cursor: pointer;
   }
 
-  /* Hide inline form, show as dropdown below header */
   .large-mobile-blog-search {
     position: absolute;
     top: 100%;
@@ -820,7 +819,6 @@ body.popup-mobile-menu-show .popup-mobilemenu-area .inner {
     border-radius: var(--radius, 6px);
   }
 
-  /* Search icon on right for mobile XS */
   .axil-search-mobile .search-button {
     top: 50%;
     right: 16px;

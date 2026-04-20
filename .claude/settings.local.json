@@ -11,7 +11,8 @@
       "Bash(rm \"d:/XAMPP/htdocs/theme_blogar/wordpress-6.8.3-vi/wordpress/wp-content/ai1wm-backups/localhost-themeblogar-wordpress-683-vi-wordpress-20260407-093456-vuadd3jwwz39.wpress\")",
       "Bash(rm \"d:/XAMPP/htdocs/theme_blogar/wordpress-6.8.3-vi/wordpress/wp-content/ai1wm-backups/localhost-themeblogar-wordpress-683-vi-wordpress-20260407-095719-t29yx17gt2ms.wpress\")",
       "Bash(rm \"d:/XAMPP/htdocs/theme_blogar/wordpress-6.8.3-vi/wordpress/wp-content/ai1wm-backups/localhost-themeblogar-wordpress-683-vi-wordpress-20260408-011311-3nw87zxjmx6s.wpress\")",
-      "Bash(rm \"d:/XAMPP/htdocs/theme_blogar/wordpress-6.8.3-vi/wordpress/wp-content/ai1wm-backups/localhost-themeblogar-wordpress-683-vi-wordpress-20260408-031527-240ivhtqxopz.wpress\")"
+      "Bash(rm \"d:/XAMPP/htdocs/theme_blogar/wordpress-6.8.3-vi/wordpress/wp-content/ai1wm-backups/localhost-themeblogar-wordpress-683-vi-wordpress-20260408-031527-240ivhtqxopz.wpress\")",
+      "Bash(python3 -c \" import sys, json lines = sys.stdin.read\\(\\).strip\\(\\).split\\('\\\\n'\\) for line in lines[-10:]: try: obj = json.loads\\(line\\) role = obj.get\\('role',''\\) content = obj.get\\('content',''\\) if isinstance\\(content, list\\): for c in content: if isinstance\\(c, dict\\) and c.get\\('type'\\) == 'text': print\\(f'[{role}]: {c[\\\\\"text\\\\\"][:500]}'\\) elif isinstance\\(content, str\\): print\\(f'[{role}]: {content[:500]}'\\) except: pass \")"
     ]
   },
   "hooks": {

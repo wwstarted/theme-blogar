@@ -13,6 +13,10 @@
  *   ② Categories   (count badge)
  *   ③ Newsletter   (name + email + subscribe)
  * Sticky: dùng .archive-sidebar-inner (giống archive.css)
+ *
+ * CHANGES v2.1:
+ *   - single-post-meta.post-meta-wrapper REMOVED (trùng với Author Box)
+ *   - single-post-thumbnail: object-fit:contain (CSS) — xem single.css
  */
 
 if (!defined('ABSPATH')) {
@@ -37,7 +41,7 @@ $single_content_col_class = $is_single_full
     : 'col-lg-8 col-md-12 col-12 order-1 order-lg-1 single-main-column';
 
 /* ================================================================
-   TOC HELPER — không thay đổi
+   TOC HELPER
    ================================================================ */
 function blogar_process_toc($content)
 {
@@ -162,7 +166,7 @@ function blogar_process_toc($content)
 
 
 <!-- ================================================================
-     MAIN LAYOUT: sidebar mode or centered no-sidebar mode
+     MAIN LAYOUT
      ================================================================ -->
 <div class="main-wrapper">
     <div class="axil-blog-area axil-section-gap bg-color-white single-layout-<?php echo esc_attr($single_layout); ?>">
@@ -199,10 +203,12 @@ function blogar_process_toc($content)
                         $toc_result = blogar_process_toc($raw_content);
                         ?>
 
-                    <article id="post-<?php the_ID(); ?>" <?php post_class('single-post-article' . ($is_single_full ? ' single-post-article-full' : '')); ?>>
+                    <article id="post-<?php the_ID(); ?>"
+                        <?php post_class('single-post-article' . ($is_single_full ? ' single-post-article-full' : '')); ?>>
 
                         <!-- Featured Image -->
-                        <div class="single-post-thumbnail">
+                        <div class="single-post-thumbnail"
+                            style="--thumb-bg: url('<?php echo esc_url($thumb_url); ?>')">
                             <img fetchpriority="high" loading="eager" decoding="async"
                                 src="<?php echo esc_url($thumb_url); ?>" alt="<?php echo esc_attr($thumb_alt); ?>">
                         </div>
@@ -231,60 +237,10 @@ function blogar_process_toc($content)
                             <!-- *** ONE h1 per page *** -->
                             <h1 class="single-post-title"><?php the_title(); ?></h1>
 
-                            <div class="single-post-meta post-meta-wrapper">
-                                <div class="post-meta">
-                                    <div class="post-author-avatar border-rounded">
-                                        <img alt="<?php echo esc_attr($author_name); ?>"
-                                            src="<?php echo esc_url($author_avatar); ?>" width="50" height="50">
-                                    </div>
-                                    <div class="content">
-                                        <p class="post-author-name">
-                                            <a class="hover-flip-item-wrapper"
-                                                href="<?php echo esc_url($author_url); ?>">
-                                                <span class="hover-flip-item">
-                                                    <span data-text="<?php echo esc_attr($author_name); ?>">
-                                                        <?php echo esc_html($author_name); ?>
-                                                    </span>
-                                                </span>
-                                            </a>
-                                        </p>
-                                        <ul class="post-meta-list">
-                                            <li class="post-meta-date"><?php echo esc_html($post_date); ?></li>
-                                            <li class="post-meta-reading-time"><?php echo esc_html($read_time); ?></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <ul class="social-share-transparent justify-content-end">
-                                    <li>
-                                        <a href="<?php echo esc_url($share_urls['facebook']); ?>" target="_blank"
-                                            rel="noopener nofollow" class="aw-facebook"
-                                            aria-label="<?php esc_attr_e('Share on Facebook', 'blogar'); ?>">
-                                            <?php echo $svg_fb; // phpcs:ignore ?>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="<?php echo esc_url($share_urls['twitter']); ?>" target="_blank"
-                                            rel="noopener nofollow" class="aw-twitter"
-                                            aria-label="<?php esc_attr_e('Share on Twitter', 'blogar'); ?>">
-                                            <?php echo $svg_tw; // phpcs:ignore ?>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="<?php echo esc_url($share_urls['linkedin']); ?>" target="_blank"
-                                            rel="noopener nofollow" class="aw-linkdin"
-                                            aria-label="<?php esc_attr_e('Share on LinkedIn', 'blogar'); ?>">
-                                            <?php echo $svg_li; // phpcs:ignore ?>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <button class="axilcopyLink" title="<?php esc_attr_e('Copy Link', 'blogar'); ?>"
-                                            data-link="<?php echo esc_url($post_url); ?>"
-                                            aria-label="<?php esc_attr_e('Copy link', 'blogar'); ?>">
-                                            <?php echo $svg_lk; // phpcs:ignore ?>
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
+                            <!-- NOTE: .single-post-meta.post-meta-wrapper removed.
+                                 Author name, date, reading time → Author Box cuối bài.
+                                 Share icons → .single-post-share-footer cuối bài. -->
+
                         </div><!-- .single-post-header -->
 
                         <!-- Post Content (TOC injected) -->
@@ -350,6 +306,11 @@ function blogar_process_toc($content)
                                         </span>
                                     </a>
                                 </div>
+                                <!-- Post date + reading time — hiển thị trong Author Box -->
+                                <ul class="post-meta-list mt--10">
+                                    <li class="post-meta-date"><?php echo esc_html($post_date); ?></li>
+                                    <li class="post-meta-reading-time"><?php echo esc_html($read_time); ?></li>
+                                </ul>
                                 <p class="author-bio">
                                     <?php
                                         if (!empty(trim($author_bio))) {
@@ -462,11 +423,11 @@ function blogar_process_toc($content)
             </div><!-- .row -->
         </div><!-- .container -->
     </div><!-- .axil-blog-area -->
-</div><!-- .main-wrapper -->
+</div>
 
 
 <!-- ================================================================
-     RELATED POSTS — full-width 4-col, ngoài main layout
+     RELATED POSTS
      ================================================================ -->
 <?php
 $related_args = array(
@@ -532,7 +493,7 @@ $related_query = new WP_Query($related_args);
 
 
 <!-- ================================================================
-     TOC TOGGLE + SMOOTH SCROLL (vanilla JS)
+     TOC TOGGLE + SMOOTH SCROLL
      ================================================================ -->
 <script>
 (function() {

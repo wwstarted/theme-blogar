@@ -86,7 +86,7 @@ $_sections = array();
             </div><!-- /.blogar-news-highlight-ticker -->
 
             <!-- Grid -->
-            <div class="blogar-news-highlight-grid">
+            <div class=" blogar-news-highlight-grid">
 
                 <!-- Big featured card -->
                 <article class="blogar-news-highlight-card blogar-news-highlight-card-featured">
@@ -126,7 +126,7 @@ $_sections = array();
                             <?php endforeach; ?>
                         </div>
                         <?php endif; ?>
-                        <h2 class="title"><a
+                        <h2 class=" title"><a
                                 href="<?php echo esc_url($hb_url); ?>"><?php echo esc_html($hb_title); ?></a>
                         </h2>
                         <div class="blogar-news-highlight-card-meta">
@@ -275,15 +275,26 @@ ob_start(); ?>
 <?php $fvg2_data = blogar_get_featured_grid_2plus3_data(); ?>
 <?php if (!empty($fvg2_data['top_posts']) || !empty($fvg2_data['bottom_posts'])): ?>
 <section class="axil-fvg2-area">
-
-    <div class="fvg2-header">
-        <div class="container">
-            <h2 class="fvg2-header__title"><?php echo esc_html($fvg2_data['title']); ?></h2>
-        </div>
-    </div>
-
     <div class="container">
-        <div class="fvg2-grid">
+
+        <div class="fvg2-section-title">
+            <span class="fvg2-section-line" aria-hidden="true"></span>
+            <div class="fvg2-title-inner lp-title-inner">
+                <span class="fvg2-title-icon lp-title-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                    </svg>
+                </span>
+                <h2 class="fvg2-title-text lp-title-text"><?php echo esc_html($fvg2_data['title']); ?></h2>
+            </div>
+            <span class="fvg2-section-line" aria-hidden="true"></span>
+        </div>
+
+        <div class="fvg2-grid mt--30">
 
             <!-- Top row: 2 equal cards -->
             <div class="fvg2-row fvg2-row--top">
@@ -307,10 +318,10 @@ ob_start(); ?>
                     <div class="fvg2-card__content">
                         <h3 class="fvg2-card__title"><span
                                 class="blogar-home-title-fill"><?php echo esc_html($tp_title); ?></span></h3>
-                        <div class="fvg2-card__meta">
+                        <div class=" fvg2-card__meta">
                             <span class="fvg2-meta-by"><?php esc_html_e('by', 'blogar'); ?></span>
                             <?php echo blogar_hover_flip_text_html($tp_author, 'fvg2-meta-author blogar-card-flip-text blogar-card-flip-text--light'); // phpcs:ignore ?>
-                            <span class="fvg2-meta-dot" aria-hidden="true">•</span>
+                            <span class=" fvg2-meta-dot" aria-hidden="true">•</span>
                             <span class="fvg2-meta-date"><?php echo esc_html($tp_date); ?></span>
                         </div>
                     </div>
@@ -319,7 +330,7 @@ ob_start(); ?>
             </div>
 
             <!-- Bottom row: 3 equal cards -->
-            <div class="fvg2-row fvg2-row--bottom">
+            <div class=" fvg2-row fvg2-row--bottom">
                 <?php foreach ($fvg2_data['bottom_posts'] as $bp):
                             if (!$bp instanceof WP_Post)
                                 continue;
@@ -340,18 +351,19 @@ ob_start(); ?>
                     <div class="fvg2-card__content">
                         <h3 class="fvg2-card__title"><span
                                 class="blogar-home-title-fill"><?php echo esc_html($bp_title); ?></span></h3>
-                        <div class="fvg2-card__meta">
+                        <div class=" fvg2-card__meta">
                             <span class="fvg2-meta-by"><?php esc_html_e('by', 'blogar'); ?></span>
                             <?php echo blogar_hover_flip_text_html($bp_author, 'fvg2-meta-author blogar-card-flip-text blogar-card-flip-text--light'); // phpcs:ignore ?>
-                            <span class="fvg2-meta-dot" aria-hidden="true">•</span>
+                            <span class=" fvg2-meta-dot" aria-hidden="true">•</span>
                             <span class="fvg2-meta-date"><?php echo esc_html($bp_date); ?></span>
                         </div>
                     </div>
                 </a>
                 <?php endforeach; ?>
             </div>
-
         </div>
+
+    </div>
     </div>
 </section>
 <?php endif; ?>
@@ -365,7 +377,7 @@ ob_start(); ?>
 <?php if (get_option('blogar_s14_enabled', '1')): ?>
 <?php $lp_data = blogar_get_latest_posts_data(); ?>
 <?php if (!empty($lp_data['posts'])): ?>
-<section class="axil-latest-posts-area axil-section-gap bg-color-white">
+<section class=" axil-latest-posts-area axil-section-gap bg-color-white">
     <div class="container">
 
         <div class="lp-section-title">
@@ -383,7 +395,7 @@ ob_start(); ?>
             </div>
         </div>
 
-        <div class="lp-grid mt--30">
+        <div class=" lp-grid mt--30">
             <?php foreach ($lp_data['posts'] as $lp):
                         $lp_id = $lp->ID;
                         $lp_url = get_permalink($lp_id);
@@ -414,10 +426,10 @@ ob_start(); ?>
                     <div class="lp-card__meta">
                         <span class="lp-meta-by"><?php esc_html_e('by', 'blogar'); ?></span>
                         <?php echo blogar_hover_flip_link_html($lp_aurl, $lp_author, 'lp-meta-author'); // phpcs:ignore ?>
-                        <span class="lp-meta-dot" aria-hidden="true">•</span>
+                        <span class=" lp-meta-dot" aria-hidden="true">•</span>
                         <span class="lp-meta-date"><?php echo esc_html($lp_date); ?></span>
                     </div>
-                    <div class="lp-card__readmore">
+                    <div class=" lp-card__readmore">
                         <a href="<?php echo esc_url($lp_url); ?>"
                             class="lp-readmore-btn"><?php esc_html_e('Read The Article', 'blogar'); ?></a>
                     </div>
@@ -428,7 +440,8 @@ ob_start(); ?>
 
         <div class="lp-loadmore mt--30">
             <a href="<?php echo esc_url($lp_data['more_url']); ?>" class="lp-loadmore-btn">
-                <span><?php esc_html_e('Load More Posts', 'blogar'); ?></span>
+                <span><?php esc_html_e('Load More Posts', 'blogar'); ?>
+                </span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"
                     width="14" height="14">
                     <polyline points="23 4 23 10 17 10" />
@@ -453,8 +466,19 @@ ob_start(); ?>
 <section class="axil-featured-grid-area axil-section-gap bg-color-white">
     <div class="container">
 
-        <div class="section-title text-left">
-            <h2 class="title"><?php echo esc_html($fvg_data['title']); ?></h2>
+        <div class="fvg-section-title">
+            <span class="fvg-section-line" aria-hidden="true"></span>
+            <div class="fvg-title-inner lp-title-inner">
+                <span class="fvg-title-icon lp-title-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <polygon
+                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
+                </span>
+                <h2 class="fvg-title-text lp-title-text"><?php echo esc_html($fvg_data['title']); ?></h2>
+            </div>
+            <span class="fvg-section-line" aria-hidden="true"></span>
         </div>
 
         <div class="fvg-grid mt--30">
@@ -485,7 +509,7 @@ ob_start(); ?>
                         <?php endif; ?>
                         <h3 class="fvg-card-title"><span
                                 class="blogar-home-title-fill"><?php echo esc_html($big_title); ?></span></h3>
-                        <div class="fvg-card-meta">
+                        <div class=" fvg-card-meta">
                             <span><?php echo esc_html($big_author); ?></span>
                             <span class="fvg-dot" aria-hidden="true">·</span>
                             <span><?php echo esc_html($big_date); ?></span>
@@ -524,7 +548,7 @@ ob_start(); ?>
                             <h3 class="fvg-card-title"><span
                                     class="blogar-home-title-fill"><?php echo esc_html($med_title); ?></span>
                             </h3>
-                            <div class="fvg-card-meta">
+                            <div class=" fvg-card-meta">
                                 <span><?php echo esc_html($med_date); ?></span>
                                 <span class="fvg-dot" aria-hidden="true">·</span>
                                 <span><?php echo esc_html($med_read); ?></span>
@@ -557,11 +581,13 @@ ob_start(); ?>
                         <div class="fvg-card-content">
                             <?php if ($sp_cats): ?>
                             <?php echo blogar_hover_flip_text_html($sp_cats[0]->name, 'fvg-card-cat blogar-card-flip-text blogar-card-flip-text--badge'); // phpcs:ignore ?>
+
                             <?php endif; ?>
                             <h3 class="fvg-card-title"><span
                                     class="blogar-home-title-fill"><?php echo esc_html($sp_title); ?></span>
                             </h3>
-                            <div class="fvg-card-meta"><span><?php echo esc_html($sp_date); ?></span></div>
+                            <div class=" fvg-card-meta"><span><?php echo esc_html($sp_date); ?></span>
+                            </div>
                         </div>
                     </a>
                     <?php endforeach; ?>
@@ -592,15 +618,18 @@ ob_start(); ?>
     <div class="wrapper">
         <div class="container">
 
-            <div class="inno-section-head">
-                <div class="section-title text-left">
-                    <h2 class="title"><?php echo esc_html($inno_data['title']); ?></h2>
-                    <?php if (!empty($inno_data['subtitle'])): ?>
-                    <p class="inno-section-subtitle">
-                        <?php echo esc_html($inno_data['subtitle']); ?>
-                    </p>
-                    <?php endif; ?>
+            <div class="fvg-section-title">
+                <span class="fvg-section-line" aria-hidden="true"></span>
+                <div class="fvg-title-inner lp-title-inner">
+                    <span class="lp-title-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                        </svg>
+                    </span>
+                    <h2 class="lp-title-text"><?php echo esc_html($inno_data['title']); ?></h2>
                 </div>
+                <span class="fvg-section-line" aria-hidden="true"></span>
             </div>
 
             <ul class="axil-tab-button inno-tab-button mt--20" role="tablist">
@@ -671,6 +700,7 @@ ob_start(); ?>
                                             <p class="modern-card-excerpt">
                                                 <?php echo esc_html($post_excerpt); ?>
                                             </p>
+
                                             <?php endif; ?>
                                             <div class="modern-card-meta">
                                                 <img class="modern-card-avatar"
@@ -712,9 +742,8 @@ ob_start(); ?>
                         </button>
                     </div>
 
-                </div><!-- /.single-tab-content -->
-                <?php endforeach; ?>
-            </div><!-- /.tab-content -->
+                </div><?php endforeach; ?>
+            </div>
 
         </div>
     </div>
@@ -731,11 +760,22 @@ ob_start(); ?>
 <?php $featured_video_data = blogar_get_featured_video_data(); ?>
 <section class="axil-video-post-area axil-section-gap bg-color-black">
     <div class="container">
-        <div class="section-title text-left">
-            <h2 class="title"><?php echo esc_html($featured_video_data['title']); ?></h2>
+        <div class="fvg-section-title">
+            <span class="fvg-section-line" aria-hidden="true"></span>
+            <div class="fvg-title-inner lp-title-inner">
+                <span class="lp-title-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <polygon points="23 7 16 12 23 17 23 7" />
+                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                    </svg>
+                </span>
+                <h2 class="lp-title-text"><?php echo esc_html($featured_video_data['title']); ?></h2>
+            </div>
+            <span class="fvg-section-line" aria-hidden="true"></span>
         </div>
 
-        <div class="video-posts-grid">
+        <div class=" video-posts-grid">
             <?php if ($featured_video_data['big_post'] instanceof WP_Post):
                     $vb_id = $featured_video_data['big_post']->ID;
                     $vb_url = get_permalink($vb_id);
@@ -779,7 +819,7 @@ ob_start(); ?>
                                 <ul class="post-meta-list">
                                     <li class="post-meta-date"><?php echo esc_html(get_the_date('', $vb_id)); ?>
                                     </li>
-                                    <li class="post-meta-reading-time">
+                                    <li class=" post-meta-reading-time">
                                         <?php echo esc_html(blogar_reading_time($vb_id)); ?>
                                     </li>
                                 </ul>
@@ -843,7 +883,7 @@ ob_start(); ?>
                                         echo blogar_post_categories_html($vs->ID, 1); // phpcs:ignore ?></div>
                         </div>
                         <?php if ($vs instanceof WP_Post): ?>
-                        <h3 class="title"><a
+                        <h3 class=" title"><a
                                 href="<?php echo esc_url($vs_url); ?>"><?php echo esc_html($vs_title); ?></a>
                         </h3>
                         <?php else: ?>

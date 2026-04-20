@@ -114,14 +114,9 @@ $cart_count = blogar_get_cart_count();
                         </div>
                     </div>
 
-                    <!-- ===== MOBILE ACTIONS (≤1199px) ===== -->
                     <div class="header-actions header-actions-mobile">
                         <div class="header-search">
 
-                            <!--
-                                Search icon: only visible at ≤575px (CSS).
-                                At 576–1199px the inline form is shown directly.
-                            -->
                             <div class="search-mobile-icon">
                                 <button type="button" aria-expanded="false" aria-controls="blogar-mobile-search"
                                     aria-label="<?php esc_attr_e('Open search', 'blogar'); ?>">
@@ -156,30 +151,11 @@ $cart_count = blogar_get_cart_count();
                                         value="<?php echo esc_attr(get_search_query()); ?>">
                                 </div>
                             </form>
-
-                            <!-- <ul class="metabar-block">
-                                <li class="icon">
-                                    <a href="<?php echo esc_url(function_exists('wc_get_cart_url') ? wc_get_cart_url() : '#'); ?>"
-                                        aria-label="<?php esc_attr_e('Cart', 'blogar'); ?>">
-                                        <span class="mini-cart">
-                                            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-                                                <circle cx="9" cy="20" r="1.5"></circle>
-                                                <circle cx="18" cy="20" r="1.5"></circle>
-                                                <path d="M3 4h2l2.2 10.2a1 1 0 0 0 1 .8H18a1 1 0 0 0 1-.8L21 7H7"
-                                                    fill="none" stroke="currentColor" stroke-linecap="round"
-                                                    stroke-linejoin="round" stroke-width="1.8"></path>
-                                            </svg>
-                                            <span class="aw-cart-count"><?php echo esc_html($cart_count); ?></span>
-                                        </span>
-                                    </a>
-                                </li>
-                            </ul> -->
-
                         </div>
                     </div>
 
-                </div><!-- .header-inner -->
-            </div><!-- .header-wrap -->
+                </div>
+            </div>
         </header>
 
         <!-- ===== MOBILE OFF-CANVAS MENU ===== -->

@@ -360,14 +360,13 @@ function blogar_section_toggle_field_cb($args)
     $option = $args['option_name'];
     $enabled = (bool) get_option($option, 1);
     ?>
-    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;font-weight:500;">
-        <input type="hidden" name="<?php echo esc_attr($option); ?>" value="0">
-        <input type="checkbox" id="<?php echo esc_attr($option); ?>"
-            name="<?php echo esc_attr($option); ?>" value="1"
-            <?php checked($enabled, true); ?>>
-        <span><?php esc_html_e('Show this section on the homepage', 'blogar'); ?></span>
-    </label>
-    <?php
+<label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;font-weight:500;">
+    <input type="hidden" name="<?php echo esc_attr($option); ?>" value="0">
+    <input type="checkbox" id="<?php echo esc_attr($option); ?>" name="<?php echo esc_attr($option); ?>" value="1"
+        <?php checked($enabled, true); ?>>
+    <span><?php esc_html_e('Show this section on the homepage', 'blogar'); ?></span>
+</label>
+<?php
 }
 
 /**
@@ -878,6 +877,10 @@ function blogar_render_options_page()
             'label'         => __('⋮ Sidebar', 'blogar'),
             'custom_render' => 'blogar_render_sidebar_tab',
         ),
+        '404_page' => array(
+            'label'         => __('⚠ 404 Page', 'blogar'),
+            'custom_render' => 'blogar_render_404_tab',
+        ),
     );
 
     $default_tab = 's11_news_highlight';
@@ -907,7 +910,7 @@ function blogar_render_options_page()
     <div
         style="background:#fff;border:1px solid #c3c4c7;border-top:none;padding:20px 24px 8px;border-radius:0 0 4px 4px">
         <?php if (!empty($tabs[$active_tab]['custom_render'])): ?>
-            <?php call_user_func($tabs[$active_tab]['custom_render']); ?>
+        <?php call_user_func($tabs[$active_tab]['custom_render']); ?>
         <?php else: ?>
         <form method="post" action="options.php">
             <?php
@@ -994,13 +997,13 @@ function blogar_home_layout_field_cb()
             document.querySelectorAll('[name="blogar_home_layout"]').forEach(function(x) {
                 var l = x.closest('label');
                 l.style.borderColor = '#ddd';
-                l.style.background  = '#fff';
+                l.style.background = '#fff';
             });
             var a = document.querySelector('[name="blogar_home_layout"]:checked');
             if (a) {
                 var l = a.closest('label');
                 l.style.borderColor = '#3858f6';
-                l.style.background  = '#f0f4ff';
+                l.style.background = '#f0f4ff';
             }
         });
     });
@@ -1293,18 +1296,23 @@ function blogar_render_order_tab()
         ?>
         <li data-key="<?php echo esc_attr($key); ?>" draggable="true"
             style="display:flex;align-items:center;gap:14px;padding:13px 16px;background:#fff;border:1.5px solid #ddd;border-radius:6px;cursor:grab;user-select:none;transition:box-shadow 0.15s,border-color 0.15s">
-            <span class="sorter-handle" style="font-size:18px;color:#bbb;line-height:1;flex-shrink:0" title="<?php esc_attr_e('Drag to reorder', 'blogar'); ?>">⠿</span>
-            <span class="sorter-pos" style="font-size:12px;font-weight:700;color:#999;width:22px;flex-shrink:0;text-align:center"></span>
+            <span class="sorter-handle" style="font-size:18px;color:#bbb;line-height:1;flex-shrink:0"
+                title="<?php esc_attr_e('Drag to reorder', 'blogar'); ?>">⠿</span>
+            <span class="sorter-pos"
+                style="font-size:12px;font-weight:700;color:#999;width:22px;flex-shrink:0;text-align:center"></span>
             <div style="flex:1;min-width:0">
-                <strong style="font-size:13px;display:block;color:#1e1e1e"><?php echo esc_html($meta['label']); ?></strong>
+                <strong
+                    style="font-size:13px;display:block;color:#1e1e1e"><?php echo esc_html($meta['label']); ?></strong>
                 <span style="font-size:12px;color:#888"><?php echo esc_html($meta['desc']); ?></span>
             </div>
             <?php if (!$enabled): ?>
-            <span style="font-size:11px;color:#999;background:#f5f5f5;border:1px solid #ddd;padding:2px 8px;border-radius:3px;flex-shrink:0">
+            <span
+                style="font-size:11px;color:#999;background:#f5f5f5;border:1px solid #ddd;padding:2px 8px;border-radius:3px;flex-shrink:0">
                 <?php esc_html_e('Ẩn', 'blogar'); ?>
             </span>
             <?php else: ?>
-            <span style="font-size:11px;color:#0a7d3e;background:#ecfdf5;border:1px solid #a7f3d0;padding:2px 8px;border-radius:3px;flex-shrink:0">
+            <span
+                style="font-size:11px;color:#0a7d3e;background:#ecfdf5;border:1px solid #a7f3d0;padding:2px 8px;border-radius:3px;flex-shrink:0">
                 <?php esc_html_e('Hiện', 'blogar'); ?>
             </span>
             <?php endif; ?>
@@ -1321,9 +1329,9 @@ function blogar_render_order_tab()
 </form>
 
 <script>
-(function () {
-    var list    = document.getElementById('blogar-sorter');
-    var input   = document.getElementById('blogar_sorder_input');
+(function() {
+    var list = document.getElementById('blogar-sorter');
+    var input = document.getElementById('blogar_sorder_input');
     var resetBtn = document.getElementById('blogar-reset-order');
     if (!list || !input) return;
 
@@ -1331,7 +1339,7 @@ function blogar_render_order_tab()
     var dragging = null;
 
     function updatePositions() {
-        list.querySelectorAll('li').forEach(function (li, i) {
+        list.querySelectorAll('li').forEach(function(li, i) {
             var pos = li.querySelector('.sorter-pos');
             if (pos) pos.textContent = '#' + (i + 1);
         });
@@ -1339,34 +1347,44 @@ function blogar_render_order_tab()
 
     function updateInput() {
         var keys = [];
-        list.querySelectorAll('li').forEach(function (li) { keys.push(li.dataset.key); });
+        list.querySelectorAll('li').forEach(function(li) {
+            keys.push(li.dataset.key);
+        });
         input.value = JSON.stringify(keys);
         updatePositions();
     }
 
-    list.addEventListener('dragstart', function (e) {
+    list.addEventListener('dragstart', function(e) {
         dragging = e.target.closest('li');
         if (!dragging) return;
-        setTimeout(function () { dragging.style.opacity = '0.4'; }, 0);
+        setTimeout(function() {
+            dragging.style.opacity = '0.4';
+        }, 0);
         e.dataTransfer.effectAllowed = 'move';
     });
 
-    list.addEventListener('dragover', function (e) {
+    list.addEventListener('dragover', function(e) {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
         var target = e.target.closest('li');
         if (!target || target === dragging) return;
-        list.querySelectorAll('li').forEach(function (li) { li.style.boxShadow = ''; li.style.borderColor = '#ddd'; });
+        list.querySelectorAll('li').forEach(function(li) {
+            li.style.boxShadow = '';
+            li.style.borderColor = '#ddd';
+        });
         var rect = target.getBoundingClientRect();
         var isAbove = e.clientY < rect.top + rect.height / 2;
         target.style.boxShadow = isAbove ? 'inset 0 3px 0 0 #2271b1' : 'inset 0 -3px 0 0 #2271b1';
         target.style.borderColor = '#2271b1';
     });
 
-    list.addEventListener('drop', function (e) {
+    list.addEventListener('drop', function(e) {
         e.preventDefault();
         var target = e.target.closest('li');
-        list.querySelectorAll('li').forEach(function (li) { li.style.boxShadow = ''; li.style.borderColor = '#ddd'; });
+        list.querySelectorAll('li').forEach(function(li) {
+            li.style.boxShadow = '';
+            li.style.borderColor = '#ddd';
+        });
         if (!target || !dragging || target === dragging) return;
         var rect = target.getBoundingClientRect();
         if (e.clientY < rect.top + rect.height / 2) {
@@ -1377,8 +1395,8 @@ function blogar_render_order_tab()
         updateInput();
     });
 
-    list.addEventListener('dragend', function () {
-        list.querySelectorAll('li').forEach(function (li) {
+    list.addEventListener('dragend', function() {
+        list.querySelectorAll('li').forEach(function(li) {
             li.style.opacity = '';
             li.style.boxShadow = '';
             li.style.borderColor = '#ddd';
@@ -1388,10 +1406,14 @@ function blogar_render_order_tab()
     });
 
     if (resetBtn) {
-        resetBtn.addEventListener('click', function () {
+        resetBtn.addEventListener('click', function() {
             var items = {};
-            list.querySelectorAll('li').forEach(function (li) { items[li.dataset.key] = li; });
-            defaultOrder.forEach(function (key) { if (items[key]) list.appendChild(items[key]); });
+            list.querySelectorAll('li').forEach(function(li) {
+                items[li.dataset.key] = li;
+            });
+            defaultOrder.forEach(function(key) {
+                if (items[key]) list.appendChild(items[key]);
+            });
             updateInput();
         });
     }
@@ -1399,7 +1421,7 @@ function blogar_render_order_tab()
     updatePositions();
 })();
 </script>
-    <?php
+<?php
 }
 
 
@@ -1717,26 +1739,25 @@ function blogar_render_sidebar_tab()
                 style="font-size:12px;font-weight:700;color:#999;width:22px;flex-shrink:0;text-align:center"></span>
 
             <div style="flex:1;min-width:0">
-                <strong style="font-size:13px;display:block;color:#1e1e1e"><?php echo esc_html($meta['label']); ?></strong>
+                <strong
+                    style="font-size:13px;display:block;color:#1e1e1e"><?php echo esc_html($meta['label']); ?></strong>
                 <span style="font-size:12px;color:#888"><?php echo esc_html($meta['desc']); ?></span>
             </div>
 
             <?php if (!empty($meta['count_key'])): ?>
-            <label style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#555;flex-shrink:0;cursor:default">
+            <label
+                style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#555;flex-shrink:0;cursor:default">
                 <?php echo esc_html($meta['count_label']); ?>:
-                <input type="number"
-                    name="<?php echo esc_attr($meta['count_key']); ?>"
-                    value="<?php echo (int) get_option($meta['count_key'], $meta['count_default']); ?>"
-                    min="1" max="20"
+                <input type="number" name="<?php echo esc_attr($meta['count_key']); ?>"
+                    value="<?php echo (int) get_option($meta['count_key'], $meta['count_default']); ?>" min="1" max="20"
                     style="width:50px;padding:3px 6px;font-size:12px;border:1px solid #ddd;border-radius:4px">
             </label>
             <?php endif; ?>
 
-            <label style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#555;flex-shrink:0;cursor:pointer"
+            <label
+                style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:#555;flex-shrink:0;cursor:pointer"
                 title="<?php esc_attr_e('Bật / Tắt widget này', 'blogar'); ?>">
-                <input type="checkbox"
-                    name="blogar_sidebar_<?php echo esc_attr($key); ?>_enabled"
-                    value="1"
+                <input type="checkbox" name="blogar_sidebar_<?php echo esc_attr($key); ?>_enabled" value="1"
                     <?php checked($enabled); ?>>
                 <?php esc_html_e('Hiện', 'blogar'); ?>
             </label>
@@ -1754,9 +1775,9 @@ function blogar_render_sidebar_tab()
 </form>
 
 <script>
-(function () {
-    var list     = document.getElementById('blogar-sb-sorter');
-    var input    = document.getElementById('blogar_sborder_input');
+(function() {
+    var list = document.getElementById('blogar-sb-sorter');
+    var input = document.getElementById('blogar_sborder_input');
     var resetBtn = document.getElementById('blogar-sb-reset');
     if (!list || !input) return;
 
@@ -1764,7 +1785,7 @@ function blogar_render_sidebar_tab()
     var dragging = null;
 
     function updatePositions() {
-        list.querySelectorAll('li').forEach(function (li, i) {
+        list.querySelectorAll('li').forEach(function(li, i) {
             var pos = li.querySelector('.sb-sorter-pos');
             if (pos) pos.textContent = '#' + (i + 1);
         });
@@ -1772,34 +1793,44 @@ function blogar_render_sidebar_tab()
 
     function updateInput() {
         var keys = [];
-        list.querySelectorAll('li').forEach(function (li) { keys.push(li.dataset.key); });
+        list.querySelectorAll('li').forEach(function(li) {
+            keys.push(li.dataset.key);
+        });
         input.value = JSON.stringify(keys);
         updatePositions();
     }
 
-    list.addEventListener('dragstart', function (e) {
+    list.addEventListener('dragstart', function(e) {
         dragging = e.target.closest('li');
         if (!dragging) return;
-        setTimeout(function () { dragging.style.opacity = '0.4'; }, 0);
+        setTimeout(function() {
+            dragging.style.opacity = '0.4';
+        }, 0);
         e.dataTransfer.effectAllowed = 'move';
     });
 
-    list.addEventListener('dragover', function (e) {
+    list.addEventListener('dragover', function(e) {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
         var target = e.target.closest('li');
         if (!target || target === dragging) return;
-        list.querySelectorAll('li').forEach(function (li) { li.style.boxShadow = ''; li.style.borderColor = '#ddd'; });
+        list.querySelectorAll('li').forEach(function(li) {
+            li.style.boxShadow = '';
+            li.style.borderColor = '#ddd';
+        });
         var rect = target.getBoundingClientRect();
         var isAbove = e.clientY < rect.top + rect.height / 2;
         target.style.boxShadow = isAbove ? 'inset 0 3px 0 0 #2271b1' : 'inset 0 -3px 0 0 #2271b1';
         target.style.borderColor = '#2271b1';
     });
 
-    list.addEventListener('drop', function (e) {
+    list.addEventListener('drop', function(e) {
         e.preventDefault();
         var target = e.target.closest('li');
-        list.querySelectorAll('li').forEach(function (li) { li.style.boxShadow = ''; li.style.borderColor = '#ddd'; });
+        list.querySelectorAll('li').forEach(function(li) {
+            li.style.boxShadow = '';
+            li.style.borderColor = '#ddd';
+        });
         if (!target || !dragging || target === dragging) return;
         var rect = target.getBoundingClientRect();
         if (e.clientY < rect.top + rect.height / 2) {
@@ -1810,8 +1841,8 @@ function blogar_render_sidebar_tab()
         updateInput();
     });
 
-    list.addEventListener('dragend', function () {
-        list.querySelectorAll('li').forEach(function (li) {
+    list.addEventListener('dragend', function() {
+        list.querySelectorAll('li').forEach(function(li) {
             li.style.opacity = '';
             li.style.boxShadow = '';
             li.style.borderColor = '#ddd';
@@ -1821,10 +1852,14 @@ function blogar_render_sidebar_tab()
     });
 
     if (resetBtn) {
-        resetBtn.addEventListener('click', function () {
+        resetBtn.addEventListener('click', function() {
             var items = {};
-            list.querySelectorAll('li').forEach(function (li) { items[li.dataset.key] = li; });
-            defaultOrder.forEach(function (key) { if (items[key]) list.appendChild(items[key]); });
+            list.querySelectorAll('li').forEach(function(li) {
+                items[li.dataset.key] = li;
+            });
+            defaultOrder.forEach(function(key) {
+                if (items[key]) list.appendChild(items[key]);
+            });
             updateInput();
         });
     }
@@ -1832,6 +1867,206 @@ function blogar_render_sidebar_tab()
     updatePositions();
 })();
 </script>
-    <?php
+<?php
 }
 
+
+
+
+
+// ================================================================
+// 404 PAGE SETTINGS
+// ================================================================
+function blogar_register_404_settings()
+{
+    register_setting('blogar_404_settings', 'blogar_404_heading',   array('sanitize_callback' => 'sanitize_text_field'));
+    register_setting('blogar_404_settings', 'blogar_404_sub',       array('sanitize_callback' => 'sanitize_textarea_field'));
+    // Dùng custom sanitizer thay vì absint để chấp nhận -1, -2
+    register_setting('blogar_404_settings', 'blogar_404_cta_1_cat', array('sanitize_callback' => 'blogar_sanitize_404_cta_cat'));
+    register_setting('blogar_404_settings', 'blogar_404_cta_2_cat', array('sanitize_callback' => 'blogar_sanitize_404_cta_cat'));
+    register_setting('blogar_404_settings', 'blogar_404_cta_3_cat', array('sanitize_callback' => 'blogar_sanitize_404_cta_cat'));
+    register_setting('blogar_404_settings', 'blogar_404_cta_4_cat', array('sanitize_callback' => 'blogar_sanitize_404_cta_cat'));
+}
+add_action('admin_init', 'blogar_register_404_settings');
+ 
+
+function blogar_sanitize_404_cta_cat( $value ) {
+    $int = (int) $value;
+    if ( in_array( $int, array( -1, -2 ), true ) ) {
+        return $int;
+    }
+    return absint( $int ); // 0 hoặc ID dương
+}
+ 
+ 
+function blogar_render_404_tab()
+{
+    // ── Handle save ────────────────────────────────────────────────
+    if (isset($_POST['blogar_404_nonce']) && wp_verify_nonce(sanitize_key($_POST['blogar_404_nonce']), 'blogar_save_404')) {
+        update_option('blogar_404_heading',   sanitize_text_field(wp_unslash($_POST['blogar_404_heading'] ?? '')));
+        update_option('blogar_404_sub',       sanitize_textarea_field(wp_unslash($_POST['blogar_404_sub'] ?? '')));
+        // Dùng custom sanitizer để -1, -2 không bị absint() chuyển thành 0
+        update_option('blogar_404_cta_1_cat', blogar_sanitize_404_cta_cat( $_POST['blogar_404_cta_1_cat'] ?? 0 ));
+        update_option('blogar_404_cta_2_cat', blogar_sanitize_404_cta_cat( $_POST['blogar_404_cta_2_cat'] ?? 0 ));
+        update_option('blogar_404_cta_3_cat', blogar_sanitize_404_cta_cat( $_POST['blogar_404_cta_3_cat'] ?? 0 ));
+        update_option('blogar_404_cta_4_cat', blogar_sanitize_404_cta_cat( $_POST['blogar_404_cta_4_cat'] ?? 0 ));
+        echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('Đã lưu cài đặt trang 404.', 'blogar') . '</p></div>';
+    }
+ 
+    // ── Current values ─────────────────────────────────────────────
+    $heading = get_option('blogar_404_heading', '');
+    $sub     = get_option('blogar_404_sub',     '');
+    $sel     = array();
+    for ($i = 1; $i <= 4; $i++) {
+        $sel[$i] = (int) get_option("blogar_404_cta_{$i}_cat", 0);
+    }
+ 
+    // ── Categories for dropdown ────────────────────────────────────
+    $cats = get_categories(array('hide_empty' => false, 'orderby' => 'name', 'order' => 'ASC'));
+ 
+    // ── Blog page info (dùng cho option -1) ────────────────────────
+    $posts_page_id    = (int) get_option('page_for_posts');
+    $posts_page_title = $posts_page_id
+        ? get_the_title($posts_page_id)
+        : __('Trang Blog', 'blogar');
+ 
+    $page_url = add_query_arg(array('page' => 'blogar-settings', 'tab' => '404_page'), admin_url('themes.php'));
+    ?>
+<form method="post" action="<?php echo esc_url($page_url); ?>">
+    <?php wp_nonce_field('blogar_save_404', 'blogar_404_nonce'); ?>
+
+    <table class="form-table" role="presentation">
+
+        <!-- Heading -->
+        <tr>
+            <th scope="row">
+                <label for="blogar_404_heading"><?php esc_html_e('Tiêu đề trang 404', 'blogar'); ?></label>
+            </th>
+            <td>
+                <input type="text" id="blogar_404_heading" name="blogar_404_heading"
+                    value="<?php echo esc_attr($heading); ?>"
+                    placeholder="<?php esc_attr_e('Oops! Trang không tìm thấy', 'blogar'); ?>"
+                    style="min-width:400px;max-width:100%">
+                <p class="description">
+                    <?php esc_html_e('Tiêu đề lớn hiển thị trên trang 404. Để trống dùng mặc định.', 'blogar'); ?></p>
+            </td>
+        </tr>
+
+        <!-- Subtitle -->
+        <tr>
+            <th scope="row">
+                <label for="blogar_404_sub"><?php esc_html_e('Mô tả / phụ đề', 'blogar'); ?></label>
+            </th>
+            <td>
+                <textarea id="blogar_404_sub" name="blogar_404_sub" rows="3" style="min-width:400px;max-width:100%"
+                    placeholder="<?php esc_attr_e('Trang bạn đang tìm có thể đã bị xóa hoặc đường dẫn thay đổi.', 'blogar'); ?>"><?php echo esc_textarea($sub); ?></textarea>
+                <p class="description"><?php esc_html_e('Dòng mô tả nhỏ bên dưới tiêu đề.', 'blogar'); ?></p>
+            </td>
+        </tr>
+
+        <!-- Divider -->
+        <tr>
+            <td colspan="2">
+                <hr style="margin:8px 0 4px;border-color:#ddd">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <h3 style="margin:0 0 4px;font-size:14px;color:#1d2327">
+                    <?php esc_html_e('4 nút CTA — chọn đích đến', 'blogar'); ?>
+                </h3>
+                <p class="description" style="margin-bottom:12px">
+                    <?php esc_html_e('Mỗi slot có thể trỏ đến một category, trang Blog, trang Chủ, hoặc để "Tự động" (hệ thống tự lấy top categories).', 'blogar'); ?>
+                </p>
+            </td>
+        </tr>
+
+        <?php
+            $card_labels = array(
+                1 => __('CTA 1 — màu xanh dương', 'blogar'),
+                2 => __('CTA 2 — màu đỏ',         'blogar'),
+                3 => __('CTA 3 — màu xanh lá',    'blogar'),
+                4 => __('CTA 4 — màu cam',         'blogar'),
+            );
+ 
+            for ($i = 1; $i <= 4; $i++) :
+                $field_id = "blogar_404_cta_{$i}_cat";
+            ?>
+        <tr>
+            <th scope="row">
+                <label for="<?php echo esc_attr($field_id); ?>">
+                    <?php echo esc_html($card_labels[$i]); ?>
+                </label>
+            </th>
+            <td>
+                <select id="<?php echo esc_attr($field_id); ?>" name="<?php echo esc_attr($field_id); ?>"
+                    style="min-width:300px">
+
+                    <!-- Tự động -->
+                    <option value="0" <?php selected($sel[$i], 0); ?>>
+                        <?php esc_html_e('— Tự động (top categories) —', 'blogar'); ?>
+                    </option>
+
+                    <!-- Trang đặc biệt -->
+                    <optgroup label="<?php esc_attr_e('── Trang đặc biệt', 'blogar'); ?>">
+
+                        <option value="-1" <?php selected($sel[$i], -1); ?>>
+                            📰 <?php
+                                    printf(
+                                        '%s %s',
+                                        esc_html($posts_page_title),
+                                        esc_html__('(tất cả bài viết)', 'blogar')
+                                    );
+                                ?>
+                        </option>
+
+                        <option value="-2" <?php selected($sel[$i], -2); ?>>
+                            🏠 <?php esc_html_e('Trang Chủ (front page)', 'blogar'); ?>
+                        </option>
+
+                    </optgroup>
+
+                    <!-- Danh mục -->
+                    <?php if (!empty($cats)) : ?>
+                    <optgroup label="<?php esc_attr_e('── Danh mục', 'blogar'); ?>">
+                        <?php foreach ($cats as $cat) : ?>
+                        <option value="<?php echo absint($cat->term_id); ?>"
+                            <?php selected($sel[$i], $cat->term_id); ?>>
+                            <?php
+                                    printf(
+                                        '%s (%d %s)',
+                                        esc_html($cat->name),
+                                        absint($cat->count),
+                                        esc_html__('bài', 'blogar')
+                                    );
+                                ?>
+                        </option>
+                        <?php endforeach; ?>
+                    </optgroup>
+                    <?php endif; ?>
+
+                </select>
+            </td>
+        </tr>
+        <?php endfor; ?>
+
+    </table>
+
+    <?php submit_button(__('Lưu cài đặt 404', 'blogar')); ?>
+</form>
+
+<!-- Live preview link -->
+<div
+    style="margin-top:8px;padding:12px 16px;background:#f8f4f8;border-left:4px solid #3858f6;border-radius:0 4px 4px 0;font-size:13px;color:#1d2327">
+    <strong><?php esc_html_e('Xem trước:', 'blogar'); ?></strong>&nbsp;
+    <a href="<?php echo esc_url(home_url('/blogar-404-preview-xyz')); ?>" target="_blank" rel="noopener noreferrer">
+        <?php esc_html_e('Mở trang 404 trong tab mới', 'blogar'); ?> &rarr;
+    </a>
+    <span style="color:#878787;margin-left:6px">
+        (<?php esc_html_e('hoặc nhập bất kỳ URL không tồn tại để xem live', 'blogar'); ?>)
+    </span>
+</div>
+
+<?php
+}
+ 
