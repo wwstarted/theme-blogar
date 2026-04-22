@@ -12,24 +12,12 @@ $svg_ig = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect
 $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
 
 // ── Section render order ─────────────────────────────────────────
-$_default_order = array('s11', 's11p', 's5', 's13', 's14', 's12', 's4', 's10', 's15');
+$_default_order = array('s11', 's5', 's13', 's14', 's12', 's4', 's10');
 $_raw_order = get_option('blogar_section_order', '');
 $_section_order = (!empty($_raw_order)) ? (array) json_decode($_raw_order, true) : array();
-$_normalized_order = array();
-
-foreach ($_section_order as $_section_key) {
-    if (in_array($_section_key, $_default_order, true) && !in_array($_section_key, $_normalized_order, true)) {
-        $_normalized_order[] = $_section_key;
-    }
+if (count($_section_order) < 7) {
+    $_section_order = $_default_order;
 }
-
-foreach ($_default_order as $_section_key) {
-    if (!in_array($_section_key, $_normalized_order, true)) {
-        $_normalized_order[] = $_section_key;
-    }
-}
-
-$_section_order = !empty($_normalized_order) ? $_normalized_order : $_default_order;
 $_sections = array();
 ?>
 
@@ -243,15 +231,13 @@ ob_start(); ?>
             <!-- ══ LEFT 50% — featured slider + 4 small cards (2-col) ══ -->
             <div class="pc-col pc-col-50">
 
-                <div
-                    class="penci-featured-content featured-area featured-style-1 vertical-align-bottom horizontal-align-center text-align-center">
-                    <div class="penci-feat-slider" data-s11p-slider>
+                <div class="penci-featured-content">
+                    <div class="penci-feat-slider">
                         <?php if (count($s11p_slider) > 1): ?>
-                        <button type="button" class="penci-feat-nav penci-feat-prev"
-                            aria-label="<?php esc_attr_e('Previous featured post', 'blogar'); ?>">&#8249;</button>
+                        <button class="penci-feat-nav penci-feat-prev" aria-label="Previous">&#8249;</button>
                         <?php endif; ?>
 
-                        <div class="penci-feat-slides" aria-live="polite">
+                        <div class="penci-feat-slides">
                             <?php $s11p_slide_i = 0;
                                 foreach ($s11p_slider as $sl):
                                     if (!$sl instanceof WP_Post)
@@ -266,9 +252,7 @@ ob_start(); ?>
                                     $sl_aurl = get_author_posts_url($sl_aid);
                                     $sl_date = get_the_date('F j, Y', $sl_id);
                                     ?>
-                            <div class="penci-feat-slide<?php echo $s11p_slide_i === 0 ? ' active' : ''; ?>"
-                                aria-hidden="<?php echo $s11p_slide_i === 0 ? 'false' : 'true'; ?>"
-                                <?php echo $s11p_slide_i === 0 ? '' : 'hidden'; ?>>
+                            <div class="penci-feat-slide<?php echo $s11p_slide_i === 0 ? ' active' : ''; ?>">
                                 <div class="penci-image-holder"
                                     style="background-image:url(<?php echo esc_url($sl_img); ?>)">
                                     <div class="featured-slider-overlay"></div>
@@ -277,7 +261,7 @@ ob_start(); ?>
                                     <div class="feat-text">
                                         <div class="feat-text-inner">
                                             <?php if ($sl_cats): ?>
-                                            <div class="cat feat-cat featured-cat">
+                                            <div class="feat-cat">
                                                 <a
                                                     href="<?php echo esc_url(get_category_link($sl_cats[0]->term_id)); ?>">
                                                     <?php echo esc_html($sl_cats[0]->name); ?>
@@ -285,10 +269,10 @@ ob_start(); ?>
                                             </div>
                                             <?php endif; ?>
                                             <div class="feat-text-box">
-                                                <h3 class="feat-title">
+                                                <h2 class="feat-title">
                                                     <a
                                                         href="<?php echo esc_url($sl_url); ?>"><?php echo esc_html($sl_ttl); ?></a>
-                                                </h3>
+                                                </h2>
                                                 <div class="feat-meta">
                                                     <span class="feat-author"><?php esc_html_e('by', 'blogar'); ?>
                                                         <a
@@ -307,14 +291,14 @@ ob_start(); ?>
                             <?php $s11p_slide_i++; endforeach; ?>
 
                             <?php if (empty($s11p_slider)): ?>
-                            <div class="penci-feat-slide active" aria-hidden="false">
+                            <div class="penci-feat-slide active">
                                 <div class="penci-image-holder">
                                     <div class="featured-slider-overlay"></div>
                                     <div class="feat-text">
                                         <div class="feat-text-inner">
-                                            <h3 class="feat-title">
+                                            <h2 class="feat-title">
                                                 <?php esc_html_e('No featured post selected.', 'blogar'); ?>
-                                            </h3>
+                                            </h2>
                                         </div>
                                     </div>
                                 </div>
@@ -323,8 +307,7 @@ ob_start(); ?>
                         </div><!-- /penci-feat-slides -->
 
                         <?php if (count($s11p_slider) > 1): ?>
-                        <button type="button" class="penci-feat-nav penci-feat-next"
-                            aria-label="<?php esc_attr_e('Next featured post', 'blogar'); ?>">&#8250;</button>
+                        <button class="penci-feat-nav penci-feat-next" aria-label="Next">&#8250;</button>
                         <?php endif; ?>
                     </div><!-- /penci-feat-slider -->
                 </div><!-- /penci-featured-content -->
@@ -346,21 +329,19 @@ ob_start(); ?>
                                 ?>
                     <article class="pcsl-item">
                         <div class="pcsl-itemin">
-                            <div class="pcsl-iteminer">
-                                <div class="pcsl-thumb">
-                                    <a href="<?php echo esc_url($rc_url); ?>">
-                                        <img loading="lazy" decoding="async" src="<?php echo esc_url($rc_img); ?>"
-                                            alt="<?php echo esc_attr($rc_alt); ?>">
-                                    </a>
-                                </div>
-                                <div class="pcsl-content">
-                                    <h3 class="pcsl-title">
-                                        <a href="<?php echo esc_url($rc_url); ?>"><?php echo esc_html($rc_ttl); ?></a>
-                                    </h3>
-                                    <div class="pcsl-meta">
-                                        <?php esc_html_e('by', 'blogar'); ?>
-                                        <a href="<?php echo esc_url($rc_aurl); ?>"><?php echo esc_html($rc_name); ?></a>
-                                    </div>
+                            <div class="pcsl-thumb">
+                                <a href="<?php echo esc_url($rc_url); ?>">
+                                    <img loading="lazy" decoding="async" src="<?php echo esc_url($rc_img); ?>"
+                                        alt="<?php echo esc_attr($rc_alt); ?>">
+                                </a>
+                            </div>
+                            <div class="pcsl-content">
+                                <h3 class="pcsl-title">
+                                    <a href="<?php echo esc_url($rc_url); ?>"><?php echo esc_html($rc_ttl); ?></a>
+                                </h3>
+                                <div class="pcsl-meta">
+                                    <?php esc_html_e('by', 'blogar'); ?>
+                                    <a href="<?php echo esc_url($rc_aurl); ?>"><?php echo esc_html($rc_name); ?></a>
                                 </div>
                             </div>
                         </div>
@@ -395,13 +376,11 @@ ob_start(); ?>
                     <div class="pcbg-content pcbg-content-flex">
                         <a class="pcbg-link" href="<?php echo esc_url($m1_url); ?>"
                             aria-label="<?php echo esc_attr($m1_ttl); ?>"></a>
-                        <div class="pcbg-content-inner bgcontent-block">
-                            <div class="pcbg-heading item-hover">
-                                <h3 class="pcbg-title">
-                                    <a href="<?php echo esc_url($m1_url); ?>"><?php echo esc_html($m1_ttl); ?></a>
-                                </h3>
-                            </div>
-                            <div class="pcbg-meta item-hover">
+                        <div class="pcbg-content-inner">
+                            <h3 class="pcbg-title">
+                                <a href="<?php echo esc_url($m1_url); ?>"><?php echo esc_html($m1_ttl); ?></a>
+                            </h3>
+                            <div class="pcbg-meta">
                                 <?php esc_html_e('by', 'blogar'); ?>
                                 <a href="<?php echo esc_url($m1_aurl); ?>"><?php echo esc_html($m1_name); ?></a>
                             </div>
@@ -457,13 +436,11 @@ ob_start(); ?>
                     <div class="pcbg-content pcbg-content-flex">
                         <a class="pcbg-link" href="<?php echo esc_url($m2_url); ?>"
                             aria-label="<?php echo esc_attr($m2_ttl); ?>"></a>
-                        <div class="pcbg-content-inner bgcontent-block">
-                            <div class="pcbg-heading item-hover">
-                                <h3 class="pcbg-title">
-                                    <a href="<?php echo esc_url($m2_url); ?>"><?php echo esc_html($m2_ttl); ?></a>
-                                </h3>
-                            </div>
-                            <div class="pcbg-meta item-hover">
+                        <div class="pcbg-content-inner">
+                            <h3 class="pcbg-title">
+                                <a href="<?php echo esc_url($m2_url); ?>"><?php echo esc_html($m2_ttl); ?></a>
+                            </h3>
+                            <div class="pcbg-meta">
                                 <?php esc_html_e('by', 'blogar'); ?>
                                 <a href="<?php echo esc_url($m2_aurl); ?>"><?php echo esc_html($m2_name); ?></a>
                             </div>
@@ -491,21 +468,19 @@ ob_start(); ?>
                                 ?>
                     <article class="pcsl-item">
                         <div class="pcsl-itemin">
-                            <div class="pcsl-iteminer">
-                                <div class="pcsl-thumb">
-                                    <a href="<?php echo esc_url($sc_url); ?>">
-                                        <img loading="lazy" decoding="async" src="<?php echo esc_url($sc_img); ?>"
-                                            alt="<?php echo esc_attr($sc_alt); ?>">
-                                    </a>
-                                </div>
-                                <div class="pcsl-content">
-                                    <h3 class="pcsl-title">
-                                        <a href="<?php echo esc_url($sc_url); ?>"><?php echo esc_html($sc_ttl); ?></a>
-                                    </h3>
-                                    <div class="pcsl-meta">
-                                        <?php esc_html_e('by', 'blogar'); ?>
-                                        <a href="<?php echo esc_url($sc_aurl); ?>"><?php echo esc_html($sc_name); ?></a>
-                                    </div>
+                            <div class="pcsl-thumb">
+                                <a href="<?php echo esc_url($sc_url); ?>">
+                                    <img loading="lazy" decoding="async" src="<?php echo esc_url($sc_img); ?>"
+                                        alt="<?php echo esc_attr($sc_alt); ?>">
+                                </a>
+                            </div>
+                            <div class="pcsl-content">
+                                <h3 class="pcsl-title">
+                                    <a href="<?php echo esc_url($sc_url); ?>"><?php echo esc_html($sc_ttl); ?></a>
+                                </h3>
+                                <div class="pcsl-meta">
+                                    <?php esc_html_e('by', 'blogar'); ?>
+                                    <a href="<?php echo esc_url($sc_aurl); ?>"><?php echo esc_html($sc_name); ?></a>
                                 </div>
                             </div>
                         </div>
@@ -519,6 +494,29 @@ ob_start(); ?>
         </div><!-- /pc-row -->
     </div><!-- /container -->
 </section>
+<script>
+(function() {
+    document.querySelectorAll('.blogar-s11p .penci-feat-slider').forEach(function(sl) {
+        var slides = sl.querySelectorAll('.penci-feat-slide');
+        if (slides.length < 2) return;
+        var cur = 0;
+
+        function go(n) {
+            slides[cur].classList.remove('active');
+            cur = (n + slides.length) % slides.length;
+            slides[cur].classList.add('active');
+        }
+        var prev = sl.querySelector('.penci-feat-prev');
+        var next = sl.querySelector('.penci-feat-next');
+        if (prev) prev.addEventListener('click', function() {
+            go(cur - 1);
+        });
+        if (next) next.addEventListener('click', function() {
+            go(cur + 1);
+        });
+    });
+})();
+</script>
 <?php endif; // s11p_enabled ?>
 <?php $_sections['s11p'] = ob_get_clean();
 ob_start(); ?>
@@ -1214,239 +1212,9 @@ ob_start(); ?>
 <?php endif; // s10_enabled ?>
 <?php $_sections['s10'] = ob_get_clean(); ?>
 
-<?php ob_start(); ?>
-<?php if (get_option('blogar_s15_enabled', '1')): ?>
-<?php
-/**
- * BLOGAR S15 — Entertainment Category Slider
- * Template block for front-page.php
- * Source block: elementor-element-184c1d6 > penci-small-list widget 242bb3e
- *
- * Note: Soledad also reuses penci-structure-10 for a banner section elsewhere.
- * This block is the Entertainment tabs grid, not that banner.
- */
-
-$s15_data = blogar_get_s15_data();
-$s15_legacy_opts = get_option('blogar_s15_settings', array());
-
-$s15_title = trim((string) get_option('blogar_s15_title', ''));
-if ($s15_title === '') {
-    $s15_title = !empty($s15_legacy_opts['title']) ? $s15_legacy_opts['title'] : __('Entertainment', 'blogar');
-}
-
-$s15_parent_cat_id = isset($s15_data['parent_cat_id']) ? (int) $s15_data['parent_cat_id'] : 0;
-$s15_default_link = home_url('/');
-if ($s15_parent_cat_id) {
-    $s15_term_link = get_category_link($s15_parent_cat_id);
-    if (!is_wp_error($s15_term_link)) {
-        $s15_default_link = $s15_term_link;
-    }
-}
-
-$s15_link = trim((string) get_option('blogar_s15_link', ''));
-if ($s15_link === '' && !empty($s15_legacy_opts['cat_link'])) {
-    $s15_link = $s15_legacy_opts['cat_link'];
-}
-if ($s15_link === '') {
-    $s15_link = $s15_default_link;
-}
-$s15_cats = isset($s15_data['cats']) ? $s15_data['cats'] : array();
-$s15_posts = isset($s15_data['posts']) ? $s15_data['posts'] : array();
-$s15_ppp = 4;
-
-$s15_placeholder_cards = array(
-    array(
-        'title' => __('Entertainment headline placeholder', 'blogar'),
-        'author' => __('Blogar Editorial', 'blogar'),
-        'url' => '#',
-        'author_url' => '#',
-        'img_style' => 'background-image:linear-gradient(135deg,#e5eefc 0%,#dbeafe 50%,#f8fafc 100%)',
-    ),
-    array(
-        'title' => __('Category slider fallback card', 'blogar'),
-        'author' => __('Blogar Editorial', 'blogar'),
-        'url' => '#',
-        'author_url' => '#',
-        'img_style' => 'background-image:linear-gradient(135deg,#f5efe6 0%,#fef3c7 52%,#fff7ed 100%)',
-    ),
-    array(
-        'title' => __('Homepage section stays visible even when posts are empty', 'blogar'),
-        'author' => __('Blogar Editorial', 'blogar'),
-        'url' => '#',
-        'author_url' => '#',
-        'img_style' => 'background-image:linear-gradient(135deg,#ede9fe 0%,#e9d5ff 52%,#faf5ff 100%)',
-    ),
-    array(
-        'title' => __('Replace these placeholders by assigning a category in Blogar Settings', 'blogar'),
-        'author' => __('Blogar Editorial', 'blogar'),
-        'url' => admin_url('admin.php?page=blogar-homepage-settings&tab=s15_category_slider'),
-        'author_url' => admin_url('admin.php?page=blogar-homepage-settings&tab=s15_category_slider'),
-        'img_style' => 'background-image:linear-gradient(135deg,#e2f7f0 0%,#ccfbf1 52%,#f0fdfa 100%)',
-    ),
-);
-
-if (empty($s15_posts['all'])) {
-    $s15_posts = array(
-        'all' => $s15_placeholder_cards,
-    );
-    $s15_cats = array();
-}
-
-$s15_normalize_item = static function ($item) {
-    if ($item instanceof WP_Post) {
-        $item_id = $item->ID;
-        $img_url = get_the_post_thumbnail_url($item_id, 'penci-thumb');
-        if (!$img_url) {
-            $img_url = get_the_post_thumbnail_url($item_id, 'large');
-        }
-
-        $author_id = (int) $item->post_author;
-
-        return array(
-            'title' => get_the_title($item_id),
-            'url' => get_permalink($item_id),
-            'author_name' => get_the_author_meta('display_name', $author_id),
-            'author_url' => get_author_posts_url($author_id),
-            'img_style' => $img_url ? 'background-image:url(' . esc_url($img_url) . ')' : '',
-            'is_placeholder' => false,
-        );
-    }
-
-    if (is_array($item)) {
-        return array(
-            'title' => !empty($item['title']) ? $item['title'] : __('Sample post', 'blogar'),
-            'url' => !empty($item['url']) ? $item['url'] : '#',
-            'author_name' => !empty($item['author']) ? $item['author'] : __('Blogar Editorial', 'blogar'),
-            'author_url' => !empty($item['author_url']) ? $item['author_url'] : '#',
-            'img_style' => !empty($item['img_style']) ? $item['img_style'] : '',
-            'is_placeholder' => true,
-        );
-    }
-
-    return null;
-};
-?>
-<section class="blogar-section blogar-s15" data-section="s15">
-    <div class="blogar-s15-inner">
-
-        <!-- ── Header: style-12 ── -->
-        <div class="blogar-s15-header">
-            <h2 class="s15-title-label">
-                <a href="<?php echo esc_url($s15_link); ?>">
-                    <?php echo esc_html($s15_title); ?>
-                </a>
-            </h2>
-
-            <nav class="blogar-s15-nav" aria-label="<?php esc_attr_e('Filter posts', 'blogar'); ?>">
-
-                <!-- Category filter tabs -->
-                <ul class="s15-cat-list" role="tablist" aria-label="<?php esc_attr_e('Category filters', 'blogar'); ?>">
-                    <li>
-                        <button type="button" class="s15-tab s15-active" data-cat="all" role="tab" aria-selected="true"
-                            aria-label="<?php esc_attr_e('All', 'blogar'); ?>">
-                            <?php esc_html_e('All', 'blogar'); ?>
-                        </button>
-                    </li>
-                    <?php foreach ($s15_cats as $cat): ?>
-                    <li>
-                        <button type="button" class="s15-tab" data-cat="<?php echo esc_attr($cat['id']); ?>" role="tab"
-                            aria-selected="false" aria-label="<?php echo esc_attr($cat['name']); ?>">
-                            <?php echo esc_html($cat['name']); ?>
-                        </button>
-                    </li>
-                    <?php endforeach; ?>
-                </ul>
-
-                <!-- Prev / Next -->
-                <ul class="s15-pager">
-                    <li class="s15-prev-wrap">
-                        <button type="button" class="s15-btn-prev s15-btn-disable"
-                            aria-label="<?php esc_attr_e('Previous', 'blogar'); ?>" aria-disabled="true" disabled>
-                            <i class="penciicon-left-chevron"></i>
-                        </button>
-                    </li>
-                    <li class="s15-next-wrap">
-                        <button type="button" class="s15-btn-next" aria-label="<?php esc_attr_e('Next', 'blogar'); ?>"
-                            aria-disabled="false">
-                            <i class="penciicon-right-chevron"></i>
-                        </button>
-                    </li>
-                </ul>
-
-            </nav>
-        </div><!-- /.blogar-s15-header -->
-
-        <!-- ── Slides: grouped per category ── -->
-        <div class="blogar-s15-slides" aria-live="polite">
-
-            <?php foreach ($s15_posts as $cat_id => $cat_posts):
-                // Split posts into groups of 4 (slides)
-                $slides = array_chunk($cat_posts, $s15_ppp);
-                foreach ($slides as $slide_index => $slide_posts):
-                    $is_first = ($cat_id === 'all' && $slide_index === 0);
-                    $active_cls = $is_first ? ' s15-slide-active' : '';
-                    ?>
-            <div class="blogar-s15-slide<?php echo $active_cls; ?>" data-cat="<?php echo esc_attr($cat_id); ?>"
-                data-slide="<?php echo (int) $slide_index; ?>" aria-hidden="<?php echo $is_first ? 'false' : 'true'; ?>"
-                <?php echo $is_first ? '' : 'hidden'; ?>>
-
-                <div class="s15-grid">
-
-                    <?php foreach ($slide_posts as $slide_item):
-                                $card = $s15_normalize_item($slide_item);
-                                if (!$card) {
-                                    continue;
-                                }
-                                ?>
-                    <div class="s15-item">
-                        <div class="s15-item-inner">
-                            <div class="s15-item-wrap">
-
-                                <!-- Thumbnail -->
-                                <div class="s15-thumb">
-                                    <a href="<?php echo esc_url($card['url']); ?>"
-                                        class="s15-img<?php echo !empty($card['is_placeholder']) ? ' s15-placeholder-img' : ''; ?>"
-                                        style="<?php echo esc_attr($card['img_style']); ?>"
-                                        title="<?php echo esc_attr($card['title']); ?>"
-                                        aria-label="<?php echo esc_attr($card['title']); ?>"></a>
-                                </div>
-
-                                <!-- Content -->
-                                <div class="s15-content">
-                                    <h3 class="s15-post-title">
-                                        <a href="<?php echo esc_url($card['url']); ?>"
-                                            title="<?php echo esc_attr($card['title']); ?>">
-                                            <?php echo esc_html($card['title']); ?>
-                                        </a>
-                                    </h3>
-                                    <div class="s15-meta">
-                                        <span class="s15-author">
-                                            <?php esc_html_e('by', 'blogar'); ?>
-                                            <a href="<?php echo esc_url($card['author_url']); ?>" class="author-url">
-                                                <?php echo esc_html($card['author_name']); ?>
-                                            </a>
-                                        </span>
-                                    </div>
-                                </div>
-
-                            </div><!-- /.s15-item-wrap -->
-                        </div><!-- /.s15-item-inner -->
-                    </div><!-- /.s15-item -->
-                    <?php endforeach; ?>
-
-                </div><!-- /.s15-grid -->
-            </div><!-- /.blogar-s15-slide -->
-            <?php endforeach; endforeach; ?>
-
-        </div><!-- /.blogar-s15-slides -->
-
-    </div>
-</section>
-<?php endif; ?>
-<?php $_sections['s15'] = ob_get_clean(); ?>
-
 <div class="blogar-front-page-shell">
     <div class="main-wrapper">
+        <!-- SEO: stable h1 matching RankMath homepage title; visually hidden -->
         <h1 class="blogar-visually-hidden"><?php bloginfo('name'); ?></h1>
 
         <?php foreach ($_section_order as $_sk): ?>

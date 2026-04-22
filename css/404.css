@@ -4,20 +4,16 @@
    Relies on CSS vars from style.css (always loaded globally).
    ================================================================ */
 
-/* ── Body + html override ───────────────────────────────────────── */
-/* WP admin bar adds "html { margin-top: 32px !important }" for logged-in users.
-   We neutralise it so the bar sits flush to the top of the visible area. */
 html:has(body.blogar-404-page) {
   margin-top: 0 !important;
 }
 body.blogar-404-page {
   margin: 0 !important;
   padding: 0 !important;
-  overflow: hidden; /* single-screen — no body scroll */
+  overflow: hidden;
   background: var(--blogar-home-bg, #fff7fa);
 }
 
-/* ── Outer wrap: flex column, full viewport ─────────────────────── */
 .b404-wrap {
   display: flex;
   flex-direction: column;
@@ -75,7 +71,10 @@ body.blogar-404-page {
   padding: 8px 14px;
   border: 1.5px solid var(--color-lighter, #ced0d4);
   border-radius: 50px;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background 0.2s;
 }
 
 .b404-home-link:hover {
@@ -111,7 +110,7 @@ body.blogar-404-page {
   background: linear-gradient(
     135deg,
     rgba(56, 88, 246, 0.18) 0%,
-    rgba(139, 92, 246, 0.10) 100%
+    rgba(139, 92, 246, 0.1) 100%
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -166,7 +165,9 @@ body.blogar-404-page {
   border-radius: 50px;
   padding: 5px 5px 5px 18px;
   box-shadow: 0 2px 14px rgba(56, 88, 246, 0.08);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .b404-search-inner:focus-within {
@@ -215,7 +216,9 @@ body.blogar-404-page {
   font-family: var(--font-primary, "Red Hat Display", sans-serif);
   cursor: pointer;
   letter-spacing: 0.01em;
-  transition: background 0.2s, transform 0.15s;
+  transition:
+    background 0.2s,
+    transform 0.15s;
 }
 
 .b404-search-btn:hover {
@@ -252,7 +255,10 @@ body.blogar-404-page {
   border-radius: var(--radius, 10px);
   text-decoration: none;
   color: var(--color-heading, #000);
-  transition: border-color 0.22s, transform 0.22s, box-shadow 0.22s;
+  transition:
+    border-color 0.22s,
+    transform 0.22s,
+    box-shadow 0.22s;
   position: relative;
   overflow: hidden;
 }
@@ -338,7 +344,7 @@ body.blogar-404-page {
    ================================================================ */
 @media (max-width: 767px) {
   body.blogar-404-page {
-    overflow-y: auto; /* allow scroll on short viewports */
+    overflow-y: auto;
   }
 
   .b404-bar {
@@ -407,7 +413,7 @@ body.blogar-404-page {
    ================================================================ */
 @media (max-width: 480px) {
   .b404-home-link span {
-    display: none; /* icon only on tiny screens */
+    display: none;
   }
 
   .b404-search-inner {

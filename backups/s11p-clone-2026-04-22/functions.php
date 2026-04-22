@@ -143,12 +143,6 @@ function blogar_enqueue_assets()
             array('blogar-frontpage'),
             blogar_asset_version('css/penci-s11p.css')
         );
-        wp_enqueue_style(
-            'blogar-penci-s15',
-            get_template_directory_uri() . '/css/penci-s15.css',
-            array('blogar-frontpage'),
-            blogar_asset_version('css/penci-s15.css')
-        );
     }
 
     wp_enqueue_script(

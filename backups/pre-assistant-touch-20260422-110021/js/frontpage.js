@@ -612,74 +612,12 @@
 (function () {
   "use strict";
 
-  function setButtonState(button, disabled) {
-    if (!button) return;
-    button.disabled = !!disabled;
-    button.setAttribute("aria-disabled", disabled ? "true" : "false");
-    button.classList.toggle("s15-btn-disable", !!disabled);
-  }
-
-  function initS11p(slider) {
-    var slides = Array.prototype.slice.call(
-      slider.querySelectorAll(".penci-feat-slide"),
-    );
-    var prev = slider.querySelector(".penci-feat-prev");
-    var next = slider.querySelector(".penci-feat-next");
-    var current = 0;
-
-    if (!slides.length) return;
-
-    slides.some(function (slide, index) {
-      if (slide.classList.contains("active")) {
-        current = index;
-        return true;
-      }
-      return false;
-    });
-
-    function render(index) {
-      current = (index + slides.length) % slides.length;
-
-      slides.forEach(function (slide, slideIndex) {
-        var isActive = slideIndex === current;
-        slide.classList.toggle("active", isActive);
-        slide.hidden = !isActive;
-        slide.setAttribute("aria-hidden", isActive ? "false" : "true");
-      });
-    }
-
-    render(current);
-
-    if (slides.length < 2) return;
-
-    if (prev) {
-      prev.addEventListener("click", function (e) {
-        e.preventDefault();
-        render(current - 1);
-      });
-    }
-
-    if (next) {
-      next.addEventListener("click", function (e) {
-        e.preventDefault();
-        render(current + 1);
-      });
-    }
-  }
-
-  function syncS15Tabs(tabs, currentCat) {
-    tabs.forEach(function (tab) {
-      var isActive = tab.getAttribute("data-cat") === currentCat;
-      tab.classList.toggle("s15-active", isActive);
-      tab.setAttribute("aria-selected", isActive ? "true" : "false");
-      tab.tabIndex = isActive ? 0 : -1;
-    });
-  }
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".blogar-s15").forEach(initS15);
+  });
 
   function initS15(section) {
-    var catTabs = Array.prototype.slice.call(
-      section.querySelectorAll(".s15-tab"),
-    );
+    var catTabs = section.querySelectorAll(".s15-tab");
     var btnPrev = section.querySelector(".s15-btn-prev");
     var btnNext = section.querySelector(".s15-btn-next");
     var slidesWrap = section.querySelector(".blogar-s15-slides");
@@ -696,9 +634,14 @@
         var cat = this.getAttribute("data-cat");
         if (cat === currentCat) return;
 
-        currentCat = getMaxSlide(slidesWrap, cat) >= 0 ? cat : "all";
+        // Update active tab style
+        catTabs.forEach(function (t) {
+          t.classList.remove("s15-active");
+        });
+        this.classList.add("s15-active");
+
+        currentCat = cat;
         currentSlide = 0;
-        syncS15Tabs(catTabs, currentCat);
         showSlide(slidesWrap, currentCat, currentSlide, btnPrev, btnNext);
       });
     });
@@ -724,8 +667,6 @@
       });
     }
 
-    syncS15Tabs(catTabs, currentCat);
-
     /* ── Init: ensure first slide visible ── */
     showSlide(slidesWrap, currentCat, currentSlide, btnPrev, btnNext);
   }
@@ -735,9 +676,7 @@
    * Update prev/next button states.
    */
   function showSlide(wrap, cat, slideIndex, btnPrev, btnNext) {
-    var allSlides = Array.prototype.slice.call(
-      wrap.querySelectorAll(".blogar-s15-slide"),
-    );
+    var allSlides = wrap.querySelectorAll(".blogar-s15-slide");
 
     allSlides.forEach(function (slide) {
       var slideCat = slide.getAttribute("data-cat");
@@ -745,23 +684,27 @@
       var isTarget = slideCat === cat && slideIdx === slideIndex;
 
       slide.classList.toggle("s15-slide-active", isTarget);
-      slide.hidden = !isTarget;
-      slide.setAttribute("aria-hidden", isTarget ? "false" : "true");
     });
 
     var maxSlide = getMaxSlide(wrap, cat);
 
-    if (maxSlide < 0) {
-      setButtonState(btnPrev, true);
-      setButtonState(btnNext, true);
-      return;
+    /* Update PREV button */
+    if (btnPrev) {
+      if (slideIndex <= 0) {
+        btnPrev.classList.add("s15-btn-disable");
+      } else {
+        btnPrev.classList.remove("s15-btn-disable");
+      }
     }
 
-    /* Update PREV button */
-    setButtonState(btnPrev, slideIndex <= 0);
-
     /* Update NEXT button */
-    setButtonState(btnNext, slideIndex >= maxSlide);
+    if (btnNext) {
+      if (slideIndex >= maxSlide) {
+        btnNext.classList.add("s15-btn-disable");
+      } else {
+        btnNext.classList.remove("s15-btn-disable");
+      }
+    }
   }
 
   /**
@@ -772,18 +715,5 @@
       '.blogar-s15-slide[data-cat="' + cat + '"]',
     );
     return slides.length - 1;
-  }
-
-  function bootSections() {
-    document
-      .querySelectorAll(".blogar-s11p .penci-feat-slider")
-      .forEach(initS11p);
-    document.querySelectorAll(".blogar-s15").forEach(initS15);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bootSections);
-  } else {
-    bootSections();
   }
 })();

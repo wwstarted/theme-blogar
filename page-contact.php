@@ -1,23 +1,4 @@
 <?php
-/**
- * page-contact.php — Blogar Theme
- *
- * Template Name: Contact Page
- *
- * SEO  : Exactly 1 <h1> per page — inside the hero banner.
- * Data : WordPress loop; the_title() cho banner, the_content() cho intro prose.
- * CSS  : archive.css (sidebar/shared) + single.css (prose) + page.css (banner + contact form).
- *
- * Sidebar v3:
- *  - Đồng bộ với archive.php: Popular Posts / Categories / Subscribe Newsletter.
- *  - Wrapper đổi từ .single-sidebar-sticky → .archive-sidebar-inner.
- *
- * SEO heading hierarchy:
- *  h1 → page title (hero banner)
- *  h2 → page content / contact form / sidebar groups
- *  h3 → sidebar widget titles
- *  h4 → sidebar popular post titles
- */
 
 if (!defined('ABSPATH')) {
     exit;
@@ -188,5 +169,6 @@ rewind_posts();
         </div>
     </div>
 </div>
+
 
 <?php get_footer(); ?>

@@ -40,7 +40,7 @@ Project khong con chi tap trung vao homepage nua. Hien tai theme da co nhom temp
 - `footer.php`
   - Footer visual clone, data dang hardcode.
 - `front-page.php`
-  - Homepage section stack rendered by admin-controlled order settings.
+  - Homepage 11 section.
 - `archive.php`
   - Archive list + sidebar, clone layout list tu source.
 - `search.php`
@@ -84,10 +84,6 @@ Project khong con chi tap trung vao homepage nua. Hien tai theme da co nhom temp
   - Footer layout.
 - `css/frontpage.css`
   - Homepage visual system va nhieu class shared cho post cards.
-- `css/penci-s11p.css`
-  - Front-page-only stylesheet cho section `s11p` (Penci Featured v2).
-- `css/penci-s15.css`
-  - Front-page-only stylesheet cho section `s15` (Entertainment category slider v2).
 - `css/archive.css`
   - Archive/search/list/sidebar styles.
 - `css/single.css`
@@ -103,11 +99,9 @@ Project khong con chi tap trung vao homepage nua. Hien tai theme da co nhom temp
   - Sticky header, mobile menu, mobile search, submenu toggle.
 - `js/frontpage.js`
   - Hero slider
-  - `s11p` featured slider
   - carousel factory
   - tab switching
   - category carousel
-  - `s15` category slider pager/filter
   - copy-link buttons
 - `js/footer.js`
   - Dang trong
@@ -141,9 +135,6 @@ Project khong con chi tap trung vao homepage nua. Hien tai theme da co nhom temp
 - Load cho `front-page`, `archive`, `search`, `single`, `page`, blog home:
   - `css/frontpage.css`
   - `js/frontpage.js`
-- Load them cho `front-page` only:
-  - `css/penci-s11p.css`
-  - `css/penci-s15.css`
 - Load them cho `archive`, `search`, `single`, `page`, blog home:
   - `css/archive.css`
 - Load them cho `single`, `page`:
@@ -163,31 +154,35 @@ Luu y:
 ### Homepage
 
 - `front-page.php`
-  - Render homepage sections theo thu tu `blogar_section_order`.
+  - Render 11 section homepage.
   - Mot phan da dynamic qua `theme-options.php` + `helpers.php`.
   - Van reuse rat nhieu class/layout tu source goc.
-  - SEO heading hien tai: 1 `h1` visually hidden cho homepage, section titles dung `h2/h3` theo tung block, post card title dung `h3`, category label o Trending Topics dung `span`, author/meta va footer nav labels khong dung heading.
+  - SEO heading hien tai: 1 `h1` o featured post hero, `h2` cho section/sub-group title, post card title dung `h3`, category label o Trending Topics dung `span`, author/meta va footer nav labels khong dung heading.
 
   Section status hien tai:
 
-  1. News Highlight (`s11`)
-     - Dynamic, layout v2 theo helper/settings.
-  2. Penci Featured (`s11p`)
-     - Dynamic, admin slot control + dedicated CSS.
-  3. Trending Topics (`s5`)
+  1. Hero Slider
+     - Dynamic, admin chon post, helper fallback an toan.
+  2. More Featured Posts
+     - Chu yeu la hardcode/render tinh.
+  3. Banner Ad
+     - Visual clone, tinh.
+  4. Innovation & Tech
+     - Dynamic qua settings + helper.
+  5. Trending Topics
      - Dynamic taxonomy carousel.
-  4. Featured Grid 2+3 (`s13`)
-     - Dynamic, admin-configured posts.
-  5. Latest Posts (`s14`)
-     - Dynamic latest-post grid.
-  6. Featured Grid This Week (`s12`)
-     - Dynamic asymmetric grid.
-  7. Innovation & Tech (`s4`)
-     - Dynamic tab carousel.
-  8. Featured Video (`s10`)
-     - Blog-post mode, khong con video popup that.
-  9. Entertainment Slider (`s15`)
-     - Parent category slider voi child-category tabs + pager.
+  6. Most Popular trend list
+     - Dynamic tab queries.
+  7. Social strip / white card area
+     - Static visual block.
+  8. Most Popular Grid
+     - Dynamic tab + configured posts.
+  9. Post List + Sidebar
+     - Dynamic query/render.
+  10. Featured Video
+     - Da chuyen thanh blog-post mode, khong con video popup that.
+  11. Instagram
+     - Static local mock grid, khong phai live feed.
 
 ### Archive
 

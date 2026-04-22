@@ -1,0 +1,687 @@
+/* ================================================================
+   SECTION s11p — PENCI FEATURED LAYOUT (faithful Penci class-name clone)
+   Scope: .blogar-s11p
+   Clones elementor-element-7e2e071 / penci-structure-32
+   ================================================================ */
+
+.blogar-s11p {
+  --pc-accent: #303f9f;
+  --pc-border: #dedede;
+  --pc-text: #313131;
+  --pc-meta: #888;
+  background: #fff;
+  margin-top: 12px;
+  margin-bottom: 0;
+  padding: 10px 0 12px;
+}
+
+.blogar-s11p > .container {
+  max-width: 1296px;
+}
+
+/* ── 3-column flex (50 + 25 + 25) ──────────────────────────────── */
+.blogar-s11p .pc-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  margin-left: -8px;
+  margin-right: -8px;
+}
+
+.blogar-s11p .pc-col {
+  padding-left: 8px;
+  padding-right: 8px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.blogar-s11p .pc-col-50 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+.blogar-s11p .pc-col-25 {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
+/* ================================================================
+   FEATURED SLIDER (left col top)
+   background-image approach, padding-top calc(.58*100%), dark overlay
+   ================================================================ */
+
+.blogar-s11p .penci-featured-content {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.blogar-s11p .featured-area {
+  margin-top: 0;
+  margin-bottom: 0;
+  position: relative;
+}
+
+/* ── Slider container + slide management ── */
+.blogar-s11p .penci-feat-slider {
+  position: relative;
+}
+
+.blogar-s11p .penci-feat-slides {
+  overflow: hidden;
+}
+
+.blogar-s11p .penci-feat-slide {
+  display: none;
+}
+
+.blogar-s11p .penci-feat-slide.active {
+  display: block;
+}
+
+.blogar-s11p .penci-feat-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background: transparent;
+  border: 0;
+  color: #fff;
+  width: auto;
+  height: auto;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+  padding: 15px 6px 13px;
+  transition: opacity 0.2s;
+}
+
+.blogar-s11p .penci-feat-nav:hover {
+  opacity: 1;
+}
+.blogar-s11p .penci-feat-prev {
+  left: 15px;
+}
+.blogar-s11p .penci-feat-next {
+  right: 15px;
+}
+
+/* The image holder inside each slide creates the aspect-ratio box */
+.blogar-s11p .penci-feat-slide .penci-image-holder {
+  position: relative;
+  display: block;
+  width: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: #f5f5f5;
+}
+
+.blogar-s11p .penci-feat-slide .penci-image-holder::before {
+  content: "";
+  display: block;
+  padding-top: calc(0.58 * 100%); /* exact Penci value */
+  height: auto;
+}
+
+/* gradient overlay — transparent at top, dark at bottom */
+.blogar-s11p .featured-slider-overlay {
+  display: none;
+}
+
+/* transparent full-card link */
+.blogar-s11p .penci-feat-link {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+}
+
+/* content at bottom — centered layout matching Penci reference */
+.blogar-s11p .feat-text {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  width: calc(100% - 30px);
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 15px 10px 16px;
+  background: rgba(0, 0, 0, 0.72);
+  z-index: 9;
+  text-align: center;
+}
+
+.blogar-s11p .feat-text::before {
+  display: none;
+}
+
+.blogar-s11p .feat-text > * {
+  position: relative;
+  z-index: 3;
+}
+
+.blogar-s11p .feat-text-inner {
+  position: static;
+}
+
+/* category badge — accent color pill, sits above the text box */
+.blogar-s11p .feat-cat,
+.blogar-s11p .featured-cat {
+  margin-bottom: 2px;
+  position: relative;
+  z-index: 3;
+}
+
+.blogar-s11p .feat-cat a,
+.blogar-s11p .featured-cat a {
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.blogar-s11p .feat-cat a:hover,
+.blogar-s11p .featured-cat a:hover {
+  opacity: 0.9;
+}
+
+/* semi-transparent dark box behind title + meta */
+.blogar-s11p .feat-text-box {
+  background: none;
+  padding: 0;
+  margin-top: 0;
+}
+
+.blogar-s11p .feat-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.35;
+  color: #fff;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.blogar-s11p .feat-title a {
+  color: #fff;
+  font-size: inherit;
+  text-decoration: none;
+  text-transform: none;
+  opacity: 1;
+}
+
+.blogar-s11p .feat-title a:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.blogar-s11p .feat-meta {
+  display: block;
+  margin-top: 4px;
+}
+
+.blogar-s11p .feat-meta span,
+.blogar-s11p .feat-meta a,
+.blogar-s11p .feat-meta time {
+  font-size: 12px;
+  color: #fff;
+  opacity: 1;
+}
+
+.blogar-s11p .feat-meta a:hover {
+  color: #fff;
+}
+
+.blogar-s11p .feat-title,
+.blogar-s11p .feat-title a,
+.blogar-s11p .feat-meta,
+.blogar-s11p .feat-meta span,
+.blogar-s11p .feat-meta a,
+.blogar-s11p .feat-meta time {
+  color: #fff !important;
+}
+
+.blogar-s11p .feat-meta .feat-author::after {
+  box-sizing: border-box;
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin: 0 8px 0 12px;
+  border: 2px solid currentColor;
+  border-radius: 2px;
+  opacity: 0.35;
+  transform: translateY(-2px);
+}
+
+.blogar-s11p .feat-sep {
+  display: none;
+}
+
+@keyframes blogarS11pSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.blogar-s11p .penci-feat-slide .feat-cat,
+.blogar-s11p .penci-feat-slide .featured-cat,
+.blogar-s11p .penci-feat-slide .feat-title,
+.blogar-s11p .penci-feat-slide .feat-meta {
+  opacity: 0;
+  transform: translateY(16px);
+  will-change: transform, opacity;
+}
+
+.blogar-s11p .penci-feat-slide.active .feat-cat,
+.blogar-s11p .penci-feat-slide.active .featured-cat {
+  animation: blogarS11pSlideUp 0.38s ease forwards;
+}
+
+.blogar-s11p .penci-feat-slide.active .feat-title {
+  animation: blogarS11pSlideUp 0.46s ease forwards;
+  animation-delay: 0.08s;
+}
+
+.blogar-s11p .penci-feat-slide.active .feat-meta {
+  animation: blogarS11pSlideUp 0.5s ease forwards;
+  animation-delay: 0.16s;
+}
+
+/* ================================================================
+   SMALL LIST pcsl-* (left col bottom 2-col + right col bottom 1-col)
+   padded box, 104px thumb, border #dedede
+   ================================================================ */
+
+.blogar-s11p .pcsl-inner {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: calc(-15px / 2);
+  margin-right: calc(-15px / 2);
+  width: calc(100% + 15px);
+  margin-top: 20px;
+}
+
+.blogar-s11p .pcsl-2col .pcsl-item {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding: 0 7.5px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.blogar-s11p .pcsl-1col .pcsl-item {
+  flex: 0 0 100%;
+  max-width: 100%;
+  padding: 0 7.5px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.blogar-s11p .pcsl-2col .pcsl-item:nth-last-child(-n + 2) {
+  margin-bottom: 0;
+}
+.blogar-s11p .pcsl-1col .pcsl-item:last-child {
+  margin-bottom: 0;
+}
+
+.blogar-s11p .pcsl-itemin {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid var(--pc-border);
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
+}
+
+/* thumb — 104px, 80% aspect ratio */
+.blogar-s11p .pcsl-thumb {
+  flex: 0 0 104px;
+  width: 104px;
+  position: relative;
+  overflow: hidden;
+}
+
+.blogar-s11p .pcsl-thumb::before {
+  content: "";
+  display: block;
+  padding-top: 80%;
+}
+
+.blogar-s11p .pcsl-thumb a {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+}
+
+.blogar-s11p .pcsl-thumb a:hover {
+  opacity: 0.85;
+}
+
+.blogar-s11p .pcsl-thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.blogar-s11p .pcsl-content {
+  width: calc(100% - 104px);
+  padding-left: 10px;
+}
+
+.blogar-s11p .pcsl-title {
+  font-size: 14px;
+  color: var(--pc-text);
+  font-weight: bold;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+}
+
+.blogar-s11p .pcsl-title a {
+  font-size: inherit;
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+}
+
+.blogar-s11p .pcsl-title a:hover {
+  color: var(--pc-accent);
+}
+
+.blogar-s11p .pcsl-meta {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--pc-meta);
+  font-style: italic;
+  line-height: 1.3;
+}
+
+.blogar-s11p .pcsl-meta a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ================================================================
+   BIG GRID pcbg-* (middle col + right col, top)
+   background-image, padding-top 80%, blue gradient overlay #303f9f
+   ================================================================ */
+
+.blogar-s11p .pcbg-bgmain {
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.blogar-s11p .pcbg-thumb {
+  position: relative;
+}
+
+.blogar-s11p .pcbg-thumbin {
+  position: relative;
+}
+
+/* image + aspect ratio */
+.blogar-s11p .pcbg-thumbin > .penci-image-holder {
+  position: relative;
+  width: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: #f5f5f5;
+}
+
+.blogar-s11p .pcbg-thumbin > .penci-image-holder::before {
+  content: "";
+  display: block;
+  padding-top: 80%; /* exact Penci value */
+}
+
+/* blue gradient overlay */
+.blogar-s11p .pcbg-bgoverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #303f9f 100%);
+  opacity: calc(90 / 100);
+  transition: opacity 0.3s;
+  z-index: 1;
+}
+
+.blogar-s11p .pcbg-bgmain:hover .pcbg-bgoverlay {
+  opacity: 1;
+}
+
+/* content overlay — covers entire .pcbg-bgmain */
+.blogar-s11p .pcbg-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 3;
+}
+
+.blogar-s11p .pcbg-content-flex {
+  align-items: flex-end;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  z-index: 3;
+}
+
+/* full-card link */
+.blogar-s11p .pcbg-link {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: block;
+}
+
+/* text block at bottom — extra bottom padding keeps text above trending-box overlap */
+.blogar-s11p .pcbg-content-inner {
+  padding: 15px;
+  position: relative;
+  z-index: 5;
+  width: 100%;
+}
+
+.blogar-s11p .pcbg-title {
+  font-size: 18px;
+  color: #fff;
+  font-weight: bold;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.blogar-s11p .pcbg-title a {
+  font-size: inherit;
+  color: #fff;
+  text-decoration: none;
+}
+
+.blogar-s11p .pcbg-title a:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.blogar-s11p .pcbg-meta {
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+  line-height: 1.3;
+}
+
+.blogar-s11p .pcbg-meta a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.blogar-s11p .pcbg-empty {
+  min-height: 160px;
+  background: #f5f5f5;
+}
+
+/* right col small list fills remaining column height */
+.blogar-s11p .pc-col-right .pcsl-inner {
+  flex: 1 1 auto;
+  align-content: flex-start;
+}
+
+/* ================================================================
+   TRENDING BOX (middle col, below big-grid)
+   white border box, style-7 heading, no-thumb list
+   ================================================================ */
+
+.blogar-s11p .penci-trending-box {
+  padding: 15px 10px;
+  background-color: #fff;
+  border: 1px solid var(--pc-border);
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
+  margin-top: 20px;
+}
+
+/* style-7: border-bottom on wrapper + 40px accent bar on ::before */
+.blogar-s11p .penci-border-arrow.style-7 {
+  position: relative;
+  line-height: 1.3;
+  margin-bottom: 15px;
+  border-bottom: 3px solid var(--pc-text);
+}
+
+.blogar-s11p .penci-border-arrow.style-7 .widget-title {
+  font-size: 14px;
+  color: var(--pc-text);
+  text-transform: uppercase;
+  font-weight: bold;
+  margin: 0;
+  padding: 0 0 8px 0;
+  background: none;
+  border: none;
+  position: relative;
+  line-height: 1.3;
+}
+
+.blogar-s11p .penci-border-arrow.style-7 .widget-title::before {
+  content: "";
+  width: 40px;
+  height: 3px;
+  position: absolute;
+  bottom: -3px; /* sits atop the border-bottom */
+  left: 0;
+  background: var(--pc-accent);
+  z-index: 1;
+}
+
+/* no-thumb list */
+.blogar-s11p .pcsl-nothumb {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.blogar-s11p .pcsl-nothumb li {
+  padding: 0;
+  margin-bottom: 12px;
+  border-bottom: 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.blogar-s11p .pcsl-nothumb li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.blogar-s11p .pcsl-nothumb li a {
+  color: #555;
+  font-size: inherit;
+  text-decoration: none;
+}
+
+.blogar-s11p .pcsl-nothumb li a:hover {
+  color: var(--pc-accent);
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+
+/* Tablet ≤ 1024px */
+@media only screen and (max-width: 1024px) {
+  .blogar-s11p .pc-row {
+    flex-wrap: wrap;
+  }
+
+  .blogar-s11p .pc-col-50 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .blogar-s11p .pc-col-25 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .blogar-s11p .penci-feat-slide .penci-image-holder::before {
+    padding-top: 45%;
+  }
+}
+
+/* Mobile ≤ 480px */
+@media only screen and (max-width: 480px) {
+  .blogar-s11p .pc-col-25 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .blogar-s11p .pcsl-2col .pcsl-item {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .blogar-s11p .feat-title {
+    font-size: 18px;
+  }
+
+  .blogar-s11p .feat-text {
+    width: calc(100% - 20px);
+    max-width: none;
+    padding: 14px 8px 15px;
+  }
+}

@@ -1,0 +1,13 @@
+Backup created after my unintended UI optimization pass on the homepage.
+
+This folder is a snapshot of the current file states I touched in that pass:
+- front-page.php
+- functions.php
+- PROJECT.md
+- js/frontpage.js
+- css/penci-s11p.css
+- css/penci-s15.css
+
+Note:
+- The worktree already had local edits before this pass.
+- So this backup should be treated as a current-state snapshot of touched files, not a guaranteed line-by-line isolation of only my changes.

@@ -1,0 +1,13 @@
+This backup is reconstructed to match the project state before my first code changes in this conversation.
+
+Included original-state snapshots:
+- front-page.php
+- functions.php
+- PROJECT.md
+- js/frontpage.js
+- css/penci-s11p.css
+
+Not included because it did not exist yet at that point:
+- css/penci-s15.css
+
+This backup was created without changing the live files in the theme root.

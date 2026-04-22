@@ -206,23 +206,23 @@ function blogar_get_configured_posts($count, $cat_id = 0, $selected_ids = array(
 function blogar_get_configured_post_slots($selected_ids, $cat_id = 0, $sort = 'latest', $exclude_ids = array())
 {
     $selected_ids = array_map('absint', (array) $selected_ids);
-    $slot_count = count($selected_ids);
+    $slot_count   = count($selected_ids);
 
     if ($slot_count < 1) {
         return array();
     }
 
-    $slots = array_fill(0, $slot_count, null);
-    $exclude_ids = array_values(array_filter(array_map('absint', (array) $exclude_ids)));
-    $selected_map = array();
+    $slots         = array_fill(0, $slot_count, null);
+    $exclude_ids   = array_values(array_filter(array_map('absint', (array) $exclude_ids)));
+    $selected_map  = array();
     $selected_only = array_values(array_unique(array_filter($selected_ids)));
 
     if (!empty($selected_only)) {
         $selected_posts = get_posts(array(
             'posts_per_page' => count($selected_only),
-            'post_status' => 'publish',
-            'post__in' => $selected_only,
-            'orderby' => 'post__in',
+            'post_status'    => 'publish',
+            'post__in'       => $selected_only,
+            'orderby'        => 'post__in',
         ));
 
         foreach ($selected_posts as $post) {
@@ -235,7 +235,7 @@ function blogar_get_configured_post_slots($selected_ids, $cat_id = 0, $sort = 'l
     foreach ($selected_ids as $index => $post_id) {
         if ($post_id && isset($selected_map[$post_id])) {
             $slots[$index] = $selected_map[$post_id];
-            $used_ids[] = (int) $post_id;
+            $used_ids[]    = (int) $post_id;
         }
     }
 
@@ -248,7 +248,7 @@ function blogar_get_configured_post_slots($selected_ids, $cat_id = 0, $sort = 'l
 
     if (!empty($empty_indexes)) {
         $fallback_posts = blogar_get_posts_with_exclude(count($empty_indexes), $cat_id, $used_ids, $sort);
-        $fallback_i = 0;
+        $fallback_i     = 0;
 
         foreach ($empty_indexes as $index) {
             if (isset($fallback_posts[$fallback_i]) && $fallback_posts[$fallback_i] instanceof WP_Post) {
@@ -272,11 +272,11 @@ function blogar_get_configured_post_slots($selected_ids, $cat_id = 0, $sort = 'l
  */
 function blogar_get_posts_with_exclude($count, $cat_id = 0, $exclude_ids = array(), $sort = 'latest')
 {
-    $count = max(1, (int) $count);
-    $cat_id = (int) $cat_id;
+    $count       = max(1, (int) $count);
+    $cat_id      = (int) $cat_id;
     $exclude_ids = array_values(array_unique(array_filter(array_map('absint', (array) $exclude_ids))));
 
-    $args = blogar_build_posts_query_args($count, $cat_id, $sort);
+    $args                  = blogar_build_posts_query_args($count, $cat_id, $sort);
     $args['no_found_rows'] = true;
     if (!empty($exclude_ids)) {
         $args['post__not_in'] = $exclude_ids;
@@ -285,7 +285,7 @@ function blogar_get_posts_with_exclude($count, $cat_id = 0, $exclude_ids = array
     $posts = get_posts($args);
 
     if (count($posts) < $count) {
-        $fallback_args = blogar_build_posts_query_args($count, $cat_id, $sort);
+        $fallback_args                  = blogar_build_posts_query_args($count, $cat_id, $sort);
         $fallback_args['no_found_rows'] = true;
         $posts = array_merge($posts, get_posts($fallback_args));
     }
@@ -308,16 +308,16 @@ function blogar_get_posts_with_exclude($count, $cat_id = 0, $exclude_ids = array
 
 function blogar_get_innovation_data()
 {
-    $title = get_option('blogar_s4_title', 'Innovation & Tech');
-    $subtitle = get_option('blogar_s4_subtitle', '');
-    $count = max(1, (int) get_option('blogar_s4_post_count', 4));
+    $title     = get_option('blogar_s4_title', 'Innovation & Tech');
+    $subtitle  = get_option('blogar_s4_subtitle', '');
+    $count     = max(1, (int) get_option('blogar_s4_post_count', 4));
     $tab_count = max(1, min(6, (int) get_option('blogar_s4_tab_count', 3)));
-    $tabs = array();
+    $tabs      = array();
 
     for ($i = 1; $i <= $tab_count; $i++) {
-        $label = get_option("blogar_s4_tab_{$i}_label", '');
-        $render_type = get_option("blogar_s4_tab_{$i}_render_type", 'category');
-        $cat_id = (int) get_option("blogar_s4_tab_{$i}_cat", 0);
+        $label        = get_option("blogar_s4_tab_{$i}_label", '');
+        $render_type  = get_option("blogar_s4_tab_{$i}_render_type", 'category');
+        $cat_id       = (int) get_option("blogar_s4_tab_{$i}_cat", 0);
         $post_ids_raw = get_option("blogar_s4_tab_{$i}_post_ids", '');
 
         if (!$label && !$cat_id && !$post_ids_raw) {
@@ -325,18 +325,18 @@ function blogar_get_innovation_data()
         }
 
         $args = array(
-            'numberposts' => $count,
-            'post_status' => 'publish',
+            'numberposts'        => $count,
+            'post_status'        => 'publish',
             'ignore_sticky_posts' => true,
-            'orderby' => 'date',
-            'order' => 'DESC',
+            'orderby'            => 'date',
+            'order'              => 'DESC',
         );
 
         if ($render_type === 'posts' && $post_ids_raw) {
             $ids = array_filter(array_map('intval', explode(',', $post_ids_raw)));
             if (!empty($ids)) {
-                $args['post__in'] = $ids;
-                $args['orderby'] = 'post__in';
+                $args['post__in']    = $ids;
+                $args['orderby']     = 'post__in';
                 $args['numberposts'] = count($ids);
             }
         } elseif ($cat_id) {
@@ -489,7 +489,7 @@ function blogar_get_featured_video_data()
 function blogar_get_news_highlight_block_data()
 {
     $ticker_title = get_option('blogar_s11_ticker_title', 'Trending Now');
-    $cat_id = (int) get_option('blogar_s11_cat', 0);
+    $cat_id       = (int) get_option('blogar_s11_cat', 0);
 
     // [v2] grid: [0] = big hero, [1] = middle card 1, [2] = middle card 2
     $selected_ids = array(
@@ -498,7 +498,7 @@ function blogar_get_news_highlight_block_data()
         (int) get_option('blogar_s11_small_post_2', 0),
     );
 
-    $grid_posts = blogar_get_configured_posts(3, $cat_id, $selected_ids, 'latest');
+    $grid_posts    = blogar_get_configured_posts(3, $cat_id, $selected_ids, 'latest');
     $grid_used_ids = array();
 
     foreach ($grid_posts as $p) {
@@ -508,7 +508,7 @@ function blogar_get_news_highlight_block_data()
     }
 
     // Trending text list — latest 6 not in grid
-    $ticker_args = blogar_build_posts_query_args(6, $cat_id, 'latest');
+    $ticker_args                  = blogar_build_posts_query_args(6, $cat_id, 'latest');
     $ticker_args['no_found_rows'] = true;
     if (!empty($grid_used_ids)) {
         $ticker_args['post__not_in'] = $grid_used_ids;
@@ -519,11 +519,9 @@ function blogar_get_news_highlight_block_data()
     }
 
     // Recent posts for small horizontal cards (4 left bottom + 3 right side)
-    $ticker_ids = array_map(function ($p) {
-        return $p instanceof WP_Post ? (int) $p->ID : 0;
-    }, $ticker_posts);
-    $all_used = array_filter(array_merge($grid_used_ids, $ticker_ids));
-    $recent_args = blogar_build_posts_query_args(7, $cat_id, 'latest');
+    $ticker_ids = array_map(function ($p) { return $p instanceof WP_Post ? (int) $p->ID : 0; }, $ticker_posts);
+    $all_used   = array_filter(array_merge($grid_used_ids, $ticker_ids));
+    $recent_args                  = blogar_build_posts_query_args(7, $cat_id, 'latest');
     $recent_args['no_found_rows'] = true;
     if (!empty($all_used)) {
         $recent_args['post__not_in'] = array_values($all_used);
@@ -537,7 +535,7 @@ function blogar_get_news_highlight_block_data()
     return array(
         'ticker_title' => $ticker_title,
         'ticker_posts' => $ticker_posts,
-        'grid_posts' => $grid_posts,
+        'grid_posts'   => $grid_posts,
         'recent_posts' => $recent_posts,
     );
 }
@@ -550,16 +548,16 @@ function blogar_get_news_highlight_block_data()
 function blogar_get_s11p_data()
 {
     $trending_label = get_option('blogar_s11p_trending_label', 'Trending Now');
-    $fallback_cat = (int) get_option('blogar_s11p_cat', 0);
-    $trending_cat = (int) get_option('blogar_s11p_trending_cat', 0);
-    $slider_count = max(1, min(6, (int) get_option('blogar_s11p_slider_count', 3)));
+    $fallback_cat   = (int) get_option('blogar_s11p_cat', 0);
+    $trending_cat   = (int) get_option('blogar_s11p_trending_cat', 0);
+    $slider_count   = max(1, min(6, (int) get_option('blogar_s11p_slider_count', 3)));
 
     $slider_selected = array((int) get_option('blogar_s11p_hero', 0));
     for ($i = 2; $i <= 6; $i++) {
         $slider_selected[] = (int) get_option("blogar_s11p_slider_post_{$i}", 0);
     }
     $slider_slots = blogar_get_configured_post_slots(array_slice($slider_selected, 0, $slider_count), $fallback_cat, 'latest');
-    $slider = array_values(array_filter($slider_slots, function ($post) {
+    $slider       = array_values(array_filter($slider_slots, function ($post) {
         return $post instanceof WP_Post;
     }));
 
@@ -569,13 +567,13 @@ function blogar_get_s11p_data()
     $used_ids = array_values(array_filter($used_ids));
 
     $mid1_slot = blogar_get_configured_post_slots(array((int) get_option('blogar_s11p_mid1', 0)), $fallback_cat, 'latest', $used_ids);
-    $mid1 = (!empty($mid1_slot[0]) && $mid1_slot[0] instanceof WP_Post) ? $mid1_slot[0] : null;
+    $mid1      = (!empty($mid1_slot[0]) && $mid1_slot[0] instanceof WP_Post) ? $mid1_slot[0] : null;
     if ($mid1 instanceof WP_Post) {
         $used_ids[] = (int) $mid1->ID;
     }
 
     $mid2_slot = blogar_get_configured_post_slots(array((int) get_option('blogar_s11p_mid2', 0)), $fallback_cat, 'latest', $used_ids);
-    $mid2 = (!empty($mid2_slot[0]) && $mid2_slot[0] instanceof WP_Post) ? $mid2_slot[0] : null;
+    $mid2      = (!empty($mid2_slot[0]) && $mid2_slot[0] instanceof WP_Post) ? $mid2_slot[0] : null;
     if ($mid2 instanceof WP_Post) {
         $used_ids[] = (int) $mid2->ID;
     }
@@ -585,7 +583,7 @@ function blogar_get_s11p_data()
         $left_small_selected[] = (int) get_option("blogar_s11p_left_small_{$i}", 0);
     }
     $left_small_slots = blogar_get_configured_post_slots($left_small_selected, $fallback_cat, 'latest', $used_ids);
-    $left_small = array_values(array_filter($left_small_slots, function ($post) {
+    $left_small       = array_values(array_filter($left_small_slots, function ($post) {
         return $post instanceof WP_Post;
     }));
     foreach ($left_small as $post) {
@@ -597,7 +595,7 @@ function blogar_get_s11p_data()
         $right_small_selected[] = (int) get_option("blogar_s11p_right_small_{$i}", 0);
     }
     $right_small_slots = blogar_get_configured_post_slots($right_small_selected, $fallback_cat, 'latest', $used_ids);
-    $right_small = array_values(array_filter($right_small_slots, function ($post) {
+    $right_small       = array_values(array_filter($right_small_slots, function ($post) {
         return $post instanceof WP_Post;
     }));
     foreach ($right_small as $post) {
@@ -605,17 +603,17 @@ function blogar_get_s11p_data()
     }
 
     $trending_source_cat = $trending_cat ? $trending_cat : $fallback_cat;
-    $trending = blogar_get_posts_with_exclude(6, $trending_source_cat, $used_ids, 'latest');
+    $trending            = blogar_get_posts_with_exclude(6, $trending_source_cat, $used_ids, 'latest');
 
     return array(
         'trending_label' => $trending_label,
-        'trending' => $trending,
-        'slider' => $slider,
-        'hero' => !empty($slider[0]) ? $slider[0] : null,
-        'mid1' => $mid1,
-        'mid2' => $mid2,
-        'left_small' => $left_small,
-        'right_small' => $right_small,
+        'trending'       => $trending,
+        'slider'         => $slider,
+        'hero'           => !empty($slider[0]) ? $slider[0] : null,
+        'mid1'           => $mid1,
+        'mid2'           => $mid2,
+        'left_small'     => $left_small,
+        'right_small'    => $right_small,
     );
 }
 
@@ -730,76 +728,3 @@ function blogar_get_latest_posts_data()
         'more_url' => $more_url,
     );
 }
-
-function blogar_get_s15_data()
-{
-    $opts = get_option('blogar_s15_settings', []);
-    $cat_id = !empty($opts['category_id']) ? (int) $opts['category_id'] : 0;
-    $ppp = 8; // pre-load 2 slides × 4 posts = 8 per group
-
-    $cats = [];
-    $posts = [];
-
-    if ($cat_id) {
-        // ── 1. Sub-categories ──────────────────────────────────
-        $sub_cats_raw = get_categories([
-            'parent' => $cat_id,
-            'hide_empty' => true,
-            'number' => 6,
-        ]);
-
-        foreach ($sub_cats_raw as $c) {
-            $cats[] = [
-                'id' => $c->term_id,
-                'name' => $c->name,
-                'slug' => $c->slug,
-            ];
-        }
-
-        // ── 2. Posts per group ─────────────────────────────────
-        $posts['all'] = get_posts([
-            'post_type' => 'post',
-            'post_status' => 'publish',
-            'posts_per_page' => $ppp,
-            'orderby' => 'date',
-            'order' => 'DESC',
-            'cat' => $cat_id,
-        ]);
-
-        foreach ($cats as $c) {
-            $posts[(string) $c['id']] = get_posts([
-                'post_type' => 'post',
-                'post_status' => 'publish',
-                'posts_per_page' => $ppp,
-                'orderby' => 'date',
-                'order' => 'DESC',
-                'cat' => $c['id'],
-            ]);
-        }
-    }
-
-    // Keep the section alive even when the parent category is not configured yet.
-    if (empty($posts['all'])) {
-        $latest_posts = get_posts([
-            'post_type' => 'post',
-            'post_status' => 'publish',
-            'posts_per_page' => $ppp,
-            'orderby' => 'date',
-            'order' => 'DESC',
-        ]);
-
-        if (!empty($latest_posts)) {
-            $posts['all'] = $latest_posts;
-        }
-    }
-
-    // Remove empty groups
-    $posts = array_filter($posts);
-
-    return [
-        'parent_cat_id' => $cat_id,
-        'cats' => $cats,
-        'posts' => $posts,
-    ];
-}
-

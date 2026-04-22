@@ -1,18 +1,5 @@
 <?php
-/**
- * search.php — Blogar Theme
- *
- * Template: Search results.
- *
- * SEO  : Exactly 1 <h1> per page (page-title inside breadcrumb).
- * Data : Uses the main WordPress search query; sidebar widgets use WP functions.
- * CSS  : Reuses archive.php structure + css/archive.css styles for identical UI.
- * JS   : Reuses js/frontpage.js (copy-link) — no new JS needed.
- *
- * Sidebar v2:
- *  - Đồng bộ với archive.php: Popular Posts / Categories / Subscribe Newsletter.
- *  - Bỏ 8 widgets cũ (Search, Recent, Newsletter, Social, Gallery, Videos, Tags, Ad).
- */
+
 
 if (!defined('ABSPATH')) {
     exit;
@@ -164,15 +151,17 @@ $img = get_template_directory_uri() . '/images/frontpage/';
 
                     <?php endif; ?>
 
-                </div><!-- .col-lg-8 -->
+                </div>
 
 
                 <!-- ── SIDEBAR ─────────────────────────────────────── -->
                 <?php get_template_part('template-parts/sidebar'); ?>
 
-            </div><!-- .row -->
-        </div><!-- .container -->
-    </div><!-- .axil-blog-area -->
-</div><!-- .main-wrapper -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <?php get_footer(); ?>
