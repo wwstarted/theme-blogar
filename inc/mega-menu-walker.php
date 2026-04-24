@@ -1,28 +1,4 @@
 <?php
-/**
- * Blogar Mega Menu Walker  v2
- *
- * Hai kiểu kích hoạt bằng CSS class trên menu item:
- *   blogar-mega-1  → sidebar tabs + post grid 4 cột
- *   blogar-mega-2  → post grid 4 cột, không sidebar
- *
- * FIX 4 — Hỗ trợ mega-1 với Custom Link parent:
- *   - Nếu menu item là Category → lấy child categories từ WP taxonomy
- *   - Nếu menu item là Custom Link + có child nav items là Categories
- *     → dùng child nav items làm tabs
- *   Walker overrides walk() để collect toàn bộ nav items vào $this->all_items
- *   rồi get_nav_children() để lấy children của bất kỳ item nào.
- *
- * Suppression fix:
- *   $mega_depth tracking: biết chính xác khi nào đang trong subtree của mega item
- *   → không suppress nhầm children của regular dropdown items.
- *
- * Admin setup:
- *   Appearance > Menus > Screen Options > bật CSS Classes
- *   Thêm blogar-mega-1 hoặc blogar-mega-2 vào menu item
- *   Với mega-1 Custom Link: thêm child items là Categories (Samsung, Product...)
- *   Với mega-1 Category: không cần child items trong WP menu
- */
 
 if (!defined('ABSPATH')) {
     exit;

@@ -659,3 +659,17 @@
     padding: 14px 8px 15px;
   }
 }
+
+/* pcsl-inner lấp đầy chiều cao còn lại của col */
+.blogar-s11p .pc-col-50 .pcsl-inner,
+.blogar-s11p .pc-col-right .pcsl-inner {
+  flex: 1 1 auto;
+  align-content: space-between;
+  margin-bottom: 0;
+}
+
+/* Bỏ margin-bottom cố định, để space-between tự phân bổ */
+.blogar-s11p .pcsl-2col .pcsl-item,
+.blogar-s11p .pcsl-1col .pcsl-item {
+  margin-bottom: 0;
+}

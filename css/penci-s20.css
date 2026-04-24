@@ -1,0 +1,526 @@
+/*
+  Blogar Section 20 - Dual Column Featured Cat (mag-cat-style-1)
+  Two independent blocks side-by-side, each: 1 featured (image-top) + 4 mini items stacked
+*/
+
+.blogar-s20 {
+  --s20-accent: #e55a4e;
+  --s20-heading: #313131;
+  --s20-border: #dedede;
+  --s20-meta: #888;
+  --s20-bg: #fff;
+  --s20-gap: 20px;
+  --s20-mini-thumb-w: 104px;
+  --s20-mini-thumb-ar: 80%;
+  --s20-feat-thumb-ar: 66.67%;
+  margin-top: 20px;
+  margin-bottom: 0;
+  width: 100%;
+  clear: both;
+  background-color: #fff;
+}
+
+.blogar-s20 .blogar-s20-inner {
+  max-width: 1298px;
+  margin: 0 auto;
+  padding: 5px 8px 20px;
+  box-sizing: border-box;
+}
+
+/* ── Two blocks side-by-side ───────────────────────────────── */
+
+.blogar-s20 .s20-blocks {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: calc(var(--s20-gap) / -2);
+  margin-right: calc(var(--s20-gap) / -2);
+}
+
+.blogar-s20 .blogar-s20-block {
+  flex: 0 0 50%;
+  max-width: 50%;
+  min-width: 0;
+  padding: 0 calc(var(--s20-gap) / 2);
+}
+
+/* ── Section header (title + nav) ──────────────────────────── */
+
+.blogar-s20 .blogar-s20-header {
+  position: relative;
+  clear: both;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #313131;
+  line-height: 1;
+}
+
+.blogar-s20 .s20-title-label {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 -2px;
+  padding: 0 12px;
+  border: 0;
+  background-color: #313131;
+  color: #fff;
+  font-family: var(--pchead-font, "Raleway", sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 34px;
+  text-transform: uppercase;
+}
+
+.blogar-s20 .s20-title-label::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -20px;
+  z-index: 1;
+  width: 0;
+  height: 0;
+  border-right: 20px solid transparent;
+  border-bottom: 34px solid #000;
+  opacity: 0.7;
+}
+
+.blogar-s20 .s20-title-label a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.blogar-s20 .s20-title-label a:hover {
+  opacity: 0.85;
+}
+
+.blogar-s20 .blogar-s20-nav {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: auto;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0;
+}
+
+.blogar-s20 .s20-cat-list,
+.blogar-s20 .s20-pager {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.blogar-s20 .s20-cat-list li,
+.blogar-s20 .s20-pager li {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
+
+.blogar-s20 .s20-tab,
+.blogar-s20 .s20-btn-prev,
+.blogar-s20 .s20-btn-next {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.blogar-s20 .s20-tab {
+  display: inline-block;
+  padding: 0 10px;
+  color: var(--s20-heading);
+  font-family: var(--pchead-font, "Raleway", sans-serif);
+  font-size: 13px;
+  line-height: 34px;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.blogar-s20 .s20-cat-list li:first-child .s20-tab {
+  padding-left: 0;
+}
+
+.blogar-s20 .s20-cat-list li:last-child .s20-tab {
+  padding-right: 0;
+}
+
+.blogar-s20 .s20-tab:hover,
+.blogar-s20 .s20-tab.s20-active {
+  color: var(--s20-accent);
+  opacity: 1;
+}
+
+.blogar-s20 .s20-pager {
+  padding-left: 10px;
+  margin-top: -3px;
+}
+
+.blogar-s20 .s20-pager li + li {
+  margin-left: 4px;
+}
+
+.blogar-s20 .s20-btn-prev,
+.blogar-s20 .s20-btn-next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 34px;
+  padding: 0 3px;
+  color: var(--s20-heading);
+  line-height: 1;
+  opacity: 0.6;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.blogar-s20 .s20-btn-prev:hover:not(:disabled),
+.blogar-s20 .s20-btn-next:hover:not(:disabled) {
+  color: var(--s20-accent);
+  opacity: 1;
+}
+
+.blogar-s20 .s20-btn-disable,
+.blogar-s20 .s20-btn-prev:disabled,
+.blogar-s20 .s20-btn-next:disabled {
+  pointer-events: none;
+  opacity: 0.4;
+  cursor: default;
+}
+
+.blogar-s20 .s20-btn-prev .s20-icon,
+.blogar-s20 .s20-btn-next .s20-icon {
+  display: inline-block;
+  width: 7px;
+  height: 11px;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+/* ── Slides ─────────────────────────────────────────────────── */
+
+.blogar-s20 .blogar-s20-block-slides {
+  position: relative;
+  overflow: hidden;
+}
+
+.blogar-s20 .blogar-s20-slide {
+  display: none;
+}
+
+.blogar-s20 .blogar-s20-slide.s20-slide-active {
+  display: block;
+  animation: blogarS20SlideIn 0.28s ease;
+}
+
+@keyframes blogarS20SlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Inner cols layout ──────────────────────────────────────── */
+
+.blogar-s20 .s20-cols {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.blogar-s20 .s20-col-left {
+  flex: 0 0 50%;
+  max-width: 50%;
+  min-width: 0;
+}
+
+.blogar-s20 .s20-col-right {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── Featured post (vertical: image-top + content-below) ────── */
+
+.blogar-s20 .s20-featured-card {
+  border: 1px solid var(--s20-border);
+  background: var(--s20-bg);
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.blogar-s20 .s20-featured-thumb {
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.blogar-s20 .s20-featured-thumb::before {
+  content: "";
+  display: block;
+  padding-top: var(--s20-feat-thumb-ar);
+}
+
+.blogar-s20 .s20-featured-img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transition: transform 0.3s ease;
+}
+
+.blogar-s20 .s20-featured-img:hover {
+  transform: scale(1.03);
+}
+
+.blogar-s20 .s20-featured-thumb:not([data-has-img]) .s20-featured-img,
+.blogar-s20 .s20-featured-img[style=""] {
+  background-color: #eef2f7;
+}
+
+.blogar-s20 .s20-featured-content {
+  flex: 1;
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.blogar-s20 .s20-featured-title {
+  margin: 0;
+  color: var(--s20-heading);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.blogar-s20 .s20-featured-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.blogar-s20 .s20-featured-title a:hover {
+  color: var(--s20-accent);
+}
+
+.blogar-s20 .s20-featured-meta {
+  margin-top: 8px;
+  color: var(--s20-meta);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.blogar-s20 .s20-featured-meta a {
+  color: var(--s20-meta);
+  text-decoration: none;
+}
+
+.blogar-s20 .s20-featured-meta a:hover {
+  color: var(--s20-accent);
+}
+
+.blogar-s20 .s20-meta-sep {
+  display: inline-block;
+  margin: 0 6px;
+  color: #b1b1b1;
+}
+
+.blogar-s20 .s20-featured-excerpt {
+  margin-top: 10px;
+  color: var(--s20-heading);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.blogar-s20 .s20-featured-excerpt p {
+  margin: 0;
+}
+
+/* ── Mini items (4 stacked in right col) ───────────────────── */
+
+.blogar-s20 .s20-mini-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--s20-border);
+  background: var(--s20-bg);
+  flex: 1;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.blogar-s20 .s20-mini-thumb {
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 var(--s20-mini-thumb-w);
+  width: var(--s20-mini-thumb-w);
+  min-width: var(--s20-mini-thumb-w);
+}
+
+.blogar-s20 .s20-mini-thumb::before {
+  content: "";
+  display: block;
+  padding-top: var(--s20-mini-thumb-ar);
+}
+
+.blogar-s20 .s20-mini-img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transition: transform 0.3s ease;
+}
+
+.blogar-s20 .s20-mini-img:hover {
+  transform: scale(1.03);
+}
+
+.blogar-s20 .s20-mini-thumb:not([data-has-img]) .s20-mini-img,
+.blogar-s20 .s20-mini-img[style=""] {
+  background-color: #eef2f7;
+}
+
+.blogar-s20 .s20-mini-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.blogar-s20 .s20-mini-title {
+  margin: 0;
+  color: var(--s20-heading);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+  min-height: calc(3 * 1.45em);
+}
+
+.blogar-s20 .s20-mini-title a {
+  color: inherit;
+  text-decoration: none;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.blogar-s20 .s20-mini-title a:hover {
+  color: var(--s20-accent);
+}
+
+.blogar-s20 .s20-mini-meta {
+  margin-top: 6px;
+  color: #9a9a9a;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+
+@media (max-width: 1199px) {
+  .blogar-s20 .s20-featured-title {
+    font-size: 15px;
+  }
+
+  .blogar-s20 .s20-mini-thumb {
+    flex: 0 0 90px;
+    width: 90px;
+    min-width: 90px;
+  }
+}
+
+@media (max-width: 991px) {
+  .blogar-s20 .blogar-s20-block {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+
+  .blogar-s20 .blogar-s20-block + .blogar-s20-block {
+    margin-top: 24px;
+  }
+
+  .blogar-s20 .blogar-s20-header {
+    padding-bottom: 38px;
+  }
+
+  .blogar-s20 .blogar-s20-nav {
+    position: static;
+    margin-top: 8px;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .blogar-s20 .blogar-s20-nav::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .blogar-s20 .s20-cols {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .blogar-s20 .s20-col-left {
+    flex-basis: auto;
+    max-width: none;
+    width: 100%;
+  }
+
+  .blogar-s20 .blogar-s20-header {
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+  }
+
+  .blogar-s20 .blogar-s20-nav {
+    position: static;
+    display: block;
+    margin-top: 10px;
+  }
+
+  .blogar-s20 .s20-cat-list {
+    flex-wrap: wrap;
+  }
+
+  .blogar-s20 .s20-pager {
+    justify-content: flex-end;
+    padding-left: 0;
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .blogar-s20 .s20-mini-item {
+    flex-direction: column;
+  }
+
+  .blogar-s20 .s20-mini-thumb {
+    width: 100%;
+    flex: none;
+    min-width: 0;
+  }
+}

@@ -12,7 +12,7 @@ $svg_ig = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect
 $svg_search = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
 
 // ── Section render order ─────────────────────────────────────────
-$_default_order = array('s11', 's11p', 's5', 's13', 's14', 's12', 's4', 's10', 's15');
+$_default_order = array('s11', 's11p', 's5', 's13', 's14', 's12', 's4', 's10', 's15', 's16', 's17', 's18', 's19', 's20');
 $_raw_order = get_option('blogar_section_order', '');
 $_section_order = (!empty($_raw_order)) ? (array) json_decode($_raw_order, true) : array();
 $_normalized_order = array();
@@ -1217,116 +1217,126 @@ ob_start(); ?>
 <?php ob_start(); ?>
 <?php if (get_option('blogar_s15_enabled', '1')): ?>
 <?php
-/**
- * BLOGAR S15 — Entertainment Category Slider
- * Template block for front-page.php
- * Source block: elementor-element-184c1d6 > penci-small-list widget 242bb3e
- *
- * Note: Soledad also reuses penci-structure-10 for a banner section elsewhere.
- * This block is the Entertainment tabs grid, not that banner.
- */
+    /**
+     * BLOGAR S15 — Entertainment Category Slider
+     * Template block for front-page.php
+     * Source block: elementor-element-184c1d6 > penci-small-list widget 242bb3e
+     *
+     * Note: Soledad also reuses penci-structure-10 for a banner section elsewhere.
+     * This block is the Entertainment tabs grid, not that banner.
+     */
 
-$s15_data = blogar_get_s15_data();
-$s15_legacy_opts = get_option('blogar_s15_settings', array());
+    $s15_data = blogar_get_s15_data();
+    $s15_legacy_opts = get_option('blogar_s15_settings', array());
 
-$s15_title = trim((string) get_option('blogar_s15_title', ''));
-if ($s15_title === '') {
-    $s15_title = !empty($s15_legacy_opts['title']) ? $s15_legacy_opts['title'] : __('Entertainment', 'blogar');
-}
-
-$s15_parent_cat_id = isset($s15_data['parent_cat_id']) ? (int) $s15_data['parent_cat_id'] : 0;
-$s15_default_link = home_url('/');
-if ($s15_parent_cat_id) {
-    $s15_term_link = get_category_link($s15_parent_cat_id);
-    if (!is_wp_error($s15_term_link)) {
-        $s15_default_link = $s15_term_link;
+    $s15_title = trim((string) get_option('blogar_s15_title', ''));
+    if ($s15_title === '') {
+        $s15_title = !empty($s15_legacy_opts['title']) ? $s15_legacy_opts['title'] : __('Entertainment', 'blogar');
     }
-}
 
-$s15_link = trim((string) get_option('blogar_s15_link', ''));
-if ($s15_link === '' && !empty($s15_legacy_opts['cat_link'])) {
-    $s15_link = $s15_legacy_opts['cat_link'];
-}
-if ($s15_link === '') {
-    $s15_link = $s15_default_link;
-}
-$s15_cats = isset($s15_data['cats']) ? $s15_data['cats'] : array();
-$s15_posts = isset($s15_data['posts']) ? $s15_data['posts'] : array();
-$s15_ppp = 4;
+    $s15_parent_cat_id = isset($s15_data['parent_cat_id']) ? (int) $s15_data['parent_cat_id'] : 0;
+    $s15_default_link = home_url('/');
+    if ($s15_parent_cat_id) {
+        $s15_term_link = get_category_link($s15_parent_cat_id);
+        if (!is_wp_error($s15_term_link)) {
+            $s15_default_link = $s15_term_link;
+        }
+    }
 
-$s15_placeholder_cards = array(
-    array(
-        'title' => __('Entertainment headline placeholder', 'blogar'),
-        'author' => __('Blogar Editorial', 'blogar'),
-        'url' => '#',
-        'author_url' => '#',
-        'img_style' => 'background-image:linear-gradient(135deg,#e5eefc 0%,#dbeafe 50%,#f8fafc 100%)',
-    ),
-    array(
-        'title' => __('Category slider fallback card', 'blogar'),
-        'author' => __('Blogar Editorial', 'blogar'),
-        'url' => '#',
-        'author_url' => '#',
-        'img_style' => 'background-image:linear-gradient(135deg,#f5efe6 0%,#fef3c7 52%,#fff7ed 100%)',
-    ),
-    array(
-        'title' => __('Homepage section stays visible even when posts are empty', 'blogar'),
-        'author' => __('Blogar Editorial', 'blogar'),
-        'url' => '#',
-        'author_url' => '#',
-        'img_style' => 'background-image:linear-gradient(135deg,#ede9fe 0%,#e9d5ff 52%,#faf5ff 100%)',
-    ),
-    array(
-        'title' => __('Replace these placeholders by assigning a category in Blogar Settings', 'blogar'),
-        'author' => __('Blogar Editorial', 'blogar'),
-        'url' => admin_url('admin.php?page=blogar-homepage-settings&tab=s15_category_slider'),
-        'author_url' => admin_url('admin.php?page=blogar-homepage-settings&tab=s15_category_slider'),
-        'img_style' => 'background-image:linear-gradient(135deg,#e2f7f0 0%,#ccfbf1 52%,#f0fdfa 100%)',
-    ),
-);
+    $s15_link = trim((string) get_option('blogar_s15_link', ''));
+    if ($s15_link === '' && !empty($s15_legacy_opts['cat_link'])) {
+        $s15_link = $s15_legacy_opts['cat_link'];
+    }
+    if ($s15_link === '') {
+        $s15_link = $s15_default_link;
+    }
+    $s15_cats = isset($s15_data['cats']) ? $s15_data['cats'] : array();
+    $s15_posts = isset($s15_data['posts']) ? $s15_data['posts'] : array();
+    $s15_ppp = 4;
+    $s15_show_all_tab = (bool) get_option('blogar_s15_show_all_tab', 1);
 
-if (empty($s15_posts['all'])) {
-    $s15_posts = array(
-        'all' => $s15_placeholder_cards,
+    $s15_placeholder_cards = array(
+        array(
+            'title' => __('Entertainment headline placeholder', 'blogar'),
+            'author' => __('Blogar Editorial', 'blogar'),
+            'url' => '#',
+            'author_url' => '#',
+            'img_style' => 'background-image:linear-gradient(135deg,#e5eefc 0%,#dbeafe 50%,#f8fafc 100%)',
+        ),
+        array(
+            'title' => __('Category slider fallback card', 'blogar'),
+            'author' => __('Blogar Editorial', 'blogar'),
+            'url' => '#',
+            'author_url' => '#',
+            'img_style' => 'background-image:linear-gradient(135deg,#f5efe6 0%,#fef3c7 52%,#fff7ed 100%)',
+        ),
+        array(
+            'title' => __('Homepage section stays visible even when posts are empty', 'blogar'),
+            'author' => __('Blogar Editorial', 'blogar'),
+            'url' => '#',
+            'author_url' => '#',
+            'img_style' => 'background-image:linear-gradient(135deg,#ede9fe 0%,#e9d5ff 52%,#faf5ff 100%)',
+        ),
+        array(
+            'title' => __('Replace these placeholders by assigning a category in Blogar Settings', 'blogar'),
+            'author' => __('Blogar Editorial', 'blogar'),
+            'url' => admin_url('admin.php?page=blogar-homepage-settings&tab=s15_category_slider'),
+            'author_url' => admin_url('admin.php?page=blogar-homepage-settings&tab=s15_category_slider'),
+            'img_style' => 'background-image:linear-gradient(135deg,#e2f7f0 0%,#ccfbf1 52%,#f0fdfa 100%)',
+        ),
     );
-    $s15_cats = array();
-}
 
-$s15_normalize_item = static function ($item) {
-    if ($item instanceof WP_Post) {
-        $item_id = $item->ID;
-        $img_url = get_the_post_thumbnail_url($item_id, 'penci-thumb');
-        if (!$img_url) {
-            $img_url = get_the_post_thumbnail_url($item_id, 'large');
+    if (empty($s15_posts['all'])) {
+        $s15_posts = array(
+            'all' => $s15_placeholder_cards,
+        );
+        $s15_cats = array();
+    }
+
+    // Remove "All" group when the tab is hidden so we don't render unused slides
+    if (!$s15_show_all_tab) {
+        unset($s15_posts['all']);
+    }
+
+    // Determine which cat is active on load
+    $s15_first_cat = $s15_show_all_tab ? 'all' : (string) (isset($s15_cats[0]['id']) ? $s15_cats[0]['id'] : 'all');
+
+    $s15_normalize_item = static function ($item) {
+        if ($item instanceof WP_Post) {
+            $item_id = $item->ID;
+            $img_url = get_the_post_thumbnail_url($item_id, 'penci-thumb');
+            if (!$img_url) {
+                $img_url = get_the_post_thumbnail_url($item_id, 'large');
+            }
+
+            $author_id = (int) $item->post_author;
+
+            return array(
+                'title' => get_the_title($item_id),
+                'url' => get_permalink($item_id),
+                'author_name' => get_the_author_meta('display_name', $author_id),
+                'author_url' => get_author_posts_url($author_id),
+                'img_style' => $img_url ? 'background-image:url(' . esc_url($img_url) . ')' : '',
+                'is_placeholder' => false,
+            );
         }
 
-        $author_id = (int) $item->post_author;
+        if (is_array($item)) {
+            return array(
+                'title' => !empty($item['title']) ? $item['title'] : __('Sample post', 'blogar'),
+                'url' => !empty($item['url']) ? $item['url'] : '#',
+                'author_name' => !empty($item['author']) ? $item['author'] : __('Blogar Editorial', 'blogar'),
+                'author_url' => !empty($item['author_url']) ? $item['author_url'] : '#',
+                'img_style' => !empty($item['img_style']) ? $item['img_style'] : '',
+                'is_placeholder' => true,
+            );
+        }
 
-        return array(
-            'title' => get_the_title($item_id),
-            'url' => get_permalink($item_id),
-            'author_name' => get_the_author_meta('display_name', $author_id),
-            'author_url' => get_author_posts_url($author_id),
-            'img_style' => $img_url ? 'background-image:url(' . esc_url($img_url) . ')' : '',
-            'is_placeholder' => false,
-        );
-    }
-
-    if (is_array($item)) {
-        return array(
-            'title' => !empty($item['title']) ? $item['title'] : __('Sample post', 'blogar'),
-            'url' => !empty($item['url']) ? $item['url'] : '#',
-            'author_name' => !empty($item['author']) ? $item['author'] : __('Blogar Editorial', 'blogar'),
-            'author_url' => !empty($item['author_url']) ? $item['author_url'] : '#',
-            'img_style' => !empty($item['img_style']) ? $item['img_style'] : '',
-            'is_placeholder' => true,
-        );
-    }
-
-    return null;
-};
-?>
-<section class="blogar-section blogar-s15" data-section="s15">
+        return null;
+    };
+    ?>
+<section class="blogar-section blogar-s15" data-section="s15"
+    data-initial-cat="<?php echo esc_attr($s15_first_cat); ?>">
     <div class="blogar-s15-inner">
 
         <!-- ── Header: style-12 ── -->
@@ -1341,16 +1351,21 @@ $s15_normalize_item = static function ($item) {
 
                 <!-- Category filter tabs -->
                 <ul class="s15-cat-list" role="tablist" aria-label="<?php esc_attr_e('Category filters', 'blogar'); ?>">
+                    <?php if ($s15_show_all_tab): ?>
                     <li>
                         <button type="button" class="s15-tab s15-active" data-cat="all" role="tab" aria-selected="true"
                             aria-label="<?php esc_attr_e('All', 'blogar'); ?>">
                             <?php esc_html_e('All', 'blogar'); ?>
                         </button>
                     </li>
-                    <?php foreach ($s15_cats as $cat): ?>
+                    <?php endif; ?>
+                    <?php foreach ($s15_cats as $cat_index => $cat): ?>
                     <li>
-                        <button type="button" class="s15-tab" data-cat="<?php echo esc_attr($cat['id']); ?>" role="tab"
-                            aria-selected="false" aria-label="<?php echo esc_attr($cat['name']); ?>">
+                        <button type="button"
+                            class="s15-tab<?php echo (!$s15_show_all_tab && $cat_index === 0) ? ' s15-active' : ''; ?>"
+                            data-cat="<?php echo esc_attr($cat['id']); ?>" role="tab"
+                            aria-selected="<?php echo (!$s15_show_all_tab && $cat_index === 0) ? 'true' : 'false'; ?>"
+                            aria-label="<?php echo esc_attr($cat['name']); ?>">
                             <?php echo esc_html($cat['name']); ?>
                         </button>
                     </li>
@@ -1362,13 +1377,21 @@ $s15_normalize_item = static function ($item) {
                     <li class="s15-prev-wrap">
                         <button type="button" class="s15-btn-prev s15-btn-disable"
                             aria-label="<?php esc_attr_e('Previous', 'blogar'); ?>" aria-disabled="true" disabled>
-                            <i class="penciicon-left-chevron"></i>
+                            <svg class="s15-icon" width="7" height="11" viewBox="0 0 7 11" fill="none"
+                                aria-hidden="true" focusable="false">
+                                <path d="M6 10L1 5.5L6 1" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
                         </button>
                     </li>
                     <li class="s15-next-wrap">
                         <button type="button" class="s15-btn-next" aria-label="<?php esc_attr_e('Next', 'blogar'); ?>"
                             aria-disabled="false">
-                            <i class="penciicon-right-chevron"></i>
+                            <svg class="s15-icon" width="7" height="11" viewBox="0 0 7 11" fill="none"
+                                aria-hidden="true" focusable="false">
+                                <path d="M1 10L6 5.5L1 1" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
                         </button>
                     </li>
                 </ul>
@@ -1380,12 +1403,12 @@ $s15_normalize_item = static function ($item) {
         <div class="blogar-s15-slides" aria-live="polite">
 
             <?php foreach ($s15_posts as $cat_id => $cat_posts):
-                // Split posts into groups of 4 (slides)
-                $slides = array_chunk($cat_posts, $s15_ppp);
-                foreach ($slides as $slide_index => $slide_posts):
-                    $is_first = ($cat_id === 'all' && $slide_index === 0);
-                    $active_cls = $is_first ? ' s15-slide-active' : '';
-                    ?>
+                    // Split posts into groups of 4 (slides)
+                    $slides = array_chunk($cat_posts, $s15_ppp);
+                    foreach ($slides as $slide_index => $slide_posts):
+                        $is_first = ($cat_id === $s15_first_cat && $slide_index === 0);
+                        $active_cls = $is_first ? ' s15-slide-active' : '';
+                        ?>
             <div class="blogar-s15-slide<?php echo $active_cls; ?>" data-cat="<?php echo esc_attr($cat_id); ?>"
                 data-slide="<?php echo (int) $slide_index; ?>" aria-hidden="<?php echo $is_first ? 'false' : 'true'; ?>"
                 <?php echo $is_first ? '' : 'hidden'; ?>>
@@ -1393,11 +1416,11 @@ $s15_normalize_item = static function ($item) {
                 <div class="s15-grid">
 
                     <?php foreach ($slide_posts as $slide_item):
-                                $card = $s15_normalize_item($slide_item);
-                                if (!$card) {
-                                    continue;
-                                }
-                                ?>
+                                    $card = $s15_normalize_item($slide_item);
+                                    if (!$card) {
+                                        continue;
+                                    }
+                                    ?>
                     <div class="s15-item">
                         <div class="s15-item-inner">
                             <div class="s15-item-wrap">
@@ -1444,6 +1467,1505 @@ $s15_normalize_item = static function ($item) {
 </section>
 <?php endif; ?>
 <?php $_sections['s15'] = ob_get_clean(); ?>
+
+<?php ob_start(); ?>
+<?php if (get_option('blogar_s16_enabled', '1')): ?>
+<?php
+    /**
+     * BLOGAR S16 — Money Category Grid Slider
+     * Template block for front-page.php
+     * Source: elementor-element-b65f622 / penci-small-list widget 345687c
+     *
+     * Layout: 4 cols × 3 rows = 12 posts per slide (imgpos-left, thumb 104px × 80%ar)
+     * Nav: style-12 title badge + category tabs + prev/next chevrons
+     */
+
+    $s16_data = blogar_get_s16_data();
+
+    $s16_title = trim((string) get_option('blogar_s16_title', ''));
+    if ($s16_title === '') {
+        $s16_title = __('Money', 'blogar');
+    }
+
+    $s16_parent_cat_id = isset($s16_data['parent_cat_id']) ? (int) $s16_data['parent_cat_id'] : 0;
+    $s16_default_link = home_url('/');
+    if ($s16_parent_cat_id) {
+        $s16_term_link = get_category_link($s16_parent_cat_id);
+        if (!is_wp_error($s16_term_link)) {
+            $s16_default_link = $s16_term_link;
+        }
+    }
+
+    $s16_link = trim((string) get_option('blogar_s16_link', ''));
+    if ($s16_link === '') {
+        $s16_link = $s16_default_link;
+    }
+
+    $s16_cats = isset($s16_data['cats']) ? $s16_data['cats'] : array();
+    $s16_posts = isset($s16_data['posts']) ? $s16_data['posts'] : array();
+    $s16_ppp = 12; // 4 cols × 3 rows per slide
+
+    $s16_show_all_tab = (bool) get_option('blogar_s16_show_all_tab', 1);
+
+    // Placeholder cards shown when no posts configured yet
+    $s16_placeholder_cards = array();
+    for ($i = 0; $i < 12; $i++) {
+        $s16_placeholder_cards[] = array(
+            'title' => __('Post title placeholder — configure a category in Blogar Settings', 'blogar'),
+            'author' => __('Blogar Editorial', 'blogar'),
+            'url' => admin_url('admin.php?page=blogar-homepage-settings&tab=s16_category_slider'),
+            'author_url' => admin_url('admin.php?page=blogar-homepage-settings&tab=s16_category_slider'),
+            'img_style' => 'background-image:linear-gradient(135deg,#eef2f7 0%,#e5edf6 52%,#f8fafc 100%)',
+        );
+    }
+
+    if (empty($s16_posts['all'])) {
+        $s16_posts = array('all' => $s16_placeholder_cards);
+        $s16_cats = array();
+    }
+
+    if (!$s16_show_all_tab) {
+        unset($s16_posts['all']);
+    }
+
+    $s16_first_cat = $s16_show_all_tab ? 'all' : (string) (isset($s16_cats[0]['id']) ? $s16_cats[0]['id'] : 'all');
+
+    $s16_normalize_item = static function ($item) {
+        if ($item instanceof WP_Post) {
+            $item_id = $item->ID;
+            $img_url = get_the_post_thumbnail_url($item_id, 'medium');
+            if (!$img_url) {
+                $img_url = get_the_post_thumbnail_url($item_id, 'large');
+            }
+            $author_id = (int) $item->post_author;
+            return array(
+                'title' => get_the_title($item_id),
+                'url' => get_permalink($item_id),
+                'author_name' => get_the_author_meta('display_name', $author_id),
+                'author_url' => get_author_posts_url($author_id),
+                'img_style' => $img_url ? 'background-image:url(' . esc_url($img_url) . ')' : '',
+                'is_placeholder' => false,
+            );
+        }
+        if (is_array($item)) {
+            return array(
+                'title' => !empty($item['title']) ? $item['title'] : __('Sample post', 'blogar'),
+                'url' => !empty($item['url']) ? $item['url'] : '#',
+                'author_name' => !empty($item['author']) ? $item['author'] : __('Blogar Editorial', 'blogar'),
+                'author_url' => !empty($item['author_url']) ? $item['author_url'] : '#',
+                'img_style' => !empty($item['img_style']) ? $item['img_style'] : '',
+                'is_placeholder' => true,
+            );
+        }
+        return null;
+    };
+    ?>
+<section class="blogar-section blogar-s16" data-section="s16"
+    data-initial-cat="<?php echo esc_attr($s16_first_cat); ?>">
+    <div class="blogar-s16-inner">
+
+        <!-- ── Header: style-12 badge ── -->
+        <div class="blogar-s16-header">
+            <h2 class="s16-title-label">
+                <a href="<?php echo esc_url($s16_link); ?>">
+                    <?php echo esc_html($s16_title); ?>
+                </a>
+            </h2>
+
+            <nav class="blogar-s16-nav" aria-label="<?php esc_attr_e('Filter posts', 'blogar'); ?>">
+
+                <!-- Category filter tabs -->
+                <ul class="s16-cat-list" role="tablist" aria-label="<?php esc_attr_e('Category filters', 'blogar'); ?>">
+                    <?php if ($s16_show_all_tab): ?>
+                    <li>
+                        <button type="button" class="s16-tab s16-active" data-cat="all" role="tab" aria-selected="true"
+                            aria-label="<?php esc_attr_e('All', 'blogar'); ?>">
+                            <?php esc_html_e('All', 'blogar'); ?>
+                        </button>
+                    </li>
+                    <?php endif; ?>
+                    <?php foreach ($s16_cats as $s16_cat_index => $s16_cat): ?>
+                    <li>
+                        <button type="button"
+                            class="s16-tab<?php echo (!$s16_show_all_tab && $s16_cat_index === 0) ? ' s16-active' : ''; ?>"
+                            data-cat="<?php echo esc_attr($s16_cat['id']); ?>" role="tab"
+                            aria-selected="<?php echo (!$s16_show_all_tab && $s16_cat_index === 0) ? 'true' : 'false'; ?>"
+                            aria-label="<?php echo esc_attr($s16_cat['name']); ?>">
+                            <?php echo esc_html($s16_cat['name']); ?>
+                        </button>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+
+                <!-- Prev / Next -->
+                <ul class="s16-pager">
+                    <li>
+                        <button type="button" class="s16-btn-prev s16-btn-disable"
+                            aria-label="<?php esc_attr_e('Previous', 'blogar'); ?>" aria-disabled="true" disabled>
+                            <svg class="s16-icon" width="7" height="11" viewBox="0 0 7 11" fill="none"
+                                aria-hidden="true" focusable="false">
+                                <path d="M6 10L1 5.5L6 1" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button" class="s16-btn-next" aria-label="<?php esc_attr_e('Next', 'blogar'); ?>"
+                            aria-disabled="false">
+                            <svg class="s16-icon" width="7" height="11" viewBox="0 0 7 11" fill="none"
+                                aria-hidden="true" focusable="false">
+                                <path d="M1 10L6 5.5L1 1" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </li>
+                </ul>
+
+            </nav>
+        </div><!-- /.blogar-s16-header -->
+
+        <!-- ── Slides: each slide = 12 posts (4×3 grid) ── -->
+        <div class="blogar-s16-slides" aria-live="polite">
+
+            <?php foreach ($s16_posts as $s16_cat_id => $s16_cat_posts):
+                    $s16_slides = array_chunk($s16_cat_posts, $s16_ppp);
+                    foreach ($s16_slides as $s16_slide_idx => $s16_slide_posts):
+                        $s16_is_first = ($s16_cat_id === $s16_first_cat && $s16_slide_idx === 0);
+                        $s16_slide_cls = $s16_is_first ? ' s16-slide-active' : '';
+                        ?>
+            <div class="blogar-s16-slide<?php echo $s16_slide_cls; ?>" data-cat="<?php echo esc_attr($s16_cat_id); ?>"
+                data-slide="<?php echo (int) $s16_slide_idx; ?>"
+                aria-hidden="<?php echo $s16_is_first ? 'false' : 'true'; ?>"
+                <?php echo $s16_is_first ? '' : 'hidden'; ?>>
+
+                <div class="s16-grid">
+
+                    <?php foreach ($s16_slide_posts as $s16_item):
+                                    $s16_card = $s16_normalize_item($s16_item);
+                                    if (!$s16_card) {
+                                        continue;
+                                    }
+                                    ?>
+                    <div class="s16-item">
+                        <div class="s16-itemin">
+                            <div class="s16-iteminer">
+
+                                <!-- Thumbnail: 104px × 80% aspect ratio -->
+                                <div class="s16-thumb">
+                                    <a href="<?php echo esc_url($s16_card['url']); ?>" class="s16-img"
+                                        style="<?php echo esc_attr($s16_card['img_style']); ?>"
+                                        title="<?php echo esc_attr($s16_card['title']); ?>"
+                                        aria-label="<?php echo esc_attr($s16_card['title']); ?>" tabindex="-1"></a>
+                                </div>
+
+                                <!-- Content: title + author meta -->
+                                <div class="s16-content">
+                                    <div class="s16-post-title">
+                                        <a href="<?php echo esc_url($s16_card['url']); ?>"
+                                            title="<?php echo esc_attr($s16_card['title']); ?>">
+                                            <?php echo esc_html($s16_card['title']); ?>
+                                        </a>
+                                    </div>
+                                    <div class="s16-meta">
+                                        <?php esc_html_e('by', 'blogar'); ?>
+                                        <a href="<?php echo esc_url($s16_card['author_url']); ?>"
+                                            class="s16-author-link">
+                                            <?php echo esc_html($s16_card['author_name']); ?>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div><!-- /.s16-iteminer -->
+                        </div><!-- /.s16-itemin -->
+                    </div><!-- /.s16-item -->
+                    <?php endforeach; ?>
+
+                </div><!-- /.s16-grid -->
+            </div><!-- /.blogar-s16-slide -->
+            <?php endforeach; endforeach; ?>
+
+        </div><!-- /.blogar-s16-slides -->
+
+    </div><!-- /.blogar-s16-inner -->
+</section>
+<?php endif; ?>
+<?php $_sections['s16'] = ob_get_clean(); ?>
+
+<?php ob_start(); ?>
+<?php if (get_option('blogar_s17_enabled', '1')): ?>
+<?php
+    /**
+     * BLOGAR S17 — Editor's Picks Mixed Layout
+     * Template block for front-page.php
+     * Source: elementor-element-c971b65 + elementor-element-02d4f33
+     *
+     * Layout: 4 equal cols per slide — 8 posts total (1 + 3 + 3 + 1)
+     *   Col 1 (feat): post[0]       — img-top, 3:2 ratio
+     *   Col 2 (mini): posts[1..3]   — img-left, 88px thumb
+     *   Col 3 (mini): posts[4..6]   — img-left, 88px thumb
+     *   Col 4 (feat): post[7]       — img-top, 3:2 ratio
+     * Nav: style-12 title badge + category tabs + prev/next chevrons
+     */
+
+    $s17_data = blogar_get_s17_data();
+
+    $s17_title = trim((string) get_option('blogar_s17_title', ''));
+    if ($s17_title === '') {
+        $s17_title = __("Editor's Picks", 'blogar');
+    }
+
+    $s17_parent_cat_id = isset($s17_data['parent_cat_id']) ? (int) $s17_data['parent_cat_id'] : 0;
+    $s17_default_link = home_url('/');
+    if ($s17_parent_cat_id) {
+        $s17_term_link = get_category_link($s17_parent_cat_id);
+        if (!is_wp_error($s17_term_link)) {
+            $s17_default_link = $s17_term_link;
+        }
+    }
+
+    $s17_link = trim((string) get_option('blogar_s17_link', ''));
+    if ($s17_link === '') {
+        $s17_link = $s17_default_link;
+    }
+
+    $s17_cats = isset($s17_data['cats']) ? $s17_data['cats'] : array();
+    $s17_posts = isset($s17_data['posts']) ? $s17_data['posts'] : array();
+
+    $s17_show_all_tab = (bool) get_option('blogar_s17_show_all_tab', 1);
+
+    $s17_settings_url = add_query_arg(
+        array(
+            'page' => 'blogar-settings',
+            'tab' => 's17_editors_picks',
+        ),
+        admin_url('themes.php')
+    );
+
+    // Placeholder cards shown when no posts configured yet
+    $s17_placeholder_cards = array();
+    for ($i = 0; $i < 8; $i++) {
+        $s17_placeholder_cards[] = array(
+            'title' => __('Post title placeholder — configure a category in Blogar Settings', 'blogar'),
+            'author' => __('Blogar Editorial', 'blogar'),
+            'url' => $s17_settings_url,
+            'author_url' => $s17_settings_url,
+            'img_style' => 'background-image:linear-gradient(135deg,#eef2f7 0%,#e5edf6 52%,#f8fafc 100%)',
+        );
+    }
+
+    if (empty($s17_posts['all'])) {
+        $s17_posts = array('all' => $s17_placeholder_cards);
+        $s17_cats = array();
+    }
+
+    if (!$s17_show_all_tab) {
+        unset($s17_posts['all']);
+    }
+
+    if (empty($s17_posts)) {
+        $s17_posts = array('all' => $s17_placeholder_cards);
+        $s17_show_all_tab = true;
+    }
+
+    $s17_available_cat_ids = array_map('strval', array_keys($s17_posts));
+    $s17_cats = array_values(array_filter($s17_cats, static function ($cat) use ($s17_available_cat_ids) {
+        return isset($cat['id']) && in_array((string) $cat['id'], $s17_available_cat_ids, true);
+    }));
+
+    $s17_first_cat = 'all';
+    if ($s17_show_all_tab && isset($s17_posts['all'])) {
+        $s17_first_cat = 'all';
+    } elseif (!empty($s17_cats[0]['id'])) {
+        $s17_first_cat = (string) $s17_cats[0]['id'];
+    } else {
+        $s17_post_keys = array_keys($s17_posts);
+        if (!empty($s17_post_keys)) {
+            $s17_first_cat = (string) reset($s17_post_keys);
+        }
+    }
+
+    $s17_normalize_item = static function ($item) {
+        if ($item instanceof WP_Post) {
+            $item_id = $item->ID;
+            $img_url = get_the_post_thumbnail_url($item_id, 'blogar-card');
+            if (!$img_url) {
+                $img_url = get_the_post_thumbnail_url($item_id, 'large');
+            }
+            $author_id = (int) $item->post_author;
+            return array(
+                'title' => get_the_title($item_id),
+                'url' => get_permalink($item_id),
+                'author_name' => get_the_author_meta('display_name', $author_id),
+                'author_url' => get_author_posts_url($author_id),
+                'img_style' => $img_url ? 'background-image:url(' . esc_url($img_url) . ')' : '',
+                'is_placeholder' => false,
+            );
+        }
+        if (is_array($item)) {
+            return array(
+                'title' => !empty($item['title']) ? $item['title'] : __('Sample post', 'blogar'),
+                'url' => !empty($item['url']) ? $item['url'] : '#',
+                'author_name' => !empty($item['author']) ? $item['author'] : __('Blogar Editorial', 'blogar'),
+                'author_url' => !empty($item['author_url']) ? $item['author_url'] : '#',
+                'img_style' => !empty($item['img_style']) ? $item['img_style'] : '',
+                'is_placeholder' => true,
+            );
+        }
+        return null;
+    };
+
+    $s17_split_middle_posts = static function ($items) {
+        $left_count = (int) ceil(count($items) / 2);
+        return array(
+            array_slice($items, 0, $left_count),
+            array_slice($items, $left_count),
+        );
+    };
+    ?>
+<section class="blogar-section blogar-s17" data-section="s17"
+    data-initial-cat="<?php echo esc_attr($s17_first_cat); ?>">
+    <div class="blogar-s17-inner">
+
+        <!-- ── Header: style-12 badge ── -->
+        <div class="blogar-s17-header">
+            <h2 class="s17-title-label">
+                <a href="<?php echo esc_url($s17_link); ?>">
+                    <?php echo esc_html($s17_title); ?>
+                </a>
+            </h2>
+
+            <nav class="blogar-s17-nav" aria-label="<?php esc_attr_e('Filter posts', 'blogar'); ?>">
+
+                <!-- Category filter tabs -->
+                <ul class="s17-cat-list" role="tablist" aria-label="<?php esc_attr_e('Category filters', 'blogar'); ?>">
+                    <?php if ($s17_show_all_tab): ?>
+                    <li>
+                        <button type="button" class="s17-tab s17-active" data-cat="all" role="tab" aria-selected="true"
+                            aria-label="<?php esc_attr_e('All', 'blogar'); ?>">
+                            <?php esc_html_e('All', 'blogar'); ?>
+                        </button>
+                    </li>
+                    <?php endif; ?>
+                    <?php foreach ($s17_cats as $s17_cat_index => $s17_cat): ?>
+                    <li>
+                        <button type="button"
+                            class="s17-tab<?php echo (!$s17_show_all_tab && $s17_cat_index === 0) ? ' s17-active' : ''; ?>"
+                            data-cat="<?php echo esc_attr($s17_cat['id']); ?>" role="tab"
+                            aria-selected="<?php echo (!$s17_show_all_tab && $s17_cat_index === 0) ? 'true' : 'false'; ?>"
+                            aria-label="<?php echo esc_attr($s17_cat['name']); ?>">
+                            <?php echo esc_html($s17_cat['name']); ?>
+                        </button>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+            </nav>
+        </div><!-- /.blogar-s17-header -->
+
+        <!-- ── Slides: each slide = 8 posts (1 feat + 3 mini + 3 mini + 1 feat) ── -->
+        <div class="blogar-s17-slides" aria-live="polite">
+
+            <?php foreach ($s17_posts as $s17_cat_id => $s17_cat_posts):
+                    $s17_normalized = array();
+                    foreach ($s17_cat_posts as $_raw_post) {
+                        $n = $s17_normalize_item($_raw_post);
+                        if ($n) {
+                            $s17_normalized[] = $n;
+                        }
+                    }
+                    if (empty($s17_normalized)) {
+                        continue;
+                    }
+
+                    $s17_is_first = ((string) $s17_cat_id === $s17_first_cat);
+                    $s17_slide_cls = $s17_is_first ? ' s17-slide-active' : '';
+
+                    // Keep the original reading order: first left, last right,
+                    // and split everything in between across the middle columns.
+                    $s17_feat1 = $s17_normalized[0];
+                    $s17_feat4 = count($s17_normalized) > 1 ? $s17_normalized[count($s17_normalized) - 1] : null;
+                    $s17_middle_all = count($s17_normalized) > 2 ? array_slice($s17_normalized, 1, -1) : array();
+                    list($s17_middle_left, $s17_middle_right) = $s17_split_middle_posts($s17_middle_all);
+                    $s17_left_list_class = 's17-mini-list' . (count($s17_middle_left) > 3 ? ' s17-mini-list-variable' : '');
+                    $s17_right_list_class = 's17-mini-list' . (count($s17_middle_right) > 3 ? ' s17-mini-list-variable' : '');
+                    ?>
+            <div class="blogar-s17-slide<?php echo $s17_slide_cls; ?>" data-cat="<?php echo esc_attr($s17_cat_id); ?>"
+                aria-hidden="<?php echo $s17_is_first ? 'false' : 'true'; ?>"
+                <?php echo $s17_is_first ? '' : 'hidden'; ?>>
+
+                <div class="s17-columns">
+
+                    <!-- Col 1: Featured post -->
+                    <div class="s17-col s17-col-feat">
+                        <?php if ($s17_feat1): ?>
+                        <article class="s17-feat-post">
+                            <div class="s17-feat-img-wrap"<?php echo !empty($s17_feat1['img_style']) ? ' data-has-img="true"' : ''; ?>>
+                                <a href="<?php echo esc_url($s17_feat1['url']); ?>" class="s17-feat-img"
+                                    style="<?php echo esc_attr($s17_feat1['img_style']); ?>"
+                                    title="<?php echo esc_attr($s17_feat1['title']); ?>"
+                                    aria-label="<?php echo esc_attr($s17_feat1['title']); ?>" tabindex="-1"></a>
+                            </div>
+                            <div class="s17-feat-content">
+                                <h3 class="s17-feat-title">
+                                    <a href="<?php echo esc_url($s17_feat1['url']); ?>"
+                                        title="<?php echo esc_attr($s17_feat1['title']); ?>">
+                                        <?php echo esc_html($s17_feat1['title']); ?>
+                                    </a>
+                                </h3>
+                                <div class="s17-feat-meta">
+                                    <?php esc_html_e('by', 'blogar'); ?>
+                                    <a href="<?php echo esc_url($s17_feat1['author_url']); ?>">
+                                        <?php echo esc_html($s17_feat1['author_name']); ?>
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Col 2: First half of middle posts -->
+                    <div class="s17-col s17-col-mini">
+                        <div class="<?php echo esc_attr($s17_left_list_class); ?>">
+                            <?php foreach ($s17_middle_left as $s17_mini): ?>
+                            <article class="s17-mini-item">
+                                <div class="s17-mini-inner">
+                                    <div class="s17-mini-thumb">
+                                        <a href="<?php echo esc_url($s17_mini['url']); ?>" class="s17-mini-img"
+                                            style="<?php echo esc_attr($s17_mini['img_style']); ?>"
+                                            title="<?php echo esc_attr($s17_mini['title']); ?>"
+                                            aria-label="<?php echo esc_attr($s17_mini['title']); ?>" tabindex="-1"></a>
+                                    </div>
+                                    <div class="s17-mini-content">
+                                        <div class="s17-mini-title">
+                                            <a href="<?php echo esc_url($s17_mini['url']); ?>"
+                                                title="<?php echo esc_attr($s17_mini['title']); ?>">
+                                                <?php echo esc_html($s17_mini['title']); ?>
+                                            </a>
+                                        </div>
+                                        <div class="s17-mini-meta">
+                                            <?php esc_html_e('by', 'blogar'); ?>
+                                            <a href="<?php echo esc_url($s17_mini['author_url']); ?>">
+                                                <?php echo esc_html($s17_mini['author_name']); ?>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- Col 3: Second half of middle posts -->
+                    <div class="s17-col s17-col-mini">
+                        <div class="<?php echo esc_attr($s17_right_list_class); ?>">
+                            <?php foreach ($s17_middle_right as $s17_mini): ?>
+                            <article class="s17-mini-item">
+                                <div class="s17-mini-inner">
+                                    <div class="s17-mini-thumb">
+                                        <a href="<?php echo esc_url($s17_mini['url']); ?>" class="s17-mini-img"
+                                            style="<?php echo esc_attr($s17_mini['img_style']); ?>"
+                                            title="<?php echo esc_attr($s17_mini['title']); ?>"
+                                            aria-label="<?php echo esc_attr($s17_mini['title']); ?>" tabindex="-1"></a>
+                                    </div>
+                                    <div class="s17-mini-content">
+                                        <div class="s17-mini-title">
+                                            <a href="<?php echo esc_url($s17_mini['url']); ?>"
+                                                title="<?php echo esc_attr($s17_mini['title']); ?>">
+                                                <?php echo esc_html($s17_mini['title']); ?>
+                                            </a>
+                                        </div>
+                                        <div class="s17-mini-meta">
+                                            <?php esc_html_e('by', 'blogar'); ?>
+                                            <a href="<?php echo esc_url($s17_mini['author_url']); ?>">
+                                                <?php echo esc_html($s17_mini['author_name']); ?>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- Col 4: Last post -->
+                    <div class="s17-col s17-col-feat">
+                        <?php if ($s17_feat4): ?>
+                        <article class="s17-feat-post">
+                            <div class="s17-feat-img-wrap"<?php echo !empty($s17_feat4['img_style']) ? ' data-has-img="true"' : ''; ?>>
+                                <a href="<?php echo esc_url($s17_feat4['url']); ?>" class="s17-feat-img"
+                                    style="<?php echo esc_attr($s17_feat4['img_style']); ?>"
+                                    title="<?php echo esc_attr($s17_feat4['title']); ?>"
+                                    aria-label="<?php echo esc_attr($s17_feat4['title']); ?>" tabindex="-1"></a>
+                            </div>
+                            <div class="s17-feat-content">
+                                <h3 class="s17-feat-title">
+                                    <a href="<?php echo esc_url($s17_feat4['url']); ?>"
+                                        title="<?php echo esc_attr($s17_feat4['title']); ?>">
+                                        <?php echo esc_html($s17_feat4['title']); ?>
+                                    </a>
+                                </h3>
+                                <div class="s17-feat-meta">
+                                    <?php esc_html_e('by', 'blogar'); ?>
+                                    <a href="<?php echo esc_url($s17_feat4['author_url']); ?>">
+                                        <?php echo esc_html($s17_feat4['author_name']); ?>
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                        <?php endif; ?>
+                    </div>
+
+                </div><!-- /.s17-columns -->
+            </div><!-- /.blogar-s17-slide -->
+            <?php endforeach; ?>
+
+        </div><!-- /.blogar-s17-slides -->
+
+    </div><!-- /.blogar-s17-inner -->
+</section>
+<?php endif; ?>
+<?php $_sections['s17'] = ob_get_clean(); ?>
+
+<?php ob_start(); ?>
+<?php if (get_option('blogar_s18_enabled', '1')): ?>
+<?php
+    /**
+     * BLOGAR S18 - Life Style News Mixed Layout
+     * Template block for front-page.php
+     * Source: elementor-element-02c6eb5 / penci-structure-32
+     *
+     * Layout: 4 columns by reading order, 12 posts total
+     *   Left 50%:  posts[0..3]   -> 2x2 featured grid
+     *   Mid 25%:   posts[4..9]   -> 6 horizontal mini cards
+     *   Right 25%: posts[10..11] -> 2 stacked featured cards
+     * Nav: style-12 title badge + category tabs (static panel switch, no pager)
+     */
+
+    $s18_data = blogar_get_s18_data();
+
+    $s18_title = trim((string) get_option('blogar_s18_title', ''));
+    if ($s18_title === '') {
+        $s18_title = __('Life Style News', 'blogar');
+    }
+
+    $s18_parent_cat_id = isset($s18_data['parent_cat_id']) ? (int) $s18_data['parent_cat_id'] : 0;
+    $s18_default_link = home_url('/');
+    if ($s18_parent_cat_id) {
+        $s18_term_link = get_category_link($s18_parent_cat_id);
+        if (!is_wp_error($s18_term_link)) {
+            $s18_default_link = $s18_term_link;
+        }
+    }
+
+    $s18_link = trim((string) get_option('blogar_s18_link', ''));
+    if ($s18_link === '') {
+        $s18_link = $s18_default_link;
+    }
+
+    $s18_cats = isset($s18_data['cats']) ? $s18_data['cats'] : array();
+    $s18_posts = isset($s18_data['posts']) ? $s18_data['posts'] : array();
+    $s18_show_all_tab = (bool) get_option('blogar_s18_show_all_tab', 1);
+
+    $s18_settings_url = add_query_arg(
+        array(
+            'page' => 'blogar-settings',
+            'tab' => 's18_life_style_news',
+        ),
+        admin_url('themes.php')
+    );
+
+    $s18_placeholder_cards = array();
+    for ($i = 0; $i < 12; $i++) {
+        $hue = $i % 4;
+        $gradients = array(
+            'linear-gradient(135deg,#eef2f7 0%,#e5edf6 52%,#f8fafc 100%)',
+            'linear-gradient(135deg,#fdf2f8 0%,#fce7f3 52%,#fff1f2 100%)',
+            'linear-gradient(135deg,#fef3c7 0%,#fde68a 52%,#fffbeb 100%)',
+            'linear-gradient(135deg,#dcfce7 0%,#bbf7d0 52%,#f0fdf4 100%)',
+        );
+        $s18_placeholder_cards[] = array(
+            'title' => __('Post title placeholder - configure categories in Blogar Settings', 'blogar'),
+            'author' => __('Blogar Editorial', 'blogar'),
+            'url' => $s18_settings_url,
+            'author_url' => $s18_settings_url,
+            'img_style' => 'background-image:' . $gradients[$hue],
+        );
+    }
+
+    if (empty($s18_posts['all'])) {
+        $s18_posts = array('all' => $s18_placeholder_cards);
+        $s18_cats = array();
+    }
+
+    if (!$s18_show_all_tab) {
+        unset($s18_posts['all']);
+    }
+
+    if (empty($s18_posts)) {
+        $s18_posts = array('all' => $s18_placeholder_cards);
+        $s18_show_all_tab = true;
+    }
+
+    $s18_available_cat_ids = array_map('strval', array_keys($s18_posts));
+    $s18_cats = array_values(array_filter($s18_cats, static function ($cat) use ($s18_available_cat_ids) {
+        return isset($cat['id']) && in_array((string) $cat['id'], $s18_available_cat_ids, true);
+    }));
+
+    $s18_first_cat = 'all';
+    if ($s18_show_all_tab && isset($s18_posts['all'])) {
+        $s18_first_cat = 'all';
+    } elseif (!empty($s18_cats[0]['id'])) {
+        $s18_first_cat = (string) $s18_cats[0]['id'];
+    } else {
+        $s18_post_keys = array_keys($s18_posts);
+        if (!empty($s18_post_keys)) {
+            $s18_first_cat = (string) reset($s18_post_keys);
+        }
+    }
+
+    $s18_normalize_item = static function ($item) {
+        if ($item instanceof WP_Post) {
+            $item_id = $item->ID;
+            $img_url = get_the_post_thumbnail_url($item_id, 'penci-masonry-thumb');
+            if (!$img_url) {
+                $img_url = get_the_post_thumbnail_url($item_id, 'large');
+            }
+            $author_id = (int) $item->post_author;
+            return array(
+                'title' => get_the_title($item_id),
+                'url' => get_permalink($item_id),
+                'author_name' => get_the_author_meta('display_name', $author_id),
+                'author_url' => get_author_posts_url($author_id),
+                'img_style' => $img_url ? 'background-image:url(' . esc_url($img_url) . ')' : '',
+                'is_placeholder' => false,
+            );
+        }
+        if (is_array($item)) {
+            return array(
+                'title' => !empty($item['title']) ? $item['title'] : __('Sample post', 'blogar'),
+                'url' => !empty($item['url']) ? $item['url'] : '#',
+                'author_name' => !empty($item['author']) ? $item['author'] : __('Blogar Editorial', 'blogar'),
+                'author_url' => !empty($item['author_url']) ? $item['author_url'] : '#',
+                'img_style' => !empty($item['img_style']) ? $item['img_style'] : '',
+                'is_placeholder' => true,
+            );
+        }
+        return null;
+    };
+    ?>
+<section class="blogar-section blogar-s18" data-section="s18"
+    data-initial-cat="<?php echo esc_attr($s18_first_cat); ?>">
+    <div class="blogar-s18-inner">
+
+        <div class="blogar-s18-header">
+            <h2 class="s18-title-label">
+                <a href="<?php echo esc_url($s18_link); ?>">
+                    <?php echo esc_html($s18_title); ?>
+                </a>
+            </h2>
+
+            <nav class="blogar-s18-nav" aria-label="<?php esc_attr_e('Filter posts', 'blogar'); ?>">
+                <ul class="s18-cat-list" role="tablist" aria-label="<?php esc_attr_e('Category filters', 'blogar'); ?>">
+                    <?php if ($s18_show_all_tab): ?>
+                    <li>
+                        <button type="button" class="s18-tab s18-active" data-cat="all" role="tab" aria-selected="true"
+                            aria-label="<?php esc_attr_e('All', 'blogar'); ?>">
+                            <?php esc_html_e('All', 'blogar'); ?>
+                        </button>
+                    </li>
+                    <?php endif; ?>
+                    <?php foreach ($s18_cats as $s18_cat_index => $s18_cat): ?>
+                    <li>
+                        <button type="button"
+                            class="s18-tab<?php echo (!$s18_show_all_tab && $s18_cat_index === 0) ? ' s18-active' : ''; ?>"
+                            data-cat="<?php echo esc_attr($s18_cat['id']); ?>" role="tab"
+                            aria-selected="<?php echo (!$s18_show_all_tab && $s18_cat_index === 0) ? 'true' : 'false'; ?>"
+                            aria-label="<?php echo esc_attr($s18_cat['name']); ?>">
+                            <?php echo esc_html($s18_cat['name']); ?>
+                        </button>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+            </nav>
+        </div><!-- /.blogar-s18-header -->
+
+        <div class="blogar-s18-slides" aria-live="polite">
+            <?php foreach ($s18_posts as $s18_cat_id => $s18_cat_posts):
+                    $s18_normalized = array();
+                    foreach ($s18_cat_posts as $_raw_post) {
+                        $n = $s18_normalize_item($_raw_post);
+                        if ($n) {
+                            $s18_normalized[] = $n;
+                        }
+                    }
+                    if (empty($s18_normalized)) {
+                        continue;
+                    }
+
+                    $s18_is_first = ((string) $s18_cat_id === $s18_first_cat);
+                    $s18_slide_cls = $s18_is_first ? ' s18-slide-active' : '';
+
+                    $s18_left_posts   = array_slice($s18_normalized, 0, 4);
+                    $s18_middle_posts = array_slice($s18_normalized, 4, 6);
+                    $s18_right_posts  = array_slice($s18_normalized, 10, 2);
+                    ?>
+            <div class="blogar-s18-slide<?php echo $s18_slide_cls; ?>" data-cat="<?php echo esc_attr($s18_cat_id); ?>"
+                aria-hidden="<?php echo $s18_is_first ? 'false' : 'true'; ?>"
+                <?php echo $s18_is_first ? '' : 'hidden'; ?>>
+
+                <div class="s18-columns">
+
+                    <div class="s18-col s18-col-main">
+                        <div class="s18-main-grid">
+                            <?php foreach ($s18_left_posts as $s18_feat): ?>
+                            <article class="s18-feature-card s18-feature-card-main">
+                                <div class="s18-feature-img-wrap"<?php echo !empty($s18_feat['img_style']) ? ' data-has-img="true"' : ''; ?>>
+                                    <a href="<?php echo esc_url($s18_feat['url']); ?>" class="s18-feature-img"
+                                        style="<?php echo esc_attr($s18_feat['img_style']); ?>"
+                                        title="<?php echo esc_attr($s18_feat['title']); ?>"
+                                        aria-label="<?php echo esc_attr($s18_feat['title']); ?>" tabindex="-1"></a>
+                                </div>
+                                <div class="s18-feature-content">
+                                    <h3 class="s18-feature-title">
+                                        <a href="<?php echo esc_url($s18_feat['url']); ?>"
+                                            title="<?php echo esc_attr($s18_feat['title']); ?>">
+                                            <?php echo esc_html($s18_feat['title']); ?>
+                                        </a>
+                                    </h3>
+                                    <div class="s18-feature-meta">
+                                        <?php esc_html_e('by', 'blogar'); ?>
+                                        <a href="<?php echo esc_url($s18_feat['author_url']); ?>">
+                                            <?php echo esc_html($s18_feat['author_name']); ?>
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <div class="s18-col s18-col-list">
+                        <div class="s18-mini-list">
+                            <?php foreach ($s18_middle_posts as $s18_mini): ?>
+                            <article class="s18-mini-item">
+                                <div class="s18-mini-inner">
+                                    <div class="s18-mini-thumb">
+                                        <a href="<?php echo esc_url($s18_mini['url']); ?>" class="s18-mini-img"
+                                            style="<?php echo esc_attr($s18_mini['img_style']); ?>"
+                                            title="<?php echo esc_attr($s18_mini['title']); ?>"
+                                            aria-label="<?php echo esc_attr($s18_mini['title']); ?>" tabindex="-1"></a>
+                                    </div>
+                                    <div class="s18-mini-content">
+                                        <div class="s18-mini-title">
+                                            <a href="<?php echo esc_url($s18_mini['url']); ?>"
+                                                title="<?php echo esc_attr($s18_mini['title']); ?>">
+                                                <?php echo esc_html($s18_mini['title']); ?>
+                                            </a>
+                                        </div>
+                                        <div class="s18-mini-meta">
+                                            <?php esc_html_e('by', 'blogar'); ?>
+                                            <a href="<?php echo esc_url($s18_mini['author_url']); ?>">
+                                                <?php echo esc_html($s18_mini['author_name']); ?>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <div class="s18-col s18-col-side">
+                        <div class="s18-side-stack">
+                            <?php foreach ($s18_right_posts as $s18_feat): ?>
+                            <article class="s18-feature-card s18-feature-card-side">
+                                <div class="s18-feature-img-wrap"<?php echo !empty($s18_feat['img_style']) ? ' data-has-img="true"' : ''; ?>>
+                                    <a href="<?php echo esc_url($s18_feat['url']); ?>" class="s18-feature-img"
+                                        style="<?php echo esc_attr($s18_feat['img_style']); ?>"
+                                        title="<?php echo esc_attr($s18_feat['title']); ?>"
+                                        aria-label="<?php echo esc_attr($s18_feat['title']); ?>" tabindex="-1"></a>
+                                </div>
+                                <div class="s18-feature-content">
+                                    <h3 class="s18-feature-title">
+                                        <a href="<?php echo esc_url($s18_feat['url']); ?>"
+                                            title="<?php echo esc_attr($s18_feat['title']); ?>">
+                                            <?php echo esc_html($s18_feat['title']); ?>
+                                        </a>
+                                    </h3>
+                                    <div class="s18-feature-meta">
+                                        <?php esc_html_e('by', 'blogar'); ?>
+                                        <a href="<?php echo esc_url($s18_feat['author_url']); ?>">
+                                            <?php echo esc_html($s18_feat['author_name']); ?>
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                </div><!-- /.s18-columns -->
+            </div><!-- /.blogar-s18-slide -->
+            <?php endforeach; ?>
+        </div><!-- /.blogar-s18-slides -->
+
+    </div><!-- /.blogar-s18-inner -->
+</section>
+<?php endif; ?>
+<?php $_sections['s18'] = ob_get_clean(); ?>
+
+<?php ob_start(); ?>
+<?php if (get_option('blogar_s19_enabled', '1')): ?>
+<?php
+    /**
+     * BLOGAR S19 - Dual Featured Blocks
+     * Template block for front-page.php
+     * Source: elementor-element-929e262 / penci-structure-20
+     *
+     * Layout: 2 independent 50% blocks
+     *   Each block = 1 featured horizontal post + 6 mini posts (2 cols × 3)
+     * Nav: style-12 title badge + category tabs + prev/next pager
+     */
+
+    $s19_settings_url = add_query_arg(
+        array(
+            'page' => 'blogar-settings',
+            'tab' => 's19_dual_featured_blocks',
+        ),
+        admin_url('themes.php')
+    );
+
+    $s19_build_placeholder_cards = static function ($settings_url, $block_title) {
+        $cards = array();
+        $date_text = wp_date(get_option('date_format'));
+        $gradients = array(
+            'linear-gradient(135deg,#eef2f7 0%,#e5edf6 52%,#f8fafc 100%)',
+            'linear-gradient(135deg,#fdf2f8 0%,#fce7f3 52%,#fff1f2 100%)',
+            'linear-gradient(135deg,#fef3c7 0%,#fde68a 52%,#fffbeb 100%)',
+            'linear-gradient(135deg,#dcfce7 0%,#bbf7d0 52%,#f0fdf4 100%)',
+        );
+
+        for ($i = 0; $i < 14; $i++) {
+            $cards[] = array(
+                'title' => sprintf(__('Placeholder post %d for %s', 'blogar'), $i + 1, $block_title),
+                'author' => __('Blogar Editorial', 'blogar'),
+                'url' => $settings_url,
+                'author_url' => $settings_url,
+                'img_style' => 'background-image:' . $gradients[$i % count($gradients)],
+                'date_text' => $date_text,
+                'excerpt' => __('Assign categories in Blogar Settings to replace these fallback cards with live posts.', 'blogar'),
+            );
+        }
+
+        return $cards;
+    };
+
+    $s19_prepare_block = static function ($side, $title_default, $data, $settings_url) use ($s19_build_placeholder_cards) {
+        $prefix = 'blogar_s19_' . $side;
+
+        $title = trim((string) get_option($prefix . '_title', ''));
+        if ($title === '') {
+            $title = $title_default;
+        }
+
+        $parent_cat_id = isset($data['parent_cat_id']) ? (int) $data['parent_cat_id'] : 0;
+        $default_link = home_url('/');
+        if ($parent_cat_id) {
+            $term_link = get_category_link($parent_cat_id);
+            if (!is_wp_error($term_link)) {
+                $default_link = $term_link;
+            }
+        }
+
+        $link = trim((string) get_option($prefix . '_link', ''));
+        if ($link === '') {
+            $link = $default_link;
+        }
+
+        $cats = isset($data['cats']) ? $data['cats'] : array();
+        $posts = isset($data['posts']) ? $data['posts'] : array();
+        $show_all_tab = (bool) get_option($prefix . '_show_all_tab', 1);
+
+        $placeholder_cards = $s19_build_placeholder_cards($settings_url, $title);
+        if (empty($posts['all'])) {
+            $posts = array('all' => $placeholder_cards);
+            $cats = array();
+        }
+
+        if (!$show_all_tab) {
+            unset($posts['all']);
+        }
+
+        if (empty($posts)) {
+            $posts = array('all' => $placeholder_cards);
+            $show_all_tab = true;
+        }
+
+        $available_cat_ids = array_map('strval', array_keys($posts));
+        $cats = array_values(array_filter($cats, static function ($cat) use ($available_cat_ids) {
+            return isset($cat['id']) && in_array((string) $cat['id'], $available_cat_ids, true);
+        }));
+
+        $first_cat = 'all';
+        if ($show_all_tab && isset($posts['all'])) {
+            $first_cat = 'all';
+        } elseif (!empty($cats[0]['id'])) {
+            $first_cat = (string) $cats[0]['id'];
+        } else {
+            $post_keys = array_keys($posts);
+            if (!empty($post_keys)) {
+                $first_cat = (string) reset($post_keys);
+            }
+        }
+
+        return array(
+            'side' => $side,
+            'title' => $title,
+            'link' => $link,
+            'cats' => $cats,
+            'posts' => $posts,
+            'show_all_tab' => $show_all_tab,
+            'first_cat' => $first_cat,
+        );
+    };
+
+    $s19_normalize_item = static function ($item) {
+        if ($item instanceof WP_Post) {
+            $item_id = $item->ID;
+            $img_url = get_the_post_thumbnail_url($item_id, 'blogar-card');
+            if (!$img_url) {
+                $img_url = get_the_post_thumbnail_url($item_id, 'large');
+            }
+
+            $author_id = (int) $item->post_author;
+            $excerpt_source = has_excerpt($item_id) ? get_the_excerpt($item_id) : wp_strip_all_tags($item->post_excerpt ? $item->post_excerpt : $item->post_content);
+
+            return array(
+                'title' => get_the_title($item_id),
+                'url' => get_permalink($item_id),
+                'author_name' => get_the_author_meta('display_name', $author_id),
+                'author_url' => get_author_posts_url($author_id),
+                'img_style' => $img_url ? 'background-image:url(' . esc_url($img_url) . ')' : '',
+                'date_text' => get_the_date(get_option('date_format'), $item_id),
+                'excerpt' => wp_trim_words($excerpt_source, 24, '...'),
+                'is_placeholder' => false,
+            );
+        }
+
+        if (is_array($item)) {
+            return array(
+                'title' => !empty($item['title']) ? $item['title'] : __('Sample post', 'blogar'),
+                'url' => !empty($item['url']) ? $item['url'] : '#',
+                'author_name' => !empty($item['author']) ? $item['author'] : __('Blogar Editorial', 'blogar'),
+                'author_url' => !empty($item['author_url']) ? $item['author_url'] : '#',
+                'img_style' => !empty($item['img_style']) ? $item['img_style'] : '',
+                'date_text' => !empty($item['date_text']) ? $item['date_text'] : wp_date(get_option('date_format')),
+                'excerpt' => !empty($item['excerpt']) ? $item['excerpt'] : __('Section preview content appears here until categories are assigned.', 'blogar'),
+                'is_placeholder' => true,
+            );
+        }
+
+        return null;
+    };
+
+    $s19_blocks = array(
+        'left' => $s19_prepare_block('left', __('Esports News', 'blogar'), blogar_get_s19_block_data('left'), $s19_settings_url),
+        'right' => $s19_prepare_block('right', __('Movie Update', 'blogar'), blogar_get_s19_block_data('right'), $s19_settings_url),
+    );
+    ?>
+<section class="blogar-section blogar-s19" data-section="s19">
+    <div class="blogar-s19-inner">
+        <div class="s19-blocks">
+            <?php foreach ($s19_blocks as $s19_block): ?>
+            <div class="blogar-s19-block blogar-s19-block-<?php echo esc_attr($s19_block['side']); ?>"
+                data-initial-cat="<?php echo esc_attr($s19_block['first_cat']); ?>">
+
+                <div class="blogar-s19-header">
+                    <h2 class="s19-title-label">
+                        <a href="<?php echo esc_url($s19_block['link']); ?>">
+                            <?php echo esc_html($s19_block['title']); ?>
+                        </a>
+                    </h2>
+
+                    <nav class="blogar-s19-nav" aria-label="<?php esc_attr_e('Filter posts', 'blogar'); ?>">
+                        <ul class="s19-cat-list" role="tablist" aria-label="<?php esc_attr_e('Category filters', 'blogar'); ?>">
+                            <?php if ($s19_block['show_all_tab']): ?>
+                            <li>
+                                <button type="button" class="s19-tab s19-active" data-cat="all" role="tab"
+                                    aria-selected="true" aria-label="<?php esc_attr_e('All', 'blogar'); ?>">
+                                    <?php esc_html_e('All', 'blogar'); ?>
+                                </button>
+                            </li>
+                            <?php endif; ?>
+                            <?php foreach ($s19_block['cats'] as $s19_cat_index => $s19_cat): ?>
+                            <li>
+                                <button type="button"
+                                    class="s19-tab<?php echo (!$s19_block['show_all_tab'] && $s19_cat_index === 0) ? ' s19-active' : ''; ?>"
+                                    data-cat="<?php echo esc_attr($s19_cat['id']); ?>" role="tab"
+                                    aria-selected="<?php echo (!$s19_block['show_all_tab'] && $s19_cat_index === 0) ? 'true' : 'false'; ?>"
+                                    aria-label="<?php echo esc_attr($s19_cat['name']); ?>">
+                                    <?php echo esc_html($s19_cat['name']); ?>
+                                </button>
+                            </li>
+                            <?php endforeach; ?>
+                        </ul>
+
+                        <ul class="s19-pager">
+                            <li>
+                                <button type="button" class="s19-btn-prev s19-btn-disable"
+                                    aria-label="<?php esc_attr_e('Previous', 'blogar'); ?>" aria-disabled="true" disabled>
+                                    <svg class="s19-icon" width="7" height="11" viewBox="0 0 7 11" fill="none"
+                                        aria-hidden="true" focusable="false">
+                                        <path d="M6 10L1 5.5L6 1" stroke="currentColor" stroke-width="1.8"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="s19-btn-next"
+                                    aria-label="<?php esc_attr_e('Next', 'blogar'); ?>" aria-disabled="false">
+                                    <svg class="s19-icon" width="7" height="11" viewBox="0 0 7 11" fill="none"
+                                        aria-hidden="true" focusable="false">
+                                        <path d="M1 10L6 5.5L1 1" stroke="currentColor" stroke-width="1.8"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="blogar-s19-block-slides" aria-live="polite">
+                    <?php foreach ($s19_block['posts'] as $s19_cat_id => $s19_cat_posts):
+                            $s19_normalized = array();
+                            foreach ($s19_cat_posts as $_raw_post) {
+                                $s19_card = $s19_normalize_item($_raw_post);
+                                if ($s19_card) {
+                                    $s19_normalized[] = $s19_card;
+                                }
+                            }
+
+                            if (empty($s19_normalized)) {
+                                continue;
+                            }
+
+                            $s19_slides = array_chunk($s19_normalized, 7);
+                            foreach ($s19_slides as $s19_slide_idx => $s19_slide_posts):
+                                $s19_is_first = ((string) $s19_cat_id === $s19_block['first_cat'] && $s19_slide_idx === 0);
+                                $s19_slide_cls = $s19_is_first ? ' s19-slide-active' : '';
+                                $s19_featured = !empty($s19_slide_posts[0]) ? $s19_slide_posts[0] : null;
+                                $s19_list = array_slice($s19_slide_posts, 1, 6);
+                                $s19_col1 = array_slice($s19_list, 0, 3);
+                                $s19_col2 = array_slice($s19_list, 3, 3);
+                                ?>
+                    <div class="blogar-s19-slide<?php echo $s19_slide_cls; ?>"
+                        data-cat="<?php echo esc_attr($s19_cat_id); ?>" data-slide="<?php echo (int) $s19_slide_idx; ?>"
+                        aria-hidden="<?php echo $s19_is_first ? 'false' : 'true'; ?>"
+                        <?php echo $s19_is_first ? '' : 'hidden'; ?>>
+
+                        <?php if ($s19_featured): ?>
+                        <article class="s19-featured-post">
+                            <div class="s19-featured-thumb"<?php echo !empty($s19_featured['img_style']) ? ' data-has-img="true"' : ''; ?>>
+                                <a href="<?php echo esc_url($s19_featured['url']); ?>" class="s19-featured-img"
+                                    style="<?php echo esc_attr($s19_featured['img_style']); ?>"
+                                    title="<?php echo esc_attr($s19_featured['title']); ?>"
+                                    aria-label="<?php echo esc_attr($s19_featured['title']); ?>" tabindex="-1"></a>
+                            </div>
+                            <div class="s19-featured-content">
+                                <h3 class="s19-featured-title">
+                                    <a href="<?php echo esc_url($s19_featured['url']); ?>"
+                                        title="<?php echo esc_attr($s19_featured['title']); ?>">
+                                        <?php echo esc_html($s19_featured['title']); ?>
+                                    </a>
+                                </h3>
+                                <div class="s19-featured-meta">
+                                    <?php esc_html_e('by', 'blogar'); ?>
+                                    <a href="<?php echo esc_url($s19_featured['author_url']); ?>">
+                                        <?php echo esc_html($s19_featured['author_name']); ?>
+                                    </a>
+                                    <span class="s19-meta-sep">&bull;</span>
+                                    <span><?php echo esc_html($s19_featured['date_text']); ?></span>
+                                </div>
+                                <?php if (!empty($s19_featured['excerpt'])): ?>
+                                <div class="s19-featured-excerpt">
+                                    <p><?php echo esc_html($s19_featured['excerpt']); ?></p>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                        </article>
+                        <?php endif; ?>
+
+                        <div class="s19-list-columns">
+                            <div class="s19-list-col">
+                                <?php foreach ($s19_col1 as $s19_mini): ?>
+                                <article class="s19-mini-item">
+                                    <div class="s19-mini-thumb"<?php echo !empty($s19_mini['img_style']) ? ' data-has-img="true"' : ''; ?>>
+                                        <a href="<?php echo esc_url($s19_mini['url']); ?>" class="s19-mini-img"
+                                            style="<?php echo esc_attr($s19_mini['img_style']); ?>"
+                                            title="<?php echo esc_attr($s19_mini['title']); ?>"
+                                            aria-label="<?php echo esc_attr($s19_mini['title']); ?>" tabindex="-1"></a>
+                                    </div>
+                                    <div class="s19-mini-content">
+                                        <h3 class="s19-mini-title">
+                                            <a href="<?php echo esc_url($s19_mini['url']); ?>"
+                                                title="<?php echo esc_attr($s19_mini['title']); ?>">
+                                                <?php echo esc_html($s19_mini['title']); ?>
+                                            </a>
+                                        </h3>
+                                        <div class="s19-mini-meta">
+                                            <?php echo esc_html($s19_mini['date_text']); ?>
+                                        </div>
+                                    </div>
+                                </article>
+                                <?php endforeach; ?>
+                            </div>
+
+                            <div class="s19-list-col">
+                                <?php foreach ($s19_col2 as $s19_mini): ?>
+                                <article class="s19-mini-item">
+                                    <div class="s19-mini-thumb"<?php echo !empty($s19_mini['img_style']) ? ' data-has-img="true"' : ''; ?>>
+                                        <a href="<?php echo esc_url($s19_mini['url']); ?>" class="s19-mini-img"
+                                            style="<?php echo esc_attr($s19_mini['img_style']); ?>"
+                                            title="<?php echo esc_attr($s19_mini['title']); ?>"
+                                            aria-label="<?php echo esc_attr($s19_mini['title']); ?>" tabindex="-1"></a>
+                                    </div>
+                                    <div class="s19-mini-content">
+                                        <h3 class="s19-mini-title">
+                                            <a href="<?php echo esc_url($s19_mini['url']); ?>"
+                                                title="<?php echo esc_attr($s19_mini['title']); ?>">
+                                                <?php echo esc_html($s19_mini['title']); ?>
+                                            </a>
+                                        </h3>
+                                        <div class="s19-mini-meta">
+                                            <?php echo esc_html($s19_mini['date_text']); ?>
+                                        </div>
+                                    </div>
+                                </article>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; endforeach; ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+<?php $_sections['s19'] = ob_get_clean(); ?>
+
+<?php ob_start(); ?>
+<?php if (get_option('blogar_s20_enabled', '1')): ?>
+    <?php
+    $s20_settings_url = add_query_arg(
+        array(
+            'page' => 'blogar-settings',
+            'tab'  => 's20_dual_col_featured',
+        ),
+        admin_url('themes.php')
+    );
+
+    $s20_build_placeholder_cards = static function ($settings_url, $block_title) {
+        $cards = array();
+        $date_text = wp_date(get_option('date_format'));
+        $gradients = array(
+            'linear-gradient(135deg,#eef2f7 0%,#e5edf6 52%,#f8fafc 100%)',
+            'linear-gradient(135deg,#fdf2f8 0%,#fce7f3 52%,#fff1f2 100%)',
+            'linear-gradient(135deg,#fef3c7 0%,#fde68a 52%,#fffbeb 100%)',
+            'linear-gradient(135deg,#dcfce7 0%,#bbf7d0 52%,#f0fdf4 100%)',
+        );
+
+        for ($i = 0; $i < 10; $i++) {
+            $cards[] = array(
+                'title'      => sprintf(__('Placeholder post %d for %s', 'blogar'), $i + 1, $block_title),
+                'author'     => __('Blogar Editorial', 'blogar'),
+                'url'        => $settings_url,
+                'author_url' => $settings_url,
+                'img_style'  => 'background-image:' . $gradients[$i % count($gradients)],
+                'date_text'  => $date_text,
+                'excerpt'    => __('Assign categories in Blogar Settings to replace these fallback cards with live posts.', 'blogar'),
+            );
+        }
+
+        return $cards;
+    };
+
+    $s20_prepare_block = static function ($side, $title_default, $data, $settings_url) use ($s20_build_placeholder_cards) {
+        $prefix = 'blogar_s20_' . $side;
+
+        $title = trim((string) get_option($prefix . '_title', ''));
+        if ($title === '') {
+            $title = $title_default;
+        }
+
+        $parent_cat_id = isset($data['parent_cat_id']) ? (int) $data['parent_cat_id'] : 0;
+        $default_link  = home_url('/');
+        if ($parent_cat_id) {
+            $term_link = get_category_link($parent_cat_id);
+            if (!is_wp_error($term_link)) {
+                $default_link = $term_link;
+            }
+        }
+
+        $link = trim((string) get_option($prefix . '_link', ''));
+        if ($link === '') {
+            $link = $default_link;
+        }
+
+        $cats         = isset($data['cats']) ? $data['cats'] : array();
+        $posts        = isset($data['posts']) ? $data['posts'] : array();
+        $show_all_tab = (bool) get_option($prefix . '_show_all_tab', 1);
+
+        $placeholder_cards = $s20_build_placeholder_cards($settings_url, $title);
+        if (empty($posts['all'])) {
+            $posts = array('all' => $placeholder_cards);
+            $cats  = array();
+        }
+
+        if (!$show_all_tab) {
+            unset($posts['all']);
+        }
+
+        if (empty($posts)) {
+            $posts        = array('all' => $placeholder_cards);
+            $show_all_tab = true;
+        }
+
+        $available_cat_ids = array_map('strval', array_keys($posts));
+        $cats = array_values(array_filter($cats, static function ($cat) use ($available_cat_ids) {
+            return isset($cat['id']) && in_array((string) $cat['id'], $available_cat_ids, true);
+        }));
+
+        $first_cat = 'all';
+        if ($show_all_tab && isset($posts['all'])) {
+            $first_cat = 'all';
+        } elseif (!empty($cats[0]['id'])) {
+            $first_cat = (string) $cats[0]['id'];
+        } else {
+            $post_keys = array_keys($posts);
+            if (!empty($post_keys)) {
+                $first_cat = (string) reset($post_keys);
+            }
+        }
+
+        return array(
+            'side'         => $side,
+            'title'        => $title,
+            'link'         => $link,
+            'cats'         => $cats,
+            'posts'        => $posts,
+            'show_all_tab' => $show_all_tab,
+            'first_cat'    => $first_cat,
+        );
+    };
+
+    $s20_normalize_item = static function ($item) {
+        if ($item instanceof WP_Post) {
+            $item_id  = $item->ID;
+            $img_url  = get_the_post_thumbnail_url($item_id, 'blogar-card');
+            if (!$img_url) {
+                $img_url = get_the_post_thumbnail_url($item_id, 'large');
+            }
+
+            $author_id      = (int) $item->post_author;
+            $excerpt_source = has_excerpt($item_id)
+                ? get_the_excerpt($item_id)
+                : wp_strip_all_tags($item->post_excerpt ? $item->post_excerpt : $item->post_content);
+
+            return array(
+                'title'       => get_the_title($item_id),
+                'url'         => get_permalink($item_id),
+                'author_name' => get_the_author_meta('display_name', $author_id),
+                'author_url'  => get_author_posts_url($author_id),
+                'img_style'   => $img_url ? 'background-image:url(' . esc_url($img_url) . ')' : '',
+                'date_text'   => get_the_date(get_option('date_format'), $item_id),
+                'excerpt'     => wp_trim_words($excerpt_source, 24, '...'),
+                'is_placeholder' => false,
+            );
+        }
+
+        if (is_array($item)) {
+            return array(
+                'title'       => !empty($item['title']) ? $item['title'] : __('Sample post', 'blogar'),
+                'url'         => !empty($item['url']) ? $item['url'] : '#',
+                'author_name' => !empty($item['author']) ? $item['author'] : __('Blogar Editorial', 'blogar'),
+                'author_url'  => !empty($item['author_url']) ? $item['author_url'] : '#',
+                'img_style'   => !empty($item['img_style']) ? $item['img_style'] : '',
+                'date_text'   => !empty($item['date_text']) ? $item['date_text'] : wp_date(get_option('date_format')),
+                'excerpt'     => !empty($item['excerpt']) ? $item['excerpt'] : __('Section preview content appears here until categories are assigned.', 'blogar'),
+                'is_placeholder' => true,
+            );
+        }
+
+        return null;
+    };
+
+    $s20_blocks = array(
+        'left'  => $s20_prepare_block('left',  __('Food & Cuisine', 'blogar'), blogar_get_s20_block_data('left'),  $s20_settings_url),
+        'right' => $s20_prepare_block('right', __('Music News',     'blogar'), blogar_get_s20_block_data('right'), $s20_settings_url),
+    );
+    ?>
+<section class="blogar-section blogar-s20" data-section="s20">
+    <div class="blogar-s20-inner">
+        <div class="s20-blocks">
+            <?php foreach ($s20_blocks as $s20_block): ?>
+            <div class="blogar-s20-block blogar-s20-block-<?php echo esc_attr($s20_block['side']); ?>"
+                data-initial-cat="<?php echo esc_attr($s20_block['first_cat']); ?>">
+
+                <div class="blogar-s20-header">
+                    <h2 class="s20-title-label">
+                        <a href="<?php echo esc_url($s20_block['link']); ?>">
+                            <?php echo esc_html($s20_block['title']); ?>
+                        </a>
+                    </h2>
+
+                    <nav class="blogar-s20-nav" aria-label="<?php esc_attr_e('Filter posts', 'blogar'); ?>">
+                        <ul class="s20-cat-list" role="tablist" aria-label="<?php esc_attr_e('Category filters', 'blogar'); ?>">
+                            <?php if ($s20_block['show_all_tab']): ?>
+                            <li role="presentation">
+                                <button type="button" class="s20-tab s20-active" data-cat="all" role="tab"
+                                    aria-selected="true" aria-label="<?php esc_attr_e('All', 'blogar'); ?>">
+                                    <?php esc_html_e('All', 'blogar'); ?>
+                                </button>
+                            </li>
+                            <?php endif; ?>
+                            <?php foreach ($s20_block['cats'] as $s20_cat_index => $s20_cat): ?>
+                            <li role="presentation">
+                                <button type="button"
+                                    class="s20-tab<?php echo (!$s20_block['show_all_tab'] && $s20_cat_index === 0) ? ' s20-active' : ''; ?>"
+                                    data-cat="<?php echo esc_attr($s20_cat['id']); ?>" role="tab"
+                                    aria-selected="<?php echo (!$s20_block['show_all_tab'] && $s20_cat_index === 0) ? 'true' : 'false'; ?>"
+                                    aria-label="<?php echo esc_attr($s20_cat['name']); ?>">
+                                    <?php echo esc_html($s20_cat['name']); ?>
+                                </button>
+                            </li>
+                            <?php endforeach; ?>
+                        </ul>
+
+                        <ul class="s20-pager">
+                            <li>
+                                <button type="button" class="s20-btn-prev s20-btn-disable"
+                                    aria-label="<?php esc_attr_e('Previous', 'blogar'); ?>" aria-disabled="true" disabled>
+                                    <svg class="s20-icon" width="7" height="11" viewBox="0 0 7 11" fill="none"
+                                        aria-hidden="true" focusable="false">
+                                        <path d="M6 10L1 5.5L6 1" stroke="currentColor" stroke-width="1.8"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="s20-btn-next"
+                                    aria-label="<?php esc_attr_e('Next', 'blogar'); ?>" aria-disabled="false">
+                                    <svg class="s20-icon" width="7" height="11" viewBox="0 0 7 11" fill="none"
+                                        aria-hidden="true" focusable="false">
+                                        <path d="M1 10L6 5.5L1 1" stroke="currentColor" stroke-width="1.8"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="blogar-s20-block-slides" aria-live="polite">
+                    <?php foreach ($s20_block['posts'] as $s20_cat_id => $s20_cat_posts):
+                            $s20_normalized = array();
+                            foreach ($s20_cat_posts as $_raw_post) {
+                                $s20_card = $s20_normalize_item($_raw_post);
+                                if ($s20_card) {
+                                    $s20_normalized[] = $s20_card;
+                                }
+                            }
+
+                            if (empty($s20_normalized)) {
+                                continue;
+                            }
+
+                            $s20_slides = array_chunk($s20_normalized, 5);
+                            foreach ($s20_slides as $s20_slide_idx => $s20_slide_posts):
+                                $s20_is_first   = ((string) $s20_cat_id === $s20_block['first_cat'] && $s20_slide_idx === 0);
+                                $s20_slide_cls  = $s20_is_first ? ' s20-slide-active' : '';
+                                $s20_featured   = !empty($s20_slide_posts[0]) ? $s20_slide_posts[0] : null;
+                                $s20_mini_items = array_slice($s20_slide_posts, 1, 4);
+                                ?>
+                    <div class="blogar-s20-slide<?php echo $s20_slide_cls; ?>"
+                        data-cat="<?php echo esc_attr($s20_cat_id); ?>" data-slide="<?php echo (int) $s20_slide_idx; ?>"
+                        aria-hidden="<?php echo $s20_is_first ? 'false' : 'true'; ?>"
+                        <?php echo $s20_is_first ? '' : 'hidden'; ?>>
+
+                        <div class="s20-cols">
+
+                            <!-- Left: featured post (image top + content below) -->
+                            <div class="s20-col-left">
+                                <?php if ($s20_featured): ?>
+                                <article class="s20-featured-card">
+                                    <div class="s20-featured-thumb"<?php echo !empty($s20_featured['img_style']) ? ' data-has-img="true"' : ''; ?>>
+                                        <a href="<?php echo esc_url($s20_featured['url']); ?>" class="s20-featured-img"
+                                            style="<?php echo esc_attr($s20_featured['img_style']); ?>"
+                                            title="<?php echo esc_attr($s20_featured['title']); ?>"
+                                            aria-label="<?php echo esc_attr($s20_featured['title']); ?>" tabindex="-1"></a>
+                                    </div>
+                                    <div class="s20-featured-content">
+                                        <h3 class="s20-featured-title">
+                                            <a href="<?php echo esc_url($s20_featured['url']); ?>"
+                                                title="<?php echo esc_attr($s20_featured['title']); ?>">
+                                                <?php echo esc_html($s20_featured['title']); ?>
+                                            </a>
+                                        </h3>
+                                        <div class="s20-featured-meta">
+                                            <?php esc_html_e('by', 'blogar'); ?>
+                                            <a href="<?php echo esc_url($s20_featured['author_url']); ?>">
+                                                <?php echo esc_html($s20_featured['author_name']); ?>
+                                            </a>
+                                            <span class="s20-meta-sep">&bull;</span>
+                                            <span><?php echo esc_html($s20_featured['date_text']); ?></span>
+                                        </div>
+                                        <?php if (!empty($s20_featured['excerpt'])): ?>
+                                        <div class="s20-featured-excerpt">
+                                            <p><?php echo esc_html($s20_featured['excerpt']); ?></p>
+                                        </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </article>
+                                <?php endif; ?>
+                            </div>
+
+                            <!-- Right: 4 mini items stacked -->
+                            <div class="s20-col-right">
+                                <?php foreach ($s20_mini_items as $s20_mini): ?>
+                                <article class="s20-mini-item">
+                                    <div class="s20-mini-thumb"<?php echo !empty($s20_mini['img_style']) ? ' data-has-img="true"' : ''; ?>>
+                                        <a href="<?php echo esc_url($s20_mini['url']); ?>" class="s20-mini-img"
+                                            style="<?php echo esc_attr($s20_mini['img_style']); ?>"
+                                            title="<?php echo esc_attr($s20_mini['title']); ?>"
+                                            aria-label="<?php echo esc_attr($s20_mini['title']); ?>" tabindex="-1"></a>
+                                    </div>
+                                    <div class="s20-mini-content">
+                                        <h3 class="s20-mini-title">
+                                            <a href="<?php echo esc_url($s20_mini['url']); ?>"
+                                                title="<?php echo esc_attr($s20_mini['title']); ?>">
+                                                <?php echo esc_html($s20_mini['title']); ?>
+                                            </a>
+                                        </h3>
+                                        <div class="s20-mini-meta">
+                                            <?php echo esc_html($s20_mini['date_text']); ?>
+                                        </div>
+                                    </div>
+                                </article>
+                                <?php endforeach; ?>
+                            </div>
+
+                        </div>
+                    </div>
+                    <?php endforeach; endforeach; ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+<?php $_sections['s20'] = ob_get_clean(); ?>
 
 <div class="blogar-front-page-shell">
     <div class="main-wrapper">

@@ -149,6 +149,36 @@ function blogar_enqueue_assets()
             array('blogar-frontpage'),
             blogar_asset_version('css/penci-s15.css')
         );
+        wp_enqueue_style(
+            'blogar-penci-s16',
+            get_template_directory_uri() . '/css/penci-s16.css',
+            array('blogar-frontpage'),
+            blogar_asset_version('css/penci-s16.css')
+        );
+        wp_enqueue_style(
+            'blogar-penci-s17',
+            get_template_directory_uri() . '/css/penci-s17.css',
+            array('blogar-frontpage'),
+            blogar_asset_version('css/penci-s17.css')
+        );
+        wp_enqueue_style(
+            'blogar-penci-s18',
+            get_template_directory_uri() . '/css/penci-s18.css',
+            array('blogar-frontpage'),
+            blogar_asset_version('css/penci-s18.css')
+        );
+        wp_enqueue_style(
+            'blogar-penci-s19',
+            get_template_directory_uri() . '/css/penci-s19.css',
+            array('blogar-frontpage'),
+            blogar_asset_version('css/penci-s19.css')
+        );
+        wp_enqueue_style(
+            'blogar-penci-s20',
+            get_template_directory_uri() . '/css/penci-s20.css',
+            array('blogar-frontpage'),
+            blogar_asset_version('css/penci-s20.css')
+        );
     }
 
     wp_enqueue_script(
@@ -215,9 +245,9 @@ function blogar_enqueue_assets()
 
     if (is_author()) {
         wp_enqueue_style(
-            'blogar-author',                                        // handle
+            'blogar-author',
             get_template_directory_uri() . '/css/author.css',
-            array('blogar-archive'),                             // depends on archive.css
+            array('blogar-archive'),
             wp_get_theme()->get('Version')
         );
     }

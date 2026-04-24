@@ -27,10 +27,21 @@
       "Bash(mv css/s11p-penci.css css/penci-s11p.css)",
       "Bash(rm css/s11-penci.css)",
       "Bash(sed -n '24,40p' front-page.php)",
-      "Bash(sed -n '288,293p' front-page.php)"
+      "Bash(sed -n '288,293p' front-page.php)",
+      "Bash(grep -ao '.{0,200}data-id=\"b65f622\".{0,2000}' \"C:\\\\My Web Sites\\\\techblogv2\\\\soledaddemo.pencidesign.net\\\\24h-news-magazine\\\\index.html\")",
+      "Bash(dd if=\"C:\\\\Users\\\\THE VY\\\\AppData\\\\Local\\\\Temp\\\\element_b65f622.html\" bs=1 skip=50000 count=10000)",
+      "Bash(node -e \" const fs = require\\('fs'\\); const content = fs.readFileSync\\('C:/My Web Sites/techblogv2/soledaddemo.pencidesign.net/24h-news-magazine/index.html', 'utf8'\\); const styleRe = /<style[^>]*>\\([\\\\s\\\\S]*?\\)<\\\\/style>/g; let m; while\\(\\(m=styleRe.exec\\(content\\)\\)!==null\\){ const s=m[1]; if\\(/pcsl|pcflx|pcaj|penci-smalllist|penci-border-arrow|style-12/.test\\(s\\)\\){ // split by selector groups ending in } const rules=s.split\\('}'\\); rules.forEach\\(r=>{ if\\(/pcsl|pcflx|pcaj|penci-smalllist|penci-border-arrow/.test\\(r\\)\\){ console.log\\(r.trim\\(\\)+'}'\\); } }\\); } } \")",
+      "Bash(node -e ' *)",
+      "Bash(node -e \" const fs = require\\('fs'\\); const content = fs.readFileSync\\('C:/My Web Sites/techblogv2/soledaddemo.pencidesign.net/24h-news-magazine/index.html', 'utf8'\\); const styleRe = /<style[^>]*>\\([\\\\s\\\\S]*?\\)<\\\\/style>/g; let m, found=new Set\\(\\); while\\(\\(m=styleRe.exec\\(content\\)\\)!==null\\){ const s=m[1]; if\\(/pc-ajaxfil|pcnav-lgroup|pcflx[^-]|penci-home|style-12/.test\\(s\\)\\){ s.split\\('}'\\).forEach\\(r=>{ if\\(/pc-ajaxfil|pcnav-lgroup|pcflx[^-]|penci-home.*style-12|style-12/.test\\(r\\) && !found.has\\(r.trim\\(\\)\\)\\){ found.add\\(r.trim\\(\\)\\); console.log\\(r.trim\\(\\)+'}'\\); } }\\); } } \")",
+      "Read(//d/XAMPP/htdocs/theme_blogar/**)",
+      "Read(//d/XAMPP/htdocs/**)",
+      "Read(//c/Users/THE VY/**)",
+      "Read(//d/XAMPP/**)",
+      "Bash(grep -n '$allowed\\\\|$sections_meta\\\\|$default_order\\\\|'\\\\''s16'\\\\''\\\\|'\\\\''s15'\\\\''' inc/theme-options.php)"
     ],
     "additionalDirectories": [
-      "C:\\Users\\THE VY\\AppData\\Local\\Temp"
+      "C:\\Users\\THE VY\\AppData\\Local\\Temp",
+      "C:\\My Web Sites\\techblogv2\\soledaddemo.pencidesign.net\\24h-news-magazine"
     ]
   },
   "hooks": {

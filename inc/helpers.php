@@ -734,72 +734,776 @@ function blogar_get_latest_posts_data()
 function blogar_get_s15_data()
 {
     $opts = get_option('blogar_s15_settings', []);
-    $cat_id = !empty($opts['category_id']) ? (int) $opts['category_id'] : 0;
-    $ppp = 8; // pre-load 2 slides × 4 posts = 8 per group
 
-    $cats = [];
-    $posts = [];
+    // Fix: read from the correct registered option key first, fallback to legacy array key
+    $cat_id = (int) get_option('blogar_s15_cat', 0);
+    if (!$cat_id && !empty($opts['category_id'])) {
+        $cat_id = (int) $opts['category_id'];
+    }
 
-    if ($cat_id) {
-        // ── 1. Sub-categories ──────────────────────────────────
+    // Multi-select categories (new model: arbitrary categories as tabs)
+    $multi_raw = get_option('blogar_s15_cats_multi', '');
+    $multi_ids = [];
+    if ($multi_raw && $multi_raw !== '[]') {
+        $decoded = json_decode($multi_raw, true);
+        if (is_array($decoded)) {
+            $multi_ids = array_values(array_filter(array_map('intval', $decoded)));
+        }
+    }
+
+    // Per-category post counts — JSON: { "cat_id": count, ... }
+    $ppp_raw  = get_option('blogar_s15_cats_ppp', '');
+    $cats_ppp = [];
+    if ($ppp_raw) {
+        $decoded = json_decode($ppp_raw, true);
+        if (is_array($decoded)) {
+            $cats_ppp = $decoded;
+        }
+    }
+
+    $default_ppp = 8; // 2 slides × 4 posts per tab
+    $cats        = [];
+    $posts       = [];
+
+    if (!empty($multi_ids)) {
+        // ── New model: arbitrary multi-select categories ───────────────
+        foreach ($multi_ids as $cid) {
+            $term = get_term((int) $cid, 'category');
+            if (!$term || is_wp_error($term)) {
+                continue;
+            }
+            $cats[] = [
+                'id'   => $term->term_id,
+                'name' => $term->name,
+                'slug' => $term->slug,
+            ];
+            $ppp = isset($cats_ppp[$cid]) ? max(1, (int) $cats_ppp[$cid]) : $default_ppp;
+            $posts[(string) $term->term_id] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'cat'            => $cid,
+            ]);
+        }
+
+        // "All" tab: union of all selected categories (capped at 24)
+        if (!empty($cats)) {
+            $all_cat_ids = wp_list_pluck($cats, 'id');
+            $all_ppp     = max($default_ppp, array_sum(array_map(function ($id) use ($cats_ppp, $default_ppp) {
+                return isset($cats_ppp[$id]) ? (int) $cats_ppp[$id] : $default_ppp;
+            }, $all_cat_ids)));
+            $all_ppp     = min($all_ppp, 24);
+            $posts['all'] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $all_ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'category__in'   => $all_cat_ids,
+            ]);
+        }
+    } elseif ($cat_id) {
+        // ── Legacy model: single parent category → auto sub-categories ──
         $sub_cats_raw = get_categories([
-            'parent' => $cat_id,
+            'parent'     => $cat_id,
             'hide_empty' => true,
-            'number' => 6,
+            'number'     => 6,
         ]);
-
         foreach ($sub_cats_raw as $c) {
             $cats[] = [
-                'id' => $c->term_id,
+                'id'   => $c->term_id,
                 'name' => $c->name,
                 'slug' => $c->slug,
             ];
         }
 
-        // ── 2. Posts per group ─────────────────────────────────
+        $all_ppp      = isset($cats_ppp['all']) ? max(1, (int) $cats_ppp['all']) : $default_ppp;
         $posts['all'] = get_posts([
-            'post_type' => 'post',
-            'post_status' => 'publish',
-            'posts_per_page' => $ppp,
-            'orderby' => 'date',
-            'order' => 'DESC',
-            'cat' => $cat_id,
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'posts_per_page' => $all_ppp,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'cat'            => $cat_id,
         ]);
 
         foreach ($cats as $c) {
+            $ppp = isset($cats_ppp[$c['id']]) ? max(1, (int) $cats_ppp[$c['id']]) : $default_ppp;
             $posts[(string) $c['id']] = get_posts([
-                'post_type' => 'post',
-                'post_status' => 'publish',
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
                 'posts_per_page' => $ppp,
-                'orderby' => 'date',
-                'order' => 'DESC',
-                'cat' => $c['id'],
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'cat'            => $c['id'],
             ]);
         }
     }
 
-    // Keep the section alive even when the parent category is not configured yet.
+    // Fallback: section stays visible even when nothing is configured
     if (empty($posts['all'])) {
-        $latest_posts = get_posts([
-            'post_type' => 'post',
-            'post_status' => 'publish',
-            'posts_per_page' => $ppp,
-            'orderby' => 'date',
-            'order' => 'DESC',
+        $latest = get_posts([
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'posts_per_page' => $default_ppp,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
         ]);
-
-        if (!empty($latest_posts)) {
-            $posts['all'] = $latest_posts;
+        if (!empty($latest)) {
+            $posts['all'] = $latest;
         }
     }
 
-    // Remove empty groups
     $posts = array_filter($posts);
 
     return [
         'parent_cat_id' => $cat_id,
-        'cats' => $cats,
-        'posts' => $posts,
+        'cats'          => $cats,
+        'posts'         => $posts,
     ];
 }
 
+function blogar_get_s17_data()
+{
+    $opts = get_option('blogar_s17_settings', []);
+
+    $cat_id = (int) get_option('blogar_s17_cat', 0);
+    if (!$cat_id && !empty($opts['category_id'])) {
+        $cat_id = (int) $opts['category_id'];
+    }
+
+    $multi_raw = get_option('blogar_s17_cats_multi', '');
+    $multi_ids = [];
+    if ($multi_raw && $multi_raw !== '[]') {
+        $decoded = json_decode($multi_raw, true);
+        if (is_array($decoded)) {
+            $multi_ids = array_values(array_filter(array_map('intval', $decoded)));
+        }
+    }
+
+    $ppp_raw  = get_option('blogar_s17_cats_ppp', '');
+    $cats_ppp = [];
+    if ($ppp_raw) {
+        $decoded = json_decode($ppp_raw, true);
+        if (is_array($decoded)) {
+            $cats_ppp = $decoded;
+        }
+    }
+
+    $default_ppp = 8; // Original static layout: 1 featured + middle split + 1 featured
+    $cats        = [];
+    $posts       = [];
+
+    if (!empty($multi_ids)) {
+        foreach ($multi_ids as $cid) {
+            $term = get_term((int) $cid, 'category');
+            if (!$term || is_wp_error($term)) {
+                continue;
+            }
+            $cats[] = [
+                'id'   => $term->term_id,
+                'name' => $term->name,
+                'slug' => $term->slug,
+            ];
+            $ppp = isset($cats_ppp[$cid]) ? max(1, (int) $cats_ppp[$cid]) : $default_ppp;
+            $posts[(string) $term->term_id] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'cat'            => $cid,
+            ]);
+        }
+
+        if (!empty($cats)) {
+            $all_cat_ids = wp_list_pluck($cats, 'id');
+            $all_ppp     = min(32, max($default_ppp, (int) array_sum(array_map(function ($id) use ($cats_ppp, $default_ppp) {
+                return isset($cats_ppp[$id]) ? (int) $cats_ppp[$id] : $default_ppp;
+            }, $all_cat_ids))));
+            $posts['all'] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $all_ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'category__in'   => $all_cat_ids,
+            ]);
+        }
+    } elseif ($cat_id) {
+        $sub_cats_raw = get_categories([
+            'parent'     => $cat_id,
+            'hide_empty' => true,
+            'number'     => 6,
+        ]);
+        foreach ($sub_cats_raw as $c) {
+            $cats[] = [
+                'id'   => $c->term_id,
+                'name' => $c->name,
+                'slug' => $c->slug,
+            ];
+        }
+
+        $all_ppp      = isset($cats_ppp['all']) ? max(1, (int) $cats_ppp['all']) : $default_ppp;
+        $posts['all'] = get_posts([
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'posts_per_page' => $all_ppp,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'cat'            => $cat_id,
+        ]);
+
+        foreach ($cats as $c) {
+            $ppp = isset($cats_ppp[$c['id']]) ? max(1, (int) $cats_ppp[$c['id']]) : $default_ppp;
+            $posts[(string) $c['id']] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'cat'            => $c['id'],
+            ]);
+        }
+    }
+
+    if (empty($posts['all'])) {
+        $latest = get_posts([
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'posts_per_page' => $default_ppp,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+        ]);
+        if (!empty($latest)) {
+            $posts['all'] = $latest;
+        }
+    }
+
+    $posts = array_filter($posts);
+
+    return [
+        'parent_cat_id' => $cat_id,
+        'cats'          => $cats,
+        'posts'         => $posts,
+    ];
+}
+
+function blogar_get_s18_data()
+{
+    $opts = get_option('blogar_s18_settings', []);
+
+    $cat_id = (int) get_option('blogar_s18_cat', 0);
+    if (!$cat_id && !empty($opts['category_id'])) {
+        $cat_id = (int) $opts['category_id'];
+    }
+
+    $multi_raw = get_option('blogar_s18_cats_multi', '');
+    $multi_ids = [];
+    if ($multi_raw && $multi_raw !== '[]') {
+        $decoded = json_decode($multi_raw, true);
+        if (is_array($decoded)) {
+            $multi_ids = array_values(array_filter(array_map('intval', $decoded)));
+        }
+    }
+
+    $ppp_raw  = get_option('blogar_s18_cats_ppp', '');
+    $cats_ppp = [];
+    if ($ppp_raw) {
+        $decoded = json_decode($ppp_raw, true);
+        if (is_array($decoded)) {
+            $cats_ppp = $decoded;
+        }
+    }
+
+    $default_ppp = 12; // Source layout: 4 big-left + 6 mini-middle + 2 big-right
+    $max_ppp     = 12;
+    $cats        = [];
+    $posts       = [];
+
+    if (!empty($multi_ids)) {
+        foreach ($multi_ids as $cid) {
+            $term = get_term((int) $cid, 'category');
+            if (!$term || is_wp_error($term)) {
+                continue;
+            }
+            $cats[] = [
+                'id'   => $term->term_id,
+                'name' => $term->name,
+                'slug' => $term->slug,
+            ];
+            $ppp = isset($cats_ppp[$cid]) ? max(1, min($max_ppp, (int) $cats_ppp[$cid])) : $default_ppp;
+            $posts[(string) $term->term_id] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'cat'            => $cid,
+            ]);
+        }
+
+        if (!empty($cats)) {
+            $all_cat_ids = wp_list_pluck($cats, 'id');
+            $all_ppp     = max($default_ppp, min($max_ppp, (int) array_sum(array_map(function ($id) use ($cats_ppp, $default_ppp) {
+                return isset($cats_ppp[$id]) ? (int) $cats_ppp[$id] : $default_ppp;
+            }, $all_cat_ids))));
+            $posts['all'] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $all_ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'category__in'   => $all_cat_ids,
+            ]);
+        }
+    } elseif ($cat_id) {
+        $sub_cats_raw = get_categories([
+            'parent'     => $cat_id,
+            'hide_empty' => true,
+            'number'     => 6,
+        ]);
+        foreach ($sub_cats_raw as $c) {
+            $cats[] = [
+                'id'   => $c->term_id,
+                'name' => $c->name,
+                'slug' => $c->slug,
+            ];
+        }
+
+        $all_ppp      = isset($cats_ppp['all']) ? max(1, min($max_ppp, (int) $cats_ppp['all'])) : $default_ppp;
+        $posts['all'] = get_posts([
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'posts_per_page' => $all_ppp,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'cat'            => $cat_id,
+        ]);
+
+        foreach ($cats as $c) {
+            $ppp = isset($cats_ppp[$c['id']]) ? max(1, min($max_ppp, (int) $cats_ppp[$c['id']])) : $default_ppp;
+            $posts[(string) $c['id']] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'cat'            => $c['id'],
+            ]);
+        }
+    }
+
+    if (empty($posts['all'])) {
+        $latest = get_posts([
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'posts_per_page' => $default_ppp,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+        ]);
+        if (!empty($latest)) {
+            $posts['all'] = $latest;
+        }
+    }
+
+    $posts = array_filter($posts);
+
+    return [
+        'parent_cat_id' => $cat_id,
+        'cats'          => $cats,
+        'posts'         => $posts,
+    ];
+}
+
+function blogar_get_s16_data()
+{
+    $opts = get_option('blogar_s16_settings', []);
+
+    // Read category from registered option key first, then legacy
+    $cat_id = (int) get_option('blogar_s16_cat', 0);
+    if (!$cat_id && !empty($opts['category_id'])) {
+        $cat_id = (int) $opts['category_id'];
+    }
+
+    // Multi-select categories (new model)
+    $multi_raw = get_option('blogar_s16_cats_multi', '');
+    $multi_ids = [];
+    if ($multi_raw && $multi_raw !== '[]') {
+        $decoded = json_decode($multi_raw, true);
+        if (is_array($decoded)) {
+            $multi_ids = array_values(array_filter(array_map('intval', $decoded)));
+        }
+    }
+
+    // Per-category post counts — JSON: { "cat_id": count, ... }
+    $ppp_raw  = get_option('blogar_s16_cats_ppp', '');
+    $cats_ppp = [];
+    if ($ppp_raw) {
+        $decoded = json_decode($ppp_raw, true);
+        if (is_array($decoded)) {
+            $cats_ppp = $decoded;
+        }
+    }
+
+    $default_ppp = 24; // 2 slides × 12 posts per tab
+    $cats        = [];
+    $posts       = [];
+
+    if (!empty($multi_ids)) {
+        // ── New model: arbitrary multi-select categories ──────────────
+        foreach ($multi_ids as $cid) {
+            $term = get_term((int) $cid, 'category');
+            if (!$term || is_wp_error($term)) {
+                continue;
+            }
+            $cats[] = [
+                'id'   => $term->term_id,
+                'name' => $term->name,
+                'slug' => $term->slug,
+            ];
+            $ppp = isset($cats_ppp[$cid]) ? max(1, (int) $cats_ppp[$cid]) : $default_ppp;
+            $posts[(string) $term->term_id] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'cat'            => $cid,
+            ]);
+        }
+
+        // "All" tab: union of selected categories (capped at 48)
+        if (!empty($cats)) {
+            $all_cat_ids = wp_list_pluck($cats, 'id');
+            $all_ppp     = min(48, max($default_ppp, (int) array_sum(array_map(function ($id) use ($cats_ppp, $default_ppp) {
+                return isset($cats_ppp[$id]) ? (int) $cats_ppp[$id] : $default_ppp;
+            }, $all_cat_ids))));
+            $posts['all'] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $all_ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'category__in'   => $all_cat_ids,
+            ]);
+        }
+    } elseif ($cat_id) {
+        // ── Legacy model: single parent → auto sub-categories ────────
+        $sub_cats_raw = get_categories([
+            'parent'     => $cat_id,
+            'hide_empty' => true,
+            'number'     => 6,
+        ]);
+        foreach ($sub_cats_raw as $c) {
+            $cats[] = [
+                'id'   => $c->term_id,
+                'name' => $c->name,
+                'slug' => $c->slug,
+            ];
+        }
+
+        $all_ppp      = isset($cats_ppp['all']) ? max(1, (int) $cats_ppp['all']) : $default_ppp;
+        $posts['all'] = get_posts([
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'posts_per_page' => $all_ppp,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'cat'            => $cat_id,
+        ]);
+
+        foreach ($cats as $c) {
+            $ppp = isset($cats_ppp[$c['id']]) ? max(1, (int) $cats_ppp[$c['id']]) : $default_ppp;
+            $posts[(string) $c['id']] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'cat'            => $c['id'],
+            ]);
+        }
+    }
+
+    // Fallback: keep section alive even when nothing is configured
+    if (empty($posts['all'])) {
+        $latest = get_posts([
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'posts_per_page' => $default_ppp,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+        ]);
+        if (!empty($latest)) {
+            $posts['all'] = $latest;
+        }
+    }
+
+    $posts = array_filter($posts);
+
+    return [
+        'parent_cat_id' => $cat_id,
+        'cats'          => $cats,
+        'posts'         => $posts,
+    ];
+}
+
+function blogar_get_s19_block_data($side = 'left')
+{
+    $side = ($side === 'right') ? 'right' : 'left';
+    $prefix = 'blogar_s19_' . $side;
+
+    $cat_id = (int) get_option($prefix . '_cat', 0);
+
+    $multi_raw = get_option($prefix . '_cats_multi', '');
+    $multi_ids = [];
+    if ($multi_raw && $multi_raw !== '[]') {
+        $decoded = json_decode($multi_raw, true);
+        if (is_array($decoded)) {
+            $multi_ids = array_values(array_filter(array_map('intval', $decoded)));
+        }
+    }
+
+    $ppp_raw = get_option($prefix . '_cats_ppp', '');
+    $cats_ppp = [];
+    if ($ppp_raw) {
+        $decoded = json_decode($ppp_raw, true);
+        if (is_array($decoded)) {
+            $cats_ppp = $decoded;
+        }
+    }
+
+    $default_ppp = 14; // 2 slides × 7 posts per block
+    $max_ppp = 42;
+    $cats = [];
+    $posts = [];
+
+    if (!empty($multi_ids)) {
+        foreach ($multi_ids as $cid) {
+            $term = get_term((int) $cid, 'category');
+            if (!$term || is_wp_error($term)) {
+                continue;
+            }
+
+            $cats[] = [
+                'id'   => $term->term_id,
+                'name' => $term->name,
+                'slug' => $term->slug,
+            ];
+
+            $ppp = isset($cats_ppp[$cid]) ? max(1, min($max_ppp, (int) $cats_ppp[$cid])) : $default_ppp;
+            $posts[(string) $term->term_id] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'cat'            => $cid,
+            ]);
+        }
+
+        if (!empty($cats)) {
+            $all_cat_ids = wp_list_pluck($cats, 'id');
+            $all_ppp = min($max_ppp, max($default_ppp, (int) array_sum(array_map(function ($id) use ($cats_ppp, $default_ppp) {
+                return isset($cats_ppp[$id]) ? (int) $cats_ppp[$id] : $default_ppp;
+            }, $all_cat_ids))));
+            $posts['all'] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $all_ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'category__in'   => $all_cat_ids,
+            ]);
+        }
+    } elseif ($cat_id) {
+        $sub_cats_raw = get_categories([
+            'parent'     => $cat_id,
+            'hide_empty' => true,
+            'number'     => 6,
+        ]);
+
+        foreach ($sub_cats_raw as $c) {
+            $cats[] = [
+                'id'   => $c->term_id,
+                'name' => $c->name,
+                'slug' => $c->slug,
+            ];
+        }
+
+        $all_ppp = isset($cats_ppp['all']) ? max(1, min($max_ppp, (int) $cats_ppp['all'])) : $default_ppp;
+        $posts['all'] = get_posts([
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'posts_per_page' => $all_ppp,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'cat'            => $cat_id,
+        ]);
+
+        foreach ($cats as $c) {
+            $ppp = isset($cats_ppp[$c['id']]) ? max(1, min($max_ppp, (int) $cats_ppp[$c['id']])) : $default_ppp;
+            $posts[(string) $c['id']] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'cat'            => $c['id'],
+            ]);
+        }
+    }
+
+    if (empty($posts['all'])) {
+        $latest = get_posts([
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'posts_per_page' => $default_ppp,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+        ]);
+        if (!empty($latest)) {
+            $posts['all'] = $latest;
+        }
+    }
+
+    $posts = array_filter($posts);
+
+    return [
+        'parent_cat_id' => $cat_id,
+        'cats'          => $cats,
+        'posts'         => $posts,
+    ];
+}
+
+
+function blogar_get_s20_block_data($side = 'left')
+{
+    $side = ($side === 'right') ? 'right' : 'left';
+    $prefix = 'blogar_s20_' . $side;
+
+    $cat_id = (int) get_option($prefix . '_cat', 0);
+
+    $multi_raw = get_option($prefix . '_cats_multi', '');
+    $multi_ids = [];
+    if ($multi_raw && $multi_raw !== '[]') {
+        $decoded = json_decode($multi_raw, true);
+        if (is_array($decoded)) {
+            $multi_ids = array_values(array_filter(array_map('intval', $decoded)));
+        }
+    }
+
+    $ppp_raw = get_option($prefix . '_cats_ppp', '');
+    $cats_ppp = [];
+    if ($ppp_raw) {
+        $decoded = json_decode($ppp_raw, true);
+        if (is_array($decoded)) {
+            $cats_ppp = $decoded;
+        }
+    }
+
+    $default_ppp = 10; // 2 slides x 5 posts per block
+    $max_ppp = 30;
+    $cats = [];
+    $posts = [];
+
+    if (!empty($multi_ids)) {
+        foreach ($multi_ids as $cid) {
+            $term = get_term((int) $cid, 'category');
+            if (!$term || is_wp_error($term)) {
+                continue;
+            }
+
+            $cats[] = [
+                'id'   => $term->term_id,
+                'name' => $term->name,
+                'slug' => $term->slug,
+            ];
+
+            $ppp = isset($cats_ppp[$cid]) ? max(1, min($max_ppp, (int) $cats_ppp[$cid])) : $default_ppp;
+            $posts[(string) $term->term_id] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'cat'            => $cid,
+            ]);
+        }
+
+        if (!empty($cats)) {
+            $all_cat_ids = wp_list_pluck($cats, 'id');
+            $all_ppp = min($max_ppp, max($default_ppp, (int) array_sum(array_map(function ($id) use ($cats_ppp, $default_ppp) {
+                return isset($cats_ppp[$id]) ? (int) $cats_ppp[$id] : $default_ppp;
+            }, $all_cat_ids))));
+            $posts['all'] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $all_ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'category__in'   => $all_cat_ids,
+            ]);
+        }
+    } elseif ($cat_id) {
+        $sub_cats_raw = get_categories([
+            'parent'     => $cat_id,
+            'hide_empty' => true,
+            'number'     => 6,
+        ]);
+
+        foreach ($sub_cats_raw as $c) {
+            $cats[] = [
+                'id'   => $c->term_id,
+                'name' => $c->name,
+                'slug' => $c->slug,
+            ];
+        }
+
+        $all_ppp = isset($cats_ppp['all']) ? max(1, min($max_ppp, (int) $cats_ppp['all'])) : $default_ppp;
+        $posts['all'] = get_posts([
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'posts_per_page' => $all_ppp,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'cat'            => $cat_id,
+        ]);
+
+        foreach ($cats as $c) {
+            $ppp = isset($cats_ppp[$c['id']]) ? max(1, min($max_ppp, (int) $cats_ppp[$c['id']])) : $default_ppp;
+            $posts[(string) $c['id']] = get_posts([
+                'post_type'      => 'post',
+                'post_status'    => 'publish',
+                'posts_per_page' => $ppp,
+                'orderby'        => 'date',
+                'order'          => 'DESC',
+                'cat'            => $c['id'],
+            ]);
+        }
+    }
+
+    if (empty($posts['all'])) {
+        $latest = get_posts([
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'posts_per_page' => $default_ppp,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+        ]);
+        if (!empty($latest)) {
+            $posts['all'] = $latest;
+        }
+    }
+
+    $posts = array_filter($posts);
+
+    return [
+        'parent_cat_id' => $cat_id,
+        'cats'          => $cats,
+        'posts'         => $posts,
+    ];
+}

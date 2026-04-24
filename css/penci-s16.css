@@ -1,0 +1,453 @@
+/* ================================================================
+   SECTION s16 — Money Category Grid Slider
+   Scope: .blogar-s16
+   Source: elementor-element-b65f622 / widget elementor-element-345687c
+   All measurements extracted directly from source CSS in index.html
+   ================================================================
+
+   Key values from source:
+     --pcsl-hgap    : 15px   (column gap)
+     --pcsl-bgap    : 0px    (row gap — items share borders)
+     --pcsl-between : 10px   (thumb-to-content gap)
+     thumb width    : 104px
+     thumb aspect   : 80%    (padding-top: 80% → ~83px tall)
+     title font-size: 14px
+     meta font-size : 12px
+     section margin : margin-top:24px; margin-bottom:0
+     container max  : 1296px; padding: 0 8px
+     card border    : 0 1px 1px 1px (no top border)
+     card padding   : 10px all sides
+   ================================================================ */
+
+.blogar-s16 {
+  --s16-accent:    #6eb48c;
+  --s16-heading:   #313131;
+  --s16-border:    #dedede;
+  --s16-meta:      #888;
+  --s16-hgap:      15px;
+  --s16-bgap:      0px;
+  --s16-between:   10px;
+  --s16-thumb-w:   104px;
+  --s16-thumb-ar:  80%;
+  margin-top: 24px;
+  margin-bottom: 0;
+  width: 100%;
+  clear: both;
+  background-color: #fff;
+}
+
+.blogar-s16 .blogar-s16-inner {
+  max-width: 1296px;
+  margin: 0 auto;
+  padding: 5px 8px 20px;
+  box-sizing: border-box;
+}
+
+/* ── Header (style-12: black badge + 2px bottom border) ── */
+
+.blogar-s16 .blogar-s16-header {
+  position: relative;
+  clear: both;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #313131;
+  line-height: 1;
+}
+
+.blogar-s16 .s16-title-label {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 -2px;
+  padding: 0 12px;
+  border: 0;
+  background-color: #313131;
+  color: #fff;
+  font-family: var(--pchead-font, "Raleway", sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 34px;
+  text-transform: uppercase;
+}
+
+/* Chevron tail on right of badge */
+.blogar-s16 .s16-title-label::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -20px;
+  z-index: 1;
+  width: 0;
+  height: 0;
+  border-right: 20px solid transparent;
+  border-bottom: 34px solid #000;
+  opacity: 0.7;
+}
+
+.blogar-s16 .s16-title-label a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.blogar-s16 .s16-title-label a:hover {
+  opacity: 0.85;
+}
+
+/* ── Navigation (tabs + prev/next) — absolute right of header ── */
+
+.blogar-s16 .blogar-s16-nav {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: auto;
+  z-index: 9;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  align-content: center;
+  justify-content: flex-end;
+  padding: 0;
+}
+
+.blogar-s16 .s16-cat-list,
+.blogar-s16 .s16-pager {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.blogar-s16 .s16-cat-list li,
+.blogar-s16 .s16-pager li {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  position: relative;
+}
+
+/* Tab buttons */
+.blogar-s16 .s16-tab,
+.blogar-s16 .s16-btn-prev,
+.blogar-s16 .s16-btn-next {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.blogar-s16 .s16-tab {
+  display: inline-block;
+  padding: 0 10px;
+  color: var(--s16-heading);
+  font-family: var(--pchead-font, "Raleway", sans-serif);
+  font-size: 13px;
+  line-height: 34px;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.blogar-s16 .s16-cat-list li:first-child .s16-tab {
+  padding-left: 0;
+}
+
+.blogar-s16 .s16-cat-list li:last-child .s16-tab {
+  padding-right: 0;
+}
+
+.blogar-s16 .s16-tab:hover,
+.blogar-s16 .s16-tab.s16-active {
+  color: var(--s16-accent);
+  opacity: 1;
+}
+
+/* Prev/Next pager — padding-left:10px; margin-top:-3px (from source) */
+.blogar-s16 .s16-pager {
+  padding-left: 10px;
+  margin-top: -3px;
+}
+
+.blogar-s16 .s16-pager li + li {
+  margin-left: 4px;
+}
+
+.blogar-s16 .s16-btn-prev,
+.blogar-s16 .s16-btn-next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 34px;
+  padding: 0 3px;
+  color: var(--s16-heading);
+  line-height: 1;
+  opacity: 0.6;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.blogar-s16 .s16-btn-prev:hover:not(:disabled),
+.blogar-s16 .s16-btn-next:hover:not(:disabled) {
+  color: var(--s16-accent);
+  opacity: 1;
+}
+
+.blogar-s16 .s16-btn-disable,
+.blogar-s16 .s16-btn-prev:disabled,
+.blogar-s16 .s16-btn-next:disabled {
+  pointer-events: none;
+  opacity: 0.4;
+  cursor: default;
+}
+
+.blogar-s16 .s16-btn-prev .s16-icon,
+.blogar-s16 .s16-btn-next .s16-icon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 7px;
+  height: 11px;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+/* ── Slides wrapper ── */
+
+.blogar-s16 .blogar-s16-slides {
+  position: relative;
+  overflow: hidden;
+}
+
+.blogar-s16 .blogar-s16-slide {
+  display: none;
+}
+
+.blogar-s16 .blogar-s16-slide.s16-slide-active {
+  display: block;
+  animation: blogarS16SlideIn 0.3s ease;
+}
+
+@keyframes blogarS16SlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Grid: 4 cols × 3 rows = 12 posts per slide ── */
+
+.blogar-s16 .s16-grid {
+  margin-left:  calc(var(--s16-hgap) / -2);
+  margin-right: calc(var(--s16-hgap) / -2);
+  width: calc(100% + var(--s16-hgap));
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+/* Each item = 25% (4 cols) at desktop */
+.blogar-s16 .s16-item {
+  flex: 0 0 25%;
+  max-width: 25%;
+  padding: 0 calc(var(--s16-hgap) / 2);
+  margin-bottom: var(--s16-bgap); /* 0px — rows share borders */
+  box-sizing: border-box;
+}
+
+/* ── Card (pcsl-itemin) ──
+   border: 0 1px 1px 1px — top border intentionally omitted so rows merge */
+.blogar-s16 .s16-itemin {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid var(--s16-border);
+  border-width: 0 1px 1px 1px;
+  box-sizing: border-box;
+  height: 100%;
+}
+
+/* Horizontal flex: thumb LEFT, content RIGHT */
+.blogar-s16 .s16-iteminer {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+}
+
+/* Thumbnail — fixed 104px wide (from source: pcsl-thumb{width:104px}) */
+.blogar-s16 .s16-thumb {
+  flex: 0 0 var(--s16-thumb-w);
+  width: var(--s16-thumb-w);
+  min-width: var(--s16-thumb-w);
+  overflow: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.blogar-s16 .s16-thumb:hover {
+  opacity: 0.85;
+}
+
+/* Image holder — aspect ratio padding trick (80% → ~83px for 104px wide thumb) */
+.blogar-s16 .s16-img {
+  display: block;
+  position: relative;
+  width: 100%;
+  background-color: #f5f5f5;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.blogar-s16 .s16-img::before {
+  content: "";
+  display: block;
+  width: 100%;
+  padding-top: var(--s16-thumb-ar); /* 80% */
+}
+
+/* Shimmer/skeleton when no image */
+.blogar-s16 .s16-img:not([style*="background-image"]) {
+  background-image: linear-gradient(
+    to left,
+    #f5f5f5 0%,
+    #efefef 15%,
+    #f5f5f5 40%,
+    #f5f5f5 100%
+  );
+  background-size: 900px 100%;
+  animation: s16Shimmer 0.6s infinite linear;
+}
+
+@keyframes s16Shimmer {
+  0%   { background-position: -468px 0; }
+  100% { background-position: 468px 0; }
+}
+
+/* Content — right of thumb, padding-left: var(--s16-between) = 10px */
+.blogar-s16 .s16-content {
+  flex: 1;
+  min-width: 0;
+  padding-left: var(--s16-between);
+  padding-right: 0;
+}
+
+/* Title (font-size: 14px from source) */
+.blogar-s16 .s16-post-title {
+  margin: 0;
+  color: var(--s16-heading);
+  font-family: var(--pchead-font, "Raleway", sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.blogar-s16 .s16-post-title a {
+  display: -webkit-box;
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.blogar-s16 .s16-post-title a:hover {
+  color: var(--s16-accent);
+}
+
+/* Meta "by Author" (margin-top:8px; font-size:12px; italic) */
+.blogar-s16 .s16-meta {
+  margin-top: 8px;
+  color: var(--s16-meta);
+  font-size: 12px;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+.blogar-s16 .s16-meta a {
+  color: var(--s16-meta);
+  text-decoration: none;
+  font-style: italic;
+}
+
+.blogar-s16 .s16-meta a:hover {
+  color: var(--s16-accent);
+}
+
+/* ── Responsive ── */
+
+/* Tablet: ≤1169px → 2 cols (from source: pcsl-tabcol-2) */
+@media only screen and (max-width: 1169px) {
+  .blogar-s16 .s16-item {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .blogar-s16 .s16-tab {
+    padding: 0 7px;
+    font-size: 12px;
+  }
+
+  .blogar-s16 .s16-pager {
+    padding-left: 8px;
+  }
+}
+
+/* Mobile: ≤767px → 1 col (from source: pcsl-mobcol-1) */
+@media only screen and (max-width: 767px) {
+  .blogar-s16 .blogar-s16-inner {
+    padding: 0 15px;
+  }
+
+  .blogar-s16 .blogar-s16-header {
+    padding-bottom: 38px;
+  }
+
+  .blogar-s16 .blogar-s16-nav {
+    position: static;
+    margin-top: 8px;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .blogar-s16 .blogar-s16-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .blogar-s16 .s16-item {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .blogar-s16 .s16-tab {
+    padding: 0 8px;
+    font-size: 12px;
+    line-height: 30px;
+  }
+
+  .blogar-s16 .s16-btn-prev,
+  .blogar-s16 .s16-btn-next {
+    height: 30px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .blogar-s16 .blogar-s16-inner {
+    padding: 0 10px;
+  }
+
+  .blogar-s16 .s16-post-title {
+    font-size: 13px;
+  }
+}

@@ -128,7 +128,7 @@
   max-width: 295px;
   overflow: hidden;
   aspect-ratio: 4 / 3;
-  border-radius: 10px;
+  border-radius: 0;
 }
 
 .axil-blog-area .content-block.post-list-view .post-thumbnail a {
@@ -146,7 +146,7 @@
 }
 
 .axil-blog-area .content-block.post-list-view:hover .post-thumbnail img {
-  transform: scale(1.08);
+  transform: scale(1.03);
 }
 
 .axil-blog-area .content-block.post-list-view .post-content {
@@ -156,19 +156,15 @@
   flex-grow: 1;
   padding: 20px 22px;
   overflow: hidden;
-  border: 1px solid var(--color-lightest);
-  border-radius: 10px;
+  border: 1px solid #dedede;
+  border-radius: 0;
   transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
+    border-color 0.3s ease;
 }
 
 .axil-blog-area .content-block.post-list-view:hover .post-content,
 .axil-blog-area .content-block.post-list-view.is-active .post-content {
-  background: var(--color-white);
-  border-color: var(--color-white);
-  box-shadow: var(--shadow-primary);
+  border-color: #b0b0b0;
 }
 
 .axil-blog-area .content-block.post-list-view .post-content .post-cat {
@@ -363,34 +359,34 @@
   background: var(--color-lightest);
 }
 
-/* ── Popular Posts ─────────────────────────────────────────────── */
+/* ── Popular Posts — card style matching s16/s17 mini-item ─────── */
 .popular-post-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--color-lightest);
+  border: 1px solid #dedede;
+  border-width: 0 1px 1px 1px;
+  background: #fff;
+  box-sizing: border-box;
 }
 
-.popular-post-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+.popular-post-item:first-child {
+  border-top-width: 1px;
 }
 
 .popular-post-inner {
   display: flex;
-  gap: 12px;
-  flex: 1;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
   min-width: 0;
 }
 
-/* Thumbnail: 4:3 landscape (110×83) */
+/* Thumbnail — 104px × 80% AR (≈ 83px tall), matching s16/s17 */
 .popular-post-thumb {
-  flex-shrink: 0;
-  width: 110px;
-  height: 83px;
+  flex: 0 0 104px;
+  width: 104px;
+  min-width: 104px;
+  aspect-ratio: 5 / 4;
   overflow: hidden;
-  border-radius: var(--radius);
+  border-radius: 0;
 }
 
 .popular-post-thumb a {
@@ -404,11 +400,12 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.4s ease;
 }
 
 .popular-post-item:hover .popular-post-thumb img {
-  transform: scale(1.07);
+  transform: scale(1.03);
 }
 
 .popular-post-text {
@@ -416,23 +413,24 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 6px;
 }
 
 .popular-post-title {
   margin: 0;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.45;
+  font-family: var(--pchead-font, "Raleway", sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
   display: -webkit-box;
   overflow: hidden;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
 .popular-post-title a {
   color: var(--color-heading);
+  text-decoration: none;
   transition: color 0.3s ease;
 }
 
@@ -442,8 +440,9 @@
 
 .popular-post-meta {
   font-size: 12px;
-  color: var(--color-midgray);
-  line-height: 1.2;
+  color: #888;
+  font-style: italic;
+  line-height: 1.3;
 }
 
 /* ── Categories ────────────────────────────────────────────────── */
@@ -505,7 +504,8 @@
 .sidebar-newsletter-inner {
   padding: 22px 18px;
   background: var(--color-lightest);
-  border-radius: var(--radius);
+  border: 1px solid #dedede;
+  border-radius: 0;
 }
 
 .sidebar-newsletter-desc {
@@ -673,7 +673,7 @@
     min-width: 100%;
     max-width: 100%;
     aspect-ratio: 4 / 3;
-    border-radius: 10px;
+    border-radius: 0;
     margin-bottom: 5px;
   }
 
@@ -689,7 +689,7 @@
 
   .axil-blog-area .content-block.post-list-view .post-content {
     padding: 16px 14px;
-    border-radius: 10px;
+    border-radius: 0;
   }
 
   .axil-blog-area .content-block.post-list-view .post-content .post-cat-list {
@@ -728,8 +728,9 @@
 
   /* Sidebar: popular posts — tighter thumbnail on small screens */
   .popular-post-thumb {
+    flex: 0 0 90px;
     width: 90px;
-    height: 68px;
+    min-width: 90px;
   }
 }
 
@@ -756,14 +757,9 @@
 
   /* Sidebar: even tighter on XS */
   .popular-post-thumb {
+    flex: 0 0 80px;
     width: 80px;
-    height: 60px;
-  }
-
-  .popular-post-number {
-    width: 22px;
-    height: 22px;
-    font-size: 11px;
+    min-width: 80px;
   }
 
   .sidebar-newsletter-inner {
@@ -808,17 +804,14 @@
   height: 100%;
   min-width: 0;
   background: var(--color-white);
-  border: 1px solid var(--color-lighter, #e8e8e8);
-  border-radius: var(--radius, 10px);
+  border: 1px solid #dedede;
+  border-radius: 0;
   overflow: hidden;
-  transition:
-    box-shadow 0.3s ease,
-    transform 0.3s ease;
+  transition: border-color 0.3s ease;
 }
 
 .archive-card-full:hover {
-  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.1);
-  transform: translateY(-3px);
+  border-color: #b0b0b0;
 }
 
 /* ── Thumbnail: 3:2 ratio, full-width top ───────────────────────── */
@@ -845,7 +838,7 @@
 }
 
 .archive-card-full:hover .archive-card-thumb img {
-  transform: scale(1.06);
+  transform: scale(1.03);
 }
 
 /* ── Card body ──────────────────────────────────────────────────── */
@@ -928,7 +921,7 @@
   gap: 3px 5px;
   margin-top: auto;
   padding-top: 12px;
-  border-top: 1px solid var(--color-lighter, #e8e8e8);
+  border-top: 1px solid #dedede;
   font-size: 11px;
   color: var(--color-midgray, #888);
   line-height: 1.3;
@@ -1243,8 +1236,8 @@
 
 .sidebar-search-inner {
   display: flex;
-  border: 1px solid var(--color-lighter, #e2e2e2);
-  border-radius: var(--radius, 10px);
+  border: 1px solid #dedede;
+  border-radius: 0;
   overflow: hidden;
   transition: border-color 0.25s ease;
 }

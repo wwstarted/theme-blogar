@@ -390,6 +390,9 @@ function blogar_register_settings()
     register_setting('blogar_s15_settings', 'blogar_s15_title', array('sanitize_callback' => 'sanitize_text_field'));
     register_setting('blogar_s15_settings', 'blogar_s15_cat', array('sanitize_callback' => 'absint'));
     register_setting('blogar_s15_settings', 'blogar_s15_link', array('sanitize_callback' => 'esc_url_raw'));
+    register_setting('blogar_s15_settings', 'blogar_s15_show_all_tab', array('sanitize_callback' => 'absint', 'default' => 1));
+    register_setting('blogar_s15_settings', 'blogar_s15_cats_multi', array('sanitize_callback' => 'blogar_sanitize_s15_cats_multi'));
+    register_setting('blogar_s15_settings', 'blogar_s15_cats_ppp', array('sanitize_callback' => 'blogar_sanitize_s15_cats_ppp'));
 
     add_settings_section('blogar_s15_section', __('Entertainment Category Slider', 'blogar'), 'blogar_s15_section_cb', 'blogar-s15');
 
@@ -401,17 +404,277 @@ function blogar_register_settings()
         'placeholder' => 'Entertainment',
     ));
 
-    add_settings_field('blogar_s15_cat', __('Parent category', 'blogar'), 'blogar_category_select_field', 'blogar-s15', 'blogar_s15_section', array(
+    add_settings_field('blogar_s15_cat', __('Parent category (legacy)', 'blogar'), 'blogar_category_select_field', 'blogar-s15', 'blogar_s15_section', array(
         'option_name' => 'blogar_s15_cat',
         'default' => !empty($legacy_s15_settings['category_id']) ? (int) $legacy_s15_settings['category_id'] : 0,
-        'description' => __('Choose the parent category for this section. The "All" tab uses this category, and child categories become filter tabs automatically. If left empty, the section falls back to the latest posts.', 'blogar'),
+        'description' => __('Single parent — child categories become tabs automatically. Ignored when "Category tabs" below has at least one item ticked.', 'blogar'),
     ));
+
+    add_settings_field('blogar_s15_show_all_tab', __('Show "All" tab', 'blogar'), 'blogar_s15_show_all_tab_field_cb', 'blogar-s15', 'blogar_s15_section');
+
+    add_settings_field('blogar_s15_cats_multi', __('Category tabs (multi-select)', 'blogar'), 'blogar_s15_cats_multi_field_cb', 'blogar-s15', 'blogar_s15_section');
 
     add_settings_field('blogar_s15_link', __('Title link URL', 'blogar'), 'blogar_url_field_cb', 'blogar-s15', 'blogar_s15_section', array(
         'option_name' => 'blogar_s15_link',
         'default' => !empty($legacy_s15_settings['cat_link']) ? $legacy_s15_settings['cat_link'] : '',
         'placeholder' => 'https://example.com/category/entertainment/',
         'description' => __('Optional. Leave empty to link the section title to the selected parent category archive.', 'blogar'),
+    ));
+
+    // ── S16: Money Category Grid Slider ───────────────────────────
+    register_setting('blogar_s16_settings', 'blogar_s16_enabled',      array('sanitize_callback' => 'absint', 'default' => 1));
+    register_setting('blogar_s16_settings', 'blogar_s16_title',        array('sanitize_callback' => 'sanitize_text_field'));
+    register_setting('blogar_s16_settings', 'blogar_s16_cat',          array('sanitize_callback' => 'absint'));
+    register_setting('blogar_s16_settings', 'blogar_s16_link',         array('sanitize_callback' => 'esc_url_raw'));
+    register_setting('blogar_s16_settings', 'blogar_s16_show_all_tab', array('sanitize_callback' => 'absint', 'default' => 1));
+    register_setting('blogar_s16_settings', 'blogar_s16_cats_multi',   array('sanitize_callback' => 'blogar_sanitize_s16_cats_multi'));
+    register_setting('blogar_s16_settings', 'blogar_s16_cats_ppp',     array('sanitize_callback' => 'blogar_sanitize_s16_cats_ppp'));
+
+    add_settings_section('blogar_s16_section', __('Money Category Grid Slider', 'blogar'), 'blogar_s16_section_cb', 'blogar-s16');
+
+    add_settings_field('blogar_s16_enabled', __('Display section', 'blogar'), 'blogar_section_toggle_field_cb', 'blogar-s16', 'blogar_s16_section', array('option_name' => 'blogar_s16_enabled'));
+
+    add_settings_field('blogar_s16_title', __('Section title', 'blogar'), 'blogar_text_field_cb', 'blogar-s16', 'blogar_s16_section', array(
+        'option_name' => 'blogar_s16_title',
+        'default'     => 'Money',
+        'placeholder' => 'Money',
+    ));
+
+    add_settings_field('blogar_s16_cat', __('Parent category (legacy)', 'blogar'), 'blogar_category_select_field', 'blogar-s16', 'blogar_s16_section', array(
+        'option_name' => 'blogar_s16_cat',
+        'default'     => 0,
+        'description' => __('Single parent — child categories become tabs automatically. Ignored when "Category tabs" below has at least one item ticked.', 'blogar'),
+    ));
+
+    add_settings_field('blogar_s16_show_all_tab', __('Show "All" tab', 'blogar'), 'blogar_s16_show_all_tab_field_cb', 'blogar-s16', 'blogar_s16_section');
+
+    add_settings_field('blogar_s16_cats_multi', __('Category tabs (multi-select)', 'blogar'), 'blogar_s16_cats_multi_field_cb', 'blogar-s16', 'blogar_s16_section');
+
+    add_settings_field('blogar_s16_link', __('Title link URL', 'blogar'), 'blogar_url_field_cb', 'blogar-s16', 'blogar_s16_section', array(
+        'option_name' => 'blogar_s16_link',
+        'default'     => '',
+        'placeholder' => 'https://example.com/category/money/',
+        'description' => __('Optional. Leave empty to auto-link to the parent category archive.', 'blogar'),
+    ));
+
+    // ── S17: Editor's Picks ──
+    register_setting('blogar_s17_settings', 'blogar_s17_enabled',      array('sanitize_callback' => 'absint', 'default' => 1));
+    register_setting('blogar_s17_settings', 'blogar_s17_title',        array('sanitize_callback' => 'sanitize_text_field'));
+    register_setting('blogar_s17_settings', 'blogar_s17_cat',          array('sanitize_callback' => 'absint'));
+    register_setting('blogar_s17_settings', 'blogar_s17_link',         array('sanitize_callback' => 'esc_url_raw'));
+    register_setting('blogar_s17_settings', 'blogar_s17_show_all_tab', array('sanitize_callback' => 'absint', 'default' => 1));
+    register_setting('blogar_s17_settings', 'blogar_s17_cats_multi',   array('sanitize_callback' => 'blogar_sanitize_s17_cats_multi'));
+    register_setting('blogar_s17_settings', 'blogar_s17_cats_ppp',     array('sanitize_callback' => 'blogar_sanitize_s17_cats_ppp'));
+
+    add_settings_section('blogar_s17_section', __("Editor's Picks Mixed Layout", 'blogar'), 'blogar_s17_section_cb', 'blogar-s17');
+
+    add_settings_field('blogar_s17_enabled', __('Display section', 'blogar'), 'blogar_section_toggle_field_cb', 'blogar-s17', 'blogar_s17_section', array('option_name' => 'blogar_s17_enabled'));
+
+    add_settings_field('blogar_s17_title', __('Section title', 'blogar'), 'blogar_text_field_cb', 'blogar-s17', 'blogar_s17_section', array(
+        'option_name' => 'blogar_s17_title',
+        'default'     => "Editor's Picks",
+        'placeholder' => "Editor's Picks",
+    ));
+
+    add_settings_field('blogar_s17_cat', __('Parent category (legacy)', 'blogar'), 'blogar_category_select_field', 'blogar-s17', 'blogar_s17_section', array(
+        'option_name' => 'blogar_s17_cat',
+        'default'     => 0,
+        'description' => __('Single parent — child categories become tabs automatically. Ignored when "Category tabs" below has at least one item ticked.', 'blogar'),
+    ));
+
+    add_settings_field('blogar_s17_show_all_tab', __('Show "All" tab', 'blogar'), 'blogar_s17_show_all_tab_field_cb', 'blogar-s17', 'blogar_s17_section');
+
+    add_settings_field('blogar_s17_cats_multi', __('Category tabs (multi-select)', 'blogar'), 'blogar_s17_cats_multi_field_cb', 'blogar-s17', 'blogar_s17_section');
+
+    add_settings_field('blogar_s17_link', __('Title link URL', 'blogar'), 'blogar_url_field_cb', 'blogar-s17', 'blogar_s17_section', array(
+        'option_name' => 'blogar_s17_link',
+        'default'     => '',
+        'placeholder' => 'https://example.com/category/',
+        'description' => __('Optional. Leave empty to auto-link to the parent category archive.', 'blogar'),
+    ));
+
+    // ── S18: Life Style News ──
+    register_setting('blogar_s18_settings', 'blogar_s18_enabled',      array('sanitize_callback' => 'absint', 'default' => 1));
+    register_setting('blogar_s18_settings', 'blogar_s18_title',        array('sanitize_callback' => 'sanitize_text_field'));
+    register_setting('blogar_s18_settings', 'blogar_s18_cat',          array('sanitize_callback' => 'absint'));
+    register_setting('blogar_s18_settings', 'blogar_s18_link',         array('sanitize_callback' => 'esc_url_raw'));
+    register_setting('blogar_s18_settings', 'blogar_s18_show_all_tab', array('sanitize_callback' => 'absint', 'default' => 1));
+    register_setting('blogar_s18_settings', 'blogar_s18_cats_multi',   array('sanitize_callback' => 'blogar_sanitize_s18_cats_multi'));
+    register_setting('blogar_s18_settings', 'blogar_s18_cats_ppp',     array('sanitize_callback' => 'blogar_sanitize_s18_cats_ppp'));
+
+    add_settings_section('blogar_s18_section', __('Life Style News Mixed Layout', 'blogar'), 'blogar_s18_section_cb', 'blogar-s18');
+
+    add_settings_field('blogar_s18_enabled', __('Display section', 'blogar'), 'blogar_section_toggle_field_cb', 'blogar-s18', 'blogar_s18_section', array('option_name' => 'blogar_s18_enabled'));
+
+    add_settings_field('blogar_s18_title', __('Section title', 'blogar'), 'blogar_text_field_cb', 'blogar-s18', 'blogar_s18_section', array(
+        'option_name' => 'blogar_s18_title',
+        'default'     => 'Life Style News',
+        'placeholder' => 'Life Style News',
+    ));
+
+    add_settings_field('blogar_s18_cat', __('Parent category (legacy)', 'blogar'), 'blogar_category_select_field', 'blogar-s18', 'blogar_s18_section', array(
+        'option_name' => 'blogar_s18_cat',
+        'default'     => 0,
+        'description' => __('Single parent — child categories become tabs automatically. Ignored when "Category tabs" below has at least one item ticked.', 'blogar'),
+    ));
+
+    add_settings_field('blogar_s18_show_all_tab', __('Show "All" tab', 'blogar'), 'blogar_s18_show_all_tab_field_cb', 'blogar-s18', 'blogar_s18_section');
+
+    add_settings_field('blogar_s18_cats_multi', __('Category tabs (multi-select)', 'blogar'), 'blogar_s18_cats_multi_field_cb', 'blogar-s18', 'blogar_s18_section');
+
+    add_settings_field('blogar_s18_link', __('Title link URL', 'blogar'), 'blogar_url_field_cb', 'blogar-s18', 'blogar_s18_section', array(
+        'option_name' => 'blogar_s18_link',
+        'default'     => '',
+        'placeholder' => 'https://example.com/category/life-style/',
+        'description' => __('Optional. Leave empty to auto-link to the parent category archive.', 'blogar'),
+    ));
+
+    // ── S19: Dual Featured Blocks (structure-20) ──
+    register_setting('blogar_s19_settings', 'blogar_s19_enabled', array('sanitize_callback' => 'absint', 'default' => 1));
+
+    register_setting('blogar_s19_settings', 'blogar_s19_left_title',        array('sanitize_callback' => 'sanitize_text_field'));
+    register_setting('blogar_s19_settings', 'blogar_s19_left_cat',          array('sanitize_callback' => 'absint'));
+    register_setting('blogar_s19_settings', 'blogar_s19_left_link',         array('sanitize_callback' => 'esc_url_raw'));
+    register_setting('blogar_s19_settings', 'blogar_s19_left_show_all_tab', array('sanitize_callback' => 'absint', 'default' => 1));
+    register_setting('blogar_s19_settings', 'blogar_s19_left_cats_multi',   array('sanitize_callback' => 'blogar_sanitize_s19_left_cats_multi'));
+    register_setting('blogar_s19_settings', 'blogar_s19_left_cats_ppp',     array('sanitize_callback' => 'blogar_sanitize_s19_left_cats_ppp'));
+
+    register_setting('blogar_s19_settings', 'blogar_s19_right_title',        array('sanitize_callback' => 'sanitize_text_field'));
+    register_setting('blogar_s19_settings', 'blogar_s19_right_cat',          array('sanitize_callback' => 'absint'));
+    register_setting('blogar_s19_settings', 'blogar_s19_right_link',         array('sanitize_callback' => 'esc_url_raw'));
+    register_setting('blogar_s19_settings', 'blogar_s19_right_show_all_tab', array('sanitize_callback' => 'absint', 'default' => 1));
+    register_setting('blogar_s19_settings', 'blogar_s19_right_cats_multi',   array('sanitize_callback' => 'blogar_sanitize_s19_right_cats_multi'));
+    register_setting('blogar_s19_settings', 'blogar_s19_right_cats_ppp',     array('sanitize_callback' => 'blogar_sanitize_s19_right_cats_ppp'));
+
+    add_settings_section('blogar_s19_section', __('Dual Featured Blocks', 'blogar'), 'blogar_s19_section_cb', 'blogar-s19');
+
+    add_settings_field('blogar_s19_enabled', __('Display section', 'blogar'), 'blogar_section_toggle_field_cb', 'blogar-s19', 'blogar_s19_section', array('option_name' => 'blogar_s19_enabled'));
+
+    add_settings_field('blogar_s19_left_title', __('Left block title', 'blogar'), 'blogar_text_field_cb', 'blogar-s19', 'blogar_s19_section', array(
+        'option_name' => 'blogar_s19_left_title',
+        'default'     => 'Esports News',
+        'placeholder' => 'Esports News',
+    ));
+    add_settings_field('blogar_s19_left_cat', __('Left parent category (legacy)', 'blogar'), 'blogar_category_select_field', 'blogar-s19', 'blogar_s19_section', array(
+        'option_name' => 'blogar_s19_left_cat',
+        'default'     => 0,
+        'description' => __('Single parent for the left block. Child categories become tabs automatically unless "Left category tabs" below has at least one item selected.', 'blogar'),
+    ));
+    add_settings_field('blogar_s19_left_show_all_tab', __('Left block: Show "All" tab', 'blogar'), 'blogar_s19_show_all_tab_field_cb', 'blogar-s19', 'blogar_s19_section', array(
+        'option_name' => 'blogar_s19_left_show_all_tab',
+    ));
+    add_settings_field('blogar_s19_left_cats_multi', __('Left category tabs (multi-select)', 'blogar'), 'blogar_s19_cats_multi_field_cb', 'blogar-s19', 'blogar_s19_section', array(
+        'option_prefix' => 'blogar_s19_left',
+        'wrap_id'       => 's19-left-cats-multi-wrap',
+        'default_ppp'   => 14,
+        'max_ppp'       => 42,
+        'description'   => __('Tick categories to display as tabs for the left block. Multiples of 7 are recommended (7, 14, 21…). When at least one is selected, the parent category field above is ignored.', 'blogar'),
+    ));
+    add_settings_field('blogar_s19_left_link', __('Left block title link URL', 'blogar'), 'blogar_url_field_cb', 'blogar-s19', 'blogar_s19_section', array(
+        'option_name' => 'blogar_s19_left_link',
+        'default'     => '',
+        'placeholder' => 'https://example.com/category/esports/',
+        'description' => __('Optional. Leave empty to auto-link to the selected left parent category archive.', 'blogar'),
+    ));
+
+    add_settings_field('blogar_s19_right_title', __('Right block title', 'blogar'), 'blogar_text_field_cb', 'blogar-s19', 'blogar_s19_section', array(
+        'option_name' => 'blogar_s19_right_title',
+        'default'     => 'Movie Update',
+        'placeholder' => 'Movie Update',
+    ));
+    add_settings_field('blogar_s19_right_cat', __('Right parent category (legacy)', 'blogar'), 'blogar_category_select_field', 'blogar-s19', 'blogar_s19_section', array(
+        'option_name' => 'blogar_s19_right_cat',
+        'default'     => 0,
+        'description' => __('Single parent for the right block. Child categories become tabs automatically unless "Right category tabs" below has at least one item selected.', 'blogar'),
+    ));
+    add_settings_field('blogar_s19_right_show_all_tab', __('Right block: Show "All" tab', 'blogar'), 'blogar_s19_show_all_tab_field_cb', 'blogar-s19', 'blogar_s19_section', array(
+        'option_name' => 'blogar_s19_right_show_all_tab',
+    ));
+    add_settings_field('blogar_s19_right_cats_multi', __('Right category tabs (multi-select)', 'blogar'), 'blogar_s19_cats_multi_field_cb', 'blogar-s19', 'blogar_s19_section', array(
+        'option_prefix' => 'blogar_s19_right',
+        'wrap_id'       => 's19-right-cats-multi-wrap',
+        'default_ppp'   => 14,
+        'max_ppp'       => 42,
+        'description'   => __('Tick categories to display as tabs for the right block. Multiples of 7 are recommended (7, 14, 21…). When at least one is selected, the parent category field above is ignored.', 'blogar'),
+    ));
+    add_settings_field('blogar_s19_right_link', __('Right block title link URL', 'blogar'), 'blogar_url_field_cb', 'blogar-s19', 'blogar_s19_section', array(
+        'option_name' => 'blogar_s19_right_link',
+        'default'     => '',
+        'placeholder' => 'https://example.com/category/movie/',
+        'description' => __('Optional. Leave empty to auto-link to the selected right parent category archive.', 'blogar'),
+    ));
+
+    // ── Section 20: Dual Column Featured Cat ─────────────────────
+    register_setting('blogar_s20_settings', 'blogar_s20_enabled', array('sanitize_callback' => 'absint', 'default' => 1));
+
+    register_setting('blogar_s20_settings', 'blogar_s20_left_title',        array('sanitize_callback' => 'sanitize_text_field'));
+    register_setting('blogar_s20_settings', 'blogar_s20_left_cat',          array('sanitize_callback' => 'absint'));
+    register_setting('blogar_s20_settings', 'blogar_s20_left_link',         array('sanitize_callback' => 'esc_url_raw'));
+    register_setting('blogar_s20_settings', 'blogar_s20_left_show_all_tab', array('sanitize_callback' => 'absint', 'default' => 1));
+    register_setting('blogar_s20_settings', 'blogar_s20_left_cats_multi',   array('sanitize_callback' => 'blogar_sanitize_s20_left_cats_multi'));
+    register_setting('blogar_s20_settings', 'blogar_s20_left_cats_ppp',     array('sanitize_callback' => 'blogar_sanitize_s20_left_cats_ppp'));
+
+    register_setting('blogar_s20_settings', 'blogar_s20_right_title',        array('sanitize_callback' => 'sanitize_text_field'));
+    register_setting('blogar_s20_settings', 'blogar_s20_right_cat',          array('sanitize_callback' => 'absint'));
+    register_setting('blogar_s20_settings', 'blogar_s20_right_link',         array('sanitize_callback' => 'esc_url_raw'));
+    register_setting('blogar_s20_settings', 'blogar_s20_right_show_all_tab', array('sanitize_callback' => 'absint', 'default' => 1));
+    register_setting('blogar_s20_settings', 'blogar_s20_right_cats_multi',   array('sanitize_callback' => 'blogar_sanitize_s20_right_cats_multi'));
+    register_setting('blogar_s20_settings', 'blogar_s20_right_cats_ppp',     array('sanitize_callback' => 'blogar_sanitize_s20_right_cats_ppp'));
+
+    add_settings_section('blogar_s20_section', __('Dual Column Featured Cat', 'blogar'), 'blogar_s20_section_cb', 'blogar-s20');
+
+    add_settings_field('blogar_s20_enabled', __('Display section', 'blogar'), 'blogar_section_toggle_field_cb', 'blogar-s20', 'blogar_s20_section', array('option_name' => 'blogar_s20_enabled'));
+
+    add_settings_field('blogar_s20_left_title', __('Left block title', 'blogar'), 'blogar_text_field_cb', 'blogar-s20', 'blogar_s20_section', array(
+        'option_name' => 'blogar_s20_left_title',
+        'default'     => '',
+        'placeholder' => __('Food & Cuisine', 'blogar'),
+    ));
+    add_settings_field('blogar_s20_left_cat', __('Left parent category (legacy)', 'blogar'), 'blogar_category_select_field', 'blogar-s20', 'blogar_s20_section', array(
+        'option_name' => 'blogar_s20_left_cat',
+        'description' => __('Ignored when multi-select tabs below are used.', 'blogar'),
+    ));
+    add_settings_field('blogar_s20_left_show_all_tab', __('Left block: Show "All" tab', 'blogar'), 'blogar_s19_show_all_tab_field_cb', 'blogar-s20', 'blogar_s20_section', array(
+        'option_name' => 'blogar_s20_left_show_all_tab',
+    ));
+    add_settings_field('blogar_s20_left_cats_multi', __('Left category tabs (multi-select)', 'blogar'), 'blogar_s19_cats_multi_field_cb', 'blogar-s20', 'blogar_s20_section', array(
+        'option_prefix' => 'blogar_s20_left',
+        'wrap_id'       => 's20-left-cats-multi-wrap',
+        'default_ppp'   => 10,
+        'max_ppp'       => 30,
+        'description'   => __('Tick categories to display as tabs for the left block. Multiples of 5 are recommended (5, 10, 15…).', 'blogar'),
+    ));
+    add_settings_field('blogar_s20_left_link', __('Left block title link URL', 'blogar'), 'blogar_url_field_cb', 'blogar-s20', 'blogar_s20_section', array(
+        'option_name' => 'blogar_s20_left_link',
+        'default'     => '',
+        'placeholder' => 'https://example.com/category/food/',
+        'description' => __('Optional. Leave empty to auto-link to the selected left parent category archive.', 'blogar'),
+    ));
+
+    add_settings_field('blogar_s20_right_title', __('Right block title', 'blogar'), 'blogar_text_field_cb', 'blogar-s20', 'blogar_s20_section', array(
+        'option_name' => 'blogar_s20_right_title',
+        'default'     => '',
+        'placeholder' => __('Music News', 'blogar'),
+    ));
+    add_settings_field('blogar_s20_right_cat', __('Right parent category (legacy)', 'blogar'), 'blogar_category_select_field', 'blogar-s20', 'blogar_s20_section', array(
+        'option_name' => 'blogar_s20_right_cat',
+        'description' => __('Ignored when multi-select tabs below are used.', 'blogar'),
+    ));
+    add_settings_field('blogar_s20_right_show_all_tab', __('Right block: Show "All" tab', 'blogar'), 'blogar_s19_show_all_tab_field_cb', 'blogar-s20', 'blogar_s20_section', array(
+        'option_name' => 'blogar_s20_right_show_all_tab',
+    ));
+    add_settings_field('blogar_s20_right_cats_multi', __('Right category tabs (multi-select)', 'blogar'), 'blogar_s19_cats_multi_field_cb', 'blogar-s20', 'blogar_s20_section', array(
+        'option_prefix' => 'blogar_s20_right',
+        'wrap_id'       => 's20-right-cats-multi-wrap',
+        'default_ppp'   => 10,
+        'max_ppp'       => 30,
+        'description'   => __('Tick categories to display as tabs for the right block. Multiples of 5 are recommended (5, 10, 15…).', 'blogar'),
+    ));
+    add_settings_field('blogar_s20_right_link', __('Right block title link URL', 'blogar'), 'blogar_url_field_cb', 'blogar-s20', 'blogar_s20_section', array(
+        'option_name' => 'blogar_s20_right_link',
+        'default'     => '',
+        'placeholder' => 'https://example.com/category/music/',
+        'description' => __('Optional. Leave empty to auto-link to the selected right parent category archive.', 'blogar'),
     ));
 }
 add_action('admin_init', 'blogar_register_settings');
@@ -481,8 +744,735 @@ function blogar_s14_section_cb()
 function blogar_s15_section_cb()
 {
     echo '<p class="description">'
-        . esc_html__('Entertainment-style category slider with one parent category and auto-detected child-category tabs. Each tab shows preloaded 4-post slides on the homepage.', 'blogar')
+        . esc_html__('Category slider with filter tabs. Use multi-select below for arbitrary categories (with per-category post counts), or fall back to the single parent-category model.', 'blogar')
         . '</p>';
+}
+
+function blogar_s15_show_all_tab_field_cb()
+{
+    $enabled = (bool) get_option('blogar_s15_show_all_tab', 1);
+    ?>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;font-weight:500">
+        <input type="hidden" name="blogar_s15_show_all_tab" value="0">
+        <input type="checkbox" id="blogar_s15_show_all_tab" name="blogar_s15_show_all_tab" value="1" <?php checked($enabled); ?>>
+        <span><?php esc_html_e('Show the "All" tab as the first filter tab', 'blogar'); ?></span>
+    </label>
+    <p class="description" style="margin-top:6px">
+        <?php esc_html_e('When unchecked, the slider starts on the first selected category tab.', 'blogar'); ?>
+    </p>
+    <?php
+}
+
+function blogar_s15_cats_multi_field_cb()
+{
+    $multi_raw = get_option('blogar_s15_cats_multi', '');
+    $ppp_raw   = get_option('blogar_s15_cats_ppp', '');
+
+    $selected_ids = array();
+    if ($multi_raw && $multi_raw !== '[]') {
+        $decoded = json_decode($multi_raw, true);
+        if (is_array($decoded)) {
+            $selected_ids = array_map('intval', $decoded);
+        }
+    }
+
+    $cats_ppp = array();
+    if ($ppp_raw && $ppp_raw !== '{}') {
+        $decoded = json_decode($ppp_raw, true);
+        if (is_array($decoded)) {
+            $cats_ppp = $decoded;
+        }
+    }
+
+    $categories = blogar_get_all_categories_cached();
+    ?>
+    <div id="s15-cats-multi-wrap" style="max-width:560px">
+        <p class="description" style="margin:0 0 10px">
+            <?php esc_html_e('Tick categories to display as tabs. Set posts per page for each (1–24). When at least one is ticked, the Parent Category field above is ignored.', 'blogar'); ?>
+        </p>
+        <div style="border:1px solid #ddd;border-radius:4px;max-height:300px;overflow-y:auto;background:#fafafa">
+            <?php foreach ($categories as $cat):
+                $is_checked = in_array($cat->term_id, $selected_ids, true);
+                $ppp_val    = isset($cats_ppp[$cat->term_id]) ? (int) $cats_ppp[$cat->term_id] : 8;
+            ?>
+            <div style="display:flex;align-items:center;gap:12px;padding:5px 12px;border-bottom:1px solid #eee">
+                <label style="flex:1;display:flex;align-items:center;gap:8px;cursor:pointer;min-width:0">
+                    <input type="checkbox" class="s15-cat-cb" data-cid="<?php echo esc_attr($cat->term_id); ?>"
+                        value="<?php echo esc_attr($cat->term_id); ?>"<?php checked($is_checked); ?>>
+                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                        <?php echo esc_html($cat->name); ?>
+                        <small style="color:#888">(<?php echo (int) $cat->count; ?>)</small>
+                    </span>
+                </label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:#666;flex-shrink:0<?php echo $is_checked ? '' : ';opacity:.4'; ?>">
+                    <?php esc_html_e('Posts:', 'blogar'); ?>
+                    <input type="number" class="s15-cat-ppp" data-cid="<?php echo esc_attr($cat->term_id); ?>"
+                        value="<?php echo (int) $ppp_val; ?>" min="1" max="24" style="width:54px"
+                        <?php echo $is_checked ? '' : 'disabled'; ?>>
+                </label>
+            </div>
+            <?php endforeach; ?>
+        </div>
+
+        <input type="hidden" id="blogar_s15_cats_multi" name="blogar_s15_cats_multi"
+            value="<?php echo esc_attr($multi_raw ?: '[]'); ?>">
+        <input type="hidden" id="blogar_s15_cats_ppp" name="blogar_s15_cats_ppp"
+            value="<?php echo esc_attr($ppp_raw ?: '{}'); ?>">
+    </div>
+    <script>
+    (function () {
+        var wrap = document.getElementById('s15-cats-multi-wrap');
+        if (!wrap) return;
+        function sync() {
+            var ids = [], ppp = {};
+            wrap.querySelectorAll('.s15-cat-cb').forEach(function (cb) {
+                var cid   = parseInt(cb.getAttribute('data-cid'), 10);
+                var pppEl = wrap.querySelector('.s15-cat-ppp[data-cid="' + cid + '"]');
+                var lbl   = pppEl ? pppEl.closest('label') : null;
+                if (cb.checked) {
+                    ids.push(cid);
+                    ppp[cid] = Math.min(24, Math.max(1, parseInt(pppEl ? pppEl.value : '8', 10) || 8));
+                    if (pppEl) pppEl.disabled = false;
+                    if (lbl)   lbl.style.opacity = '1';
+                } else {
+                    if (pppEl) pppEl.disabled = true;
+                    if (lbl)   lbl.style.opacity = '.4';
+                }
+            });
+            document.getElementById('blogar_s15_cats_multi').value = JSON.stringify(ids);
+            document.getElementById('blogar_s15_cats_ppp').value   = JSON.stringify(ppp);
+        }
+        wrap.addEventListener('change', sync);
+        wrap.addEventListener('input',  sync);
+    })();
+    </script>
+    <?php
+}
+
+function blogar_sanitize_s15_cats_multi($value)
+{
+    $decoded = json_decode($value, true);
+    if (!is_array($decoded)) {
+        return '[]';
+    }
+    return wp_json_encode(array_values(array_filter(array_map('absint', $decoded))));
+}
+
+function blogar_sanitize_s15_cats_ppp($value)
+{
+    $decoded = json_decode($value, true);
+    if (!is_array($decoded)) {
+        return '{}';
+    }
+    $clean = array();
+    foreach ($decoded as $id => $count) {
+        $cid = absint($id);
+        if ($cid) {
+            $clean[$cid] = max(1, min(24, (int) $count));
+        }
+    }
+    return wp_json_encode($clean);
+}
+
+// ── S16 callbacks ────────────────────────────────────────────────
+
+function blogar_s16_section_cb()
+{
+    echo '<p class="description">'
+        . esc_html__('Grid-style category slider: 4 columns × 3 rows = 12 posts per slide. Horizontal card layout (104px thumbnail on left, title + author on right). Identical settings model to the Entertainment Slider above.', 'blogar')
+        . '</p>';
+}
+
+function blogar_s16_show_all_tab_field_cb()
+{
+    $enabled = (bool) get_option('blogar_s16_show_all_tab', 1);
+    ?>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;font-weight:500">
+        <input type="hidden" name="blogar_s16_show_all_tab" value="0">
+        <input type="checkbox" id="blogar_s16_show_all_tab" name="blogar_s16_show_all_tab" value="1" <?php checked($enabled); ?>>
+        <span><?php esc_html_e('Show the "All" tab as the first filter tab', 'blogar'); ?></span>
+    </label>
+    <p class="description" style="margin-top:6px">
+        <?php esc_html_e('When unchecked, the slider starts on the first selected category tab.', 'blogar'); ?>
+    </p>
+    <?php
+}
+
+function blogar_s16_cats_multi_field_cb()
+{
+    $multi_raw = get_option('blogar_s16_cats_multi', '');
+    $ppp_raw   = get_option('blogar_s16_cats_ppp', '');
+
+    $selected_ids = array();
+    if ($multi_raw && $multi_raw !== '[]') {
+        $decoded = json_decode($multi_raw, true);
+        if (is_array($decoded)) {
+            $selected_ids = array_map('intval', $decoded);
+        }
+    }
+
+    $cats_ppp = array();
+    if ($ppp_raw && $ppp_raw !== '{}') {
+        $decoded = json_decode($ppp_raw, true);
+        if (is_array($decoded)) {
+            $cats_ppp = $decoded;
+        }
+    }
+
+    $categories = blogar_get_all_categories_cached();
+    ?>
+    <div id="s16-cats-multi-wrap" style="max-width:560px">
+        <p class="description" style="margin:0 0 10px">
+            <?php esc_html_e('Tick categories to display as tabs. Set posts per page for each (multiples of 12 recommended: 12, 24, 36…). When at least one is ticked, the Parent Category field above is ignored.', 'blogar'); ?>
+        </p>
+        <div style="border:1px solid #ddd;border-radius:4px;max-height:300px;overflow-y:auto;background:#fafafa">
+            <?php foreach ($categories as $cat):
+                $is_checked = in_array($cat->term_id, $selected_ids, true);
+                $ppp_val    = isset($cats_ppp[$cat->term_id]) ? (int) $cats_ppp[$cat->term_id] : 24;
+            ?>
+            <div style="display:flex;align-items:center;gap:12px;padding:5px 12px;border-bottom:1px solid #eee">
+                <label style="flex:1;display:flex;align-items:center;gap:8px;cursor:pointer;min-width:0">
+                    <input type="checkbox" class="s16-cat-cb" data-cid="<?php echo esc_attr($cat->term_id); ?>"
+                        value="<?php echo esc_attr($cat->term_id); ?>"<?php checked($is_checked); ?>>
+                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                        <?php echo esc_html($cat->name); ?>
+                        <small style="color:#888">(<?php echo (int) $cat->count; ?>)</small>
+                    </span>
+                </label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:#666;flex-shrink:0<?php echo $is_checked ? '' : ';opacity:.4'; ?>">
+                    <?php esc_html_e('Posts:', 'blogar'); ?>
+                    <input type="number" class="s16-cat-ppp" data-cid="<?php echo esc_attr($cat->term_id); ?>"
+                        value="<?php echo (int) $ppp_val; ?>" min="1" max="48" step="12" style="width:58px"
+                        <?php echo $is_checked ? '' : 'disabled'; ?>>
+                </label>
+            </div>
+            <?php endforeach; ?>
+        </div>
+
+        <input type="hidden" id="blogar_s16_cats_multi" name="blogar_s16_cats_multi"
+            value="<?php echo esc_attr($multi_raw ?: '[]'); ?>">
+        <input type="hidden" id="blogar_s16_cats_ppp" name="blogar_s16_cats_ppp"
+            value="<?php echo esc_attr($ppp_raw ?: '{}'); ?>">
+    </div>
+    <script>
+    (function () {
+        var wrap = document.getElementById('s16-cats-multi-wrap');
+        if (!wrap) return;
+        function sync() {
+            var ids = [], ppp = {};
+            wrap.querySelectorAll('.s16-cat-cb').forEach(function (cb) {
+                var cid   = parseInt(cb.getAttribute('data-cid'), 10);
+                var pppEl = wrap.querySelector('.s16-cat-ppp[data-cid="' + cid + '"]');
+                var lbl   = pppEl ? pppEl.closest('label') : null;
+                if (cb.checked) {
+                    ids.push(cid);
+                    ppp[cid] = Math.min(48, Math.max(1, parseInt(pppEl ? pppEl.value : '24', 10) || 24));
+                    if (pppEl) pppEl.disabled = false;
+                    if (lbl)   lbl.style.opacity = '1';
+                } else {
+                    if (pppEl) pppEl.disabled = true;
+                    if (lbl)   lbl.style.opacity = '.4';
+                }
+            });
+            document.getElementById('blogar_s16_cats_multi').value = JSON.stringify(ids);
+            document.getElementById('blogar_s16_cats_ppp').value   = JSON.stringify(ppp);
+        }
+        wrap.addEventListener('change', sync);
+        wrap.addEventListener('input',  sync);
+    })();
+    </script>
+    <?php
+}
+
+function blogar_sanitize_s16_cats_multi($value)
+{
+    $decoded = json_decode($value, true);
+    if (!is_array($decoded)) {
+        return '[]';
+    }
+    return wp_json_encode(array_values(array_filter(array_map('absint', $decoded))));
+}
+
+function blogar_sanitize_s16_cats_ppp($value)
+{
+    $decoded = json_decode($value, true);
+    if (!is_array($decoded)) {
+        return '{}';
+    }
+    $clean = array();
+    foreach ($decoded as $id => $count) {
+        $cid = absint($id);
+        if ($cid) {
+            $clean[$cid] = max(1, min(48, (int) $count));
+        }
+    }
+    return wp_json_encode($clean);
+}
+
+// ── S17 callbacks ──────────────────────────────────────────────────
+
+function blogar_s17_section_cb()
+{
+    echo '<p class="description">'
+        . esc_html__("Mixed-layout Editor's Picks: 4 equal columns — Col 1 shows the first post, Col 4 shows the last post, and the remaining posts are split between the 2 middle columns. This section is static per tab (no pager), while keeping the same category-tab settings model as s15/s16.", 'blogar')
+        . '</p>';
+}
+
+function blogar_s17_show_all_tab_field_cb()
+{
+    $enabled = (bool) get_option('blogar_s17_show_all_tab', 1);
+    ?>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;font-weight:500">
+        <input type="hidden" name="blogar_s17_show_all_tab" value="0">
+        <input type="checkbox" id="blogar_s17_show_all_tab" name="blogar_s17_show_all_tab" value="1" <?php checked($enabled); ?>>
+        <span><?php esc_html_e('Show the "All" tab as the first filter tab', 'blogar'); ?></span>
+    </label>
+    <p class="description" style="margin-top:6px">
+        <?php esc_html_e('When unchecked, the section starts on the first selected category tab.', 'blogar'); ?>
+    </p>
+    <?php
+}
+
+function blogar_s17_cats_multi_field_cb()
+{
+    $multi_raw = get_option('blogar_s17_cats_multi', '');
+    $ppp_raw   = get_option('blogar_s17_cats_ppp', '');
+
+    $selected_ids = array();
+    if ($multi_raw && $multi_raw !== '[]') {
+        $decoded = json_decode($multi_raw, true);
+        if (is_array($decoded)) {
+            $selected_ids = array_map('intval', $decoded);
+        }
+    }
+
+    $cats_ppp = array();
+    if ($ppp_raw && $ppp_raw !== '{}') {
+        $decoded = json_decode($ppp_raw, true);
+        if (is_array($decoded)) {
+            $cats_ppp = $decoded;
+        }
+    }
+
+    $categories = blogar_get_all_categories_cached();
+    ?>
+    <div id="s17-cats-multi-wrap" style="max-width:560px">
+        <p class="description" style="margin:0 0 10px">
+            <?php esc_html_e('Tick categories to display as tabs. Set posts per tab. 8 matches the original layout; larger numbers keep the first/last featured posts and push the rest into the 2 middle columns. When at least one is ticked, the Parent Category field above is ignored.', 'blogar'); ?>
+        </p>
+        <div style="border:1px solid #ddd;border-radius:4px;max-height:300px;overflow-y:auto;background:#fafafa">
+            <?php foreach ($categories as $cat):
+                $is_checked = in_array($cat->term_id, $selected_ids, true);
+                $ppp_val    = isset($cats_ppp[$cat->term_id]) ? (int) $cats_ppp[$cat->term_id] : 8;
+            ?>
+            <div style="display:flex;align-items:center;gap:12px;padding:5px 12px;border-bottom:1px solid #eee">
+                <label style="flex:1;display:flex;align-items:center;gap:8px;cursor:pointer;min-width:0">
+                    <input type="checkbox" class="s17-cat-cb" data-cid="<?php echo esc_attr($cat->term_id); ?>"
+                        value="<?php echo esc_attr($cat->term_id); ?>"<?php checked($is_checked); ?>>
+                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                        <?php echo esc_html($cat->name); ?>
+                        <small style="color:#888">(<?php echo (int) $cat->count; ?>)</small>
+                    </span>
+                </label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:#666;flex-shrink:0<?php echo $is_checked ? '' : ';opacity:.4'; ?>">
+                    <?php esc_html_e('Posts:', 'blogar'); ?>
+                    <input type="number" class="s17-cat-ppp" data-cid="<?php echo esc_attr($cat->term_id); ?>"
+                        value="<?php echo (int) $ppp_val; ?>" min="1" max="32" style="width:58px"
+                        <?php echo $is_checked ? '' : 'disabled'; ?>>
+                </label>
+            </div>
+            <?php endforeach; ?>
+        </div>
+
+        <input type="hidden" id="blogar_s17_cats_multi" name="blogar_s17_cats_multi"
+            value="<?php echo esc_attr($multi_raw ?: '[]'); ?>">
+        <input type="hidden" id="blogar_s17_cats_ppp" name="blogar_s17_cats_ppp"
+            value="<?php echo esc_attr($ppp_raw ?: '{}'); ?>">
+    </div>
+    <script>
+    (function () {
+        var wrap = document.getElementById('s17-cats-multi-wrap');
+        if (!wrap) return;
+        function sync() {
+            var ids = [], ppp = {};
+            wrap.querySelectorAll('.s17-cat-cb').forEach(function (cb) {
+                var cid   = parseInt(cb.getAttribute('data-cid'), 10);
+                var pppEl = wrap.querySelector('.s17-cat-ppp[data-cid="' + cid + '"]');
+                var lbl   = pppEl ? pppEl.closest('label') : null;
+                if (cb.checked) {
+                    ids.push(cid);
+                    ppp[cid] = Math.min(32, Math.max(1, parseInt(pppEl ? pppEl.value : '8', 10) || 8));
+                    if (pppEl) pppEl.disabled = false;
+                    if (lbl)   lbl.style.opacity = '1';
+                } else {
+                    if (pppEl) pppEl.disabled = true;
+                    if (lbl)   lbl.style.opacity = '.4';
+                }
+            });
+            document.getElementById('blogar_s17_cats_multi').value = JSON.stringify(ids);
+            document.getElementById('blogar_s17_cats_ppp').value   = JSON.stringify(ppp);
+        }
+        wrap.addEventListener('change', sync);
+        wrap.addEventListener('input',  sync);
+    })();
+    </script>
+    <?php
+}
+
+function blogar_sanitize_s17_cats_multi($value)
+{
+    $decoded = json_decode($value, true);
+    if (!is_array($decoded)) {
+        return '[]';
+    }
+    return wp_json_encode(array_values(array_filter(array_map('absint', $decoded))));
+}
+
+function blogar_sanitize_s17_cats_ppp($value)
+{
+    $decoded = json_decode($value, true);
+    if (!is_array($decoded)) {
+        return '{}';
+    }
+    $clean = array();
+    foreach ($decoded as $id => $count) {
+        $cid = absint($id);
+        if ($cid) {
+            $clean[$cid] = max(1, min(32, (int) $count));
+        }
+    }
+    return wp_json_encode($clean);
+}
+
+function blogar_s18_section_cb()
+{
+    echo '<p class="description">'
+        . esc_html__('Static mixed layout based on Soledad structure-32: left 2x2 featured grid, middle list of 6 horizontal cards, right stack of 2 featured cards. Uses the same category-tab settings model as s15/s16/s17.', 'blogar')
+        . '</p>';
+}
+
+function blogar_s19_section_cb()
+{
+    echo '<p class="description">'
+        . esc_html__('Structure-20 dual block layout inspired by Soledad: two independent halves, each with category tabs + pager, 1 featured horizontal post on top, and 6 smaller posts below split into 2 columns. Uses the same settings model as s15/s16, but duplicated for left and right blocks.', 'blogar')
+        . '</p>';
+}
+
+function blogar_s18_show_all_tab_field_cb()
+{
+    $enabled = (bool) get_option('blogar_s18_show_all_tab', 1);
+    ?>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;font-weight:500">
+        <input type="hidden" name="blogar_s18_show_all_tab" value="0">
+        <input type="checkbox" id="blogar_s18_show_all_tab" name="blogar_s18_show_all_tab" value="1" <?php checked($enabled); ?>>
+        <span><?php esc_html_e('Show the "All" tab as the first filter tab', 'blogar'); ?></span>
+    </label>
+    <p class="description" style="margin-top:6px">
+        <?php esc_html_e('When unchecked, the section starts on the first selected category tab.', 'blogar'); ?>
+    </p>
+    <?php
+}
+
+function blogar_s18_cats_multi_field_cb()
+{
+    $multi_raw = get_option('blogar_s18_cats_multi', '');
+    $ppp_raw   = get_option('blogar_s18_cats_ppp', '');
+
+    $selected_ids = array();
+    if ($multi_raw && $multi_raw !== '[]') {
+        $decoded = json_decode($multi_raw, true);
+        if (is_array($decoded)) {
+            $selected_ids = array_map('intval', $decoded);
+        }
+    }
+
+    $cats_ppp = array();
+    if ($ppp_raw && $ppp_raw !== '{}') {
+        $decoded = json_decode($ppp_raw, true);
+        if (is_array($decoded)) {
+            $cats_ppp = $decoded;
+        }
+    }
+
+    $categories = blogar_get_all_categories_cached();
+    ?>
+    <div id="s18-cats-multi-wrap" style="max-width:560px">
+        <p class="description" style="margin:0 0 10px">
+            <?php esc_html_e('Tick categories to display as tabs. Set posts per tab from 1 to 12. The original layout uses 12 posts: 4 big cards on the left, 6 horizontal cards in the middle, and 2 big cards on the right. When at least one is ticked, the Parent Category field above is ignored.', 'blogar'); ?>
+        </p>
+        <div style="border:1px solid #ddd;border-radius:4px;max-height:300px;overflow-y:auto;background:#fafafa">
+            <?php foreach ($categories as $cat):
+                $is_checked = in_array($cat->term_id, $selected_ids, true);
+                $ppp_val    = isset($cats_ppp[$cat->term_id]) ? (int) $cats_ppp[$cat->term_id] : 12;
+            ?>
+            <div style="display:flex;align-items:center;gap:12px;padding:5px 12px;border-bottom:1px solid #eee">
+                <label style="flex:1;display:flex;align-items:center;gap:8px;cursor:pointer;min-width:0">
+                    <input type="checkbox" class="s18-cat-cb" data-cid="<?php echo esc_attr($cat->term_id); ?>"
+                        value="<?php echo esc_attr($cat->term_id); ?>"<?php checked($is_checked); ?>>
+                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                        <?php echo esc_html($cat->name); ?>
+                        <small style="color:#888">(<?php echo (int) $cat->count; ?>)</small>
+                    </span>
+                </label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:#666;flex-shrink:0<?php echo $is_checked ? '' : ';opacity:.4'; ?>">
+                    <?php esc_html_e('Posts:', 'blogar'); ?>
+                    <input type="number" class="s18-cat-ppp" data-cid="<?php echo esc_attr($cat->term_id); ?>"
+                        value="<?php echo (int) $ppp_val; ?>" min="1" max="12" style="width:58px"
+                        <?php echo $is_checked ? '' : 'disabled'; ?>>
+                </label>
+            </div>
+            <?php endforeach; ?>
+        </div>
+
+        <input type="hidden" id="blogar_s18_cats_multi" name="blogar_s18_cats_multi"
+            value="<?php echo esc_attr($multi_raw ?: '[]'); ?>">
+        <input type="hidden" id="blogar_s18_cats_ppp" name="blogar_s18_cats_ppp"
+            value="<?php echo esc_attr($ppp_raw ?: '{}'); ?>">
+    </div>
+    <script>
+    (function () {
+        var wrap = document.getElementById('s18-cats-multi-wrap');
+        if (!wrap) return;
+        function sync() {
+            var ids = [], ppp = {};
+            wrap.querySelectorAll('.s18-cat-cb').forEach(function (cb) {
+                var cid   = parseInt(cb.getAttribute('data-cid'), 10);
+                var pppEl = wrap.querySelector('.s18-cat-ppp[data-cid="' + cid + '"]');
+                var lbl   = pppEl ? pppEl.closest('label') : null;
+                if (cb.checked) {
+                    ids.push(cid);
+                    ppp[cid] = Math.min(12, Math.max(1, parseInt(pppEl ? pppEl.value : '12', 10) || 12));
+                    if (pppEl) pppEl.disabled = false;
+                    if (lbl)   lbl.style.opacity = '1';
+                } else {
+                    if (pppEl) pppEl.disabled = true;
+                    if (lbl)   lbl.style.opacity = '.4';
+                }
+            });
+            document.getElementById('blogar_s18_cats_multi').value = JSON.stringify(ids);
+            document.getElementById('blogar_s18_cats_ppp').value   = JSON.stringify(ppp);
+        }
+        wrap.addEventListener('change', sync);
+        wrap.addEventListener('input',  sync);
+    })();
+    </script>
+    <?php
+}
+
+function blogar_sanitize_s18_cats_multi($value)
+{
+    $decoded = json_decode($value, true);
+    if (!is_array($decoded)) {
+        return '[]';
+    }
+    return wp_json_encode(array_values(array_filter(array_map('absint', $decoded))));
+}
+
+function blogar_sanitize_s18_cats_ppp($value)
+{
+    $decoded = json_decode($value, true);
+    if (!is_array($decoded)) {
+        return '{}';
+    }
+    $clean = array();
+    foreach ($decoded as $id => $count) {
+        $cid = absint($id);
+        if ($cid) {
+            $clean[$cid] = max(1, min(12, (int) $count));
+        }
+    }
+    return wp_json_encode($clean);
+}
+
+function blogar_s19_show_all_tab_field_cb($args)
+{
+    $option_name = !empty($args['option_name']) ? (string) $args['option_name'] : '';
+    if (!$option_name) {
+        return;
+    }
+    $enabled = (bool) get_option($option_name, 1);
+    ?>
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;font-weight:500">
+        <input type="hidden" name="<?php echo esc_attr($option_name); ?>" value="0">
+        <input type="checkbox" id="<?php echo esc_attr($option_name); ?>" name="<?php echo esc_attr($option_name); ?>" value="1" <?php checked($enabled); ?>>
+        <span><?php esc_html_e('Show the "All" tab as the first filter tab', 'blogar'); ?></span>
+    </label>
+    <p class="description" style="margin-top:6px">
+        <?php esc_html_e('When unchecked, the block starts on the first selected category tab.', 'blogar'); ?>
+    </p>
+    <?php
+}
+
+function blogar_s19_cats_multi_field_cb($args)
+{
+    $option_prefix = !empty($args['option_prefix']) ? (string) $args['option_prefix'] : '';
+    $wrap_id       = !empty($args['wrap_id']) ? (string) $args['wrap_id'] : '';
+    $default_ppp   = !empty($args['default_ppp']) ? (int) $args['default_ppp'] : 14;
+    $max_ppp       = !empty($args['max_ppp']) ? (int) $args['max_ppp'] : 42;
+    $description   = !empty($args['description']) ? (string) $args['description'] : '';
+
+    if (!$option_prefix || !$wrap_id) {
+        return;
+    }
+
+    $multi_option = $option_prefix . '_cats_multi';
+    $ppp_option   = $option_prefix . '_cats_ppp';
+    $multi_raw    = get_option($multi_option, '');
+    $ppp_raw      = get_option($ppp_option, '');
+
+    $selected_ids = array();
+    if ($multi_raw && $multi_raw !== '[]') {
+        $decoded = json_decode($multi_raw, true);
+        if (is_array($decoded)) {
+            $selected_ids = array_map('intval', $decoded);
+        }
+    }
+
+    $cats_ppp = array();
+    if ($ppp_raw && $ppp_raw !== '{}') {
+        $decoded = json_decode($ppp_raw, true);
+        if (is_array($decoded)) {
+            $cats_ppp = $decoded;
+        }
+    }
+
+    $categories = blogar_get_all_categories_cached();
+    $cb_class = $wrap_id . '-cat-cb';
+    $ppp_class = $wrap_id . '-cat-ppp';
+    ?>
+    <div id="<?php echo esc_attr($wrap_id); ?>" style="max-width:560px">
+        <p class="description" style="margin:0 0 10px">
+            <?php echo esc_html($description); ?>
+        </p>
+        <div style="border:1px solid #ddd;border-radius:4px;max-height:300px;overflow-y:auto;background:#fafafa">
+            <?php foreach ($categories as $cat):
+                $is_checked = in_array($cat->term_id, $selected_ids, true);
+                $ppp_val    = isset($cats_ppp[$cat->term_id]) ? (int) $cats_ppp[$cat->term_id] : $default_ppp;
+                ?>
+                <div style="display:flex;align-items:center;gap:12px;padding:5px 12px;border-bottom:1px solid #eee">
+                    <label style="flex:1;display:flex;align-items:center;gap:8px;cursor:pointer;min-width:0">
+                        <input type="checkbox" class="<?php echo esc_attr($cb_class); ?>" data-cid="<?php echo esc_attr($cat->term_id); ?>"
+                            value="<?php echo esc_attr($cat->term_id); ?>"<?php checked($is_checked); ?>>
+                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                            <?php echo esc_html($cat->name); ?>
+                            <small style="color:#888">(<?php echo (int) $cat->count; ?>)</small>
+                        </span>
+                    </label>
+                    <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:#666;flex-shrink:0<?php echo $is_checked ? '' : ';opacity:.4'; ?>">
+                        <?php esc_html_e('Posts:', 'blogar'); ?>
+                        <input type="number" class="<?php echo esc_attr($ppp_class); ?>" data-cid="<?php echo esc_attr($cat->term_id); ?>"
+                            value="<?php echo (int) $ppp_val; ?>" min="1" max="<?php echo (int) $max_ppp; ?>" style="width:58px"
+                            <?php echo $is_checked ? '' : 'disabled'; ?>>
+                    </label>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <input type="hidden" id="<?php echo esc_attr($multi_option); ?>" name="<?php echo esc_attr($multi_option); ?>"
+            value="<?php echo esc_attr($multi_raw ?: '[]'); ?>">
+        <input type="hidden" id="<?php echo esc_attr($ppp_option); ?>" name="<?php echo esc_attr($ppp_option); ?>"
+            value="<?php echo esc_attr($ppp_raw ?: '{}'); ?>">
+    </div>
+    <script>
+        (function () {
+            var wrap = document.getElementById('<?php echo esc_js($wrap_id); ?>');
+            if (!wrap) return;
+            function sync() {
+                var ids = [], ppp = {};
+                wrap.querySelectorAll('.<?php echo esc_js($cb_class); ?>').forEach(function (cb) {
+                    var cid   = parseInt(cb.getAttribute('data-cid'), 10);
+                    var pppEl = wrap.querySelector('.<?php echo esc_js($ppp_class); ?>[data-cid="' + cid + '"]');
+                    var lbl   = pppEl ? pppEl.closest('label') : null;
+                    if (cb.checked) {
+                        ids.push(cid);
+                        ppp[cid] = Math.min(<?php echo (int) $max_ppp; ?>, Math.max(1, parseInt(pppEl ? pppEl.value : '<?php echo (int) $default_ppp; ?>', 10) || <?php echo (int) $default_ppp; ?>));
+                        if (pppEl) pppEl.disabled = false;
+                        if (lbl)   lbl.style.opacity = '1';
+                    } else {
+                        if (pppEl) pppEl.disabled = true;
+                        if (lbl)   lbl.style.opacity = '.4';
+                    }
+                });
+                document.getElementById('<?php echo esc_js($multi_option); ?>').value = JSON.stringify(ids);
+                document.getElementById('<?php echo esc_js($ppp_option); ?>').value   = JSON.stringify(ppp);
+            }
+            wrap.addEventListener('change', sync);
+            wrap.addEventListener('input', sync);
+        })();
+    </script>
+    <?php
+}
+
+function blogar_sanitize_s19_cats_multi_generic($value)
+{
+    $decoded = json_decode($value, true);
+    if (!is_array($decoded)) {
+        return '[]';
+    }
+    return wp_json_encode(array_values(array_filter(array_map('absint', $decoded))));
+}
+
+function blogar_sanitize_s19_cats_ppp_generic($value, $max_ppp = 42)
+{
+    $decoded = json_decode($value, true);
+    if (!is_array($decoded)) {
+        return '{}';
+    }
+    $clean = array();
+    foreach ($decoded as $id => $count) {
+        $cid = absint($id);
+        if ($cid) {
+            $clean[$cid] = max(1, min((int) $max_ppp, (int) $count));
+        }
+    }
+    return wp_json_encode($clean);
+}
+
+function blogar_sanitize_s19_left_cats_multi($value)
+{
+    return blogar_sanitize_s19_cats_multi_generic($value);
+}
+
+function blogar_sanitize_s19_left_cats_ppp($value)
+{
+    return blogar_sanitize_s19_cats_ppp_generic($value, 42);
+}
+
+function blogar_sanitize_s19_right_cats_multi($value)
+{
+    return blogar_sanitize_s19_cats_multi_generic($value);
+}
+
+function blogar_sanitize_s19_right_cats_ppp($value)
+{
+    return blogar_sanitize_s19_cats_ppp_generic($value, 42);
+}
+
+function blogar_s20_section_cb()
+{
+    echo '<p class="description">'
+        . esc_html__('Style-1 dual block layout: two independent halves, each with category tabs + pager, 1 featured post (image top, excerpt below) on the left and 4 mini posts stacked on the right.', 'blogar')
+        . '</p>';
+}
+
+function blogar_sanitize_s20_left_cats_multi($value)
+{
+    return blogar_sanitize_s19_cats_multi_generic($value);
+}
+
+function blogar_sanitize_s20_left_cats_ppp($value)
+{
+    return blogar_sanitize_s19_cats_ppp_generic($value, 30);
+}
+
+function blogar_sanitize_s20_right_cats_multi($value)
+{
+    return blogar_sanitize_s19_cats_multi_generic($value);
+}
+
+function blogar_sanitize_s20_right_cats_ppp($value)
+{
+    return blogar_sanitize_s19_cats_ppp_generic($value, 30);
 }
 
 
@@ -1008,6 +1998,31 @@ function blogar_render_options_page()
             'settings_group' => 'blogar_s15_settings',
             'page_slug' => 'blogar-s15',
         ),
+        's16_category_slider' => array(
+            'label' => __('⑨ Money Grid Slider', 'blogar'),
+            'settings_group' => 'blogar_s16_settings',
+            'page_slug' => 'blogar-s16',
+        ),
+        's17_editors_picks' => array(
+            'label' => __("⑩ Editor's Picks", 'blogar'),
+            'settings_group' => 'blogar_s17_settings',
+            'page_slug' => 'blogar-s17',
+        ),
+        's18_life_style_news' => array(
+            'label' => __('⑪ Life Style News', 'blogar'),
+            'settings_group' => 'blogar_s18_settings',
+            'page_slug' => 'blogar-s18',
+        ),
+        's19_dual_featured_blocks' => array(
+            'label' => __('⑫ Dual Featured Blocks', 'blogar'),
+            'settings_group' => 'blogar_s19_settings',
+            'page_slug' => 'blogar-s19',
+        ),
+        's20_dual_col_featured' => array(
+            'label' => __('⑬ Dual Col Featured', 'blogar'),
+            'settings_group' => 'blogar_s20_settings',
+            'page_slug' => 'blogar-s20',
+        ),
         'layouts' => array(
             'label' => __('⊞ Layout', 'blogar'),
             'custom_render' => 'blogar_render_layout_tab',
@@ -1385,7 +2400,7 @@ function blogar_register_section_order_setting()
 
 function blogar_sanitize_section_order($value)
 {
-    $allowed = array('s11', 's11p', 's5', 's13', 's14', 's12', 's4', 's10', 's15');
+    $allowed = array('s11', 's11p', 's5', 's13', 's14', 's12', 's4', 's10', 's15', 's16', 's17', 's18', 's19', 's20');
     $order = json_decode($value, true);
     if (!is_array($order)) {
         return '';
@@ -1411,9 +2426,14 @@ function blogar_render_order_tab()
         's4' => array('label' => __('⑥ Innovation & Tech', 'blogar'), 'desc' => __('Tab carousel with category filters', 'blogar')),
         's10' => array('label' => __('⑦ Featured Video', 'blogar'), 'desc' => __('Video posts with thumbnail gallery', 'blogar')),
         's15' => array('label' => __('⑧ Entertainment Slider', 'blogar'), 'desc' => __('Parent category slider with child-category tabs and pager', 'blogar')),
+        's16' => array('label' => __('⑨ Money Grid Slider', 'blogar'), 'desc' => __('4×3 grid slider with category tabs (104px thumbnail left)', 'blogar')),
+        's17' => array('label' => __("⑩ Editor's Picks", 'blogar'), 'desc' => __('Mixed 4-column static layout: featured left/right + split middle lists', 'blogar')),
+        's18' => array('label' => __('⑪ Life Style News', 'blogar'), 'desc' => __('Structure-32 mixed layout: 4 featured left, 6 mini middle, 2 featured right', 'blogar')),
+        's19' => array('label' => __('⑫ Dual Featured Blocks', 'blogar'), 'desc' => __('Structure-20 layout: 2 independent blocks, each with 1 featured post + 6 mini posts, tabs and pager', 'blogar')),
+        's20' => array('label' => __('⑬ Dual Col Featured', 'blogar'), 'desc' => __('Style-1 layout: 2 independent blocks, each with 1 featured post (image top + excerpt) + 4 mini posts stacked', 'blogar')),
     );
 
-    $default_order = array('s11', 's11p', 's5', 's13', 's14', 's12', 's4', 's10', 's15');
+    $default_order = array('s11', 's11p', 's5', 's13', 's14', 's12', 's4', 's10', 's15', 's16', 's17', 's18', 's19', 's20');
     $raw = get_option('blogar_section_order', '');
     $current_order = (!empty($raw)) ? (array) json_decode($raw, true) : array();
     if (count($current_order) < count($default_order)) {

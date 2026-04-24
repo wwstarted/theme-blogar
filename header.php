@@ -129,10 +129,6 @@ $cart_count = blogar_get_cart_count();
                                 </button>
                             </div>
 
-                            <!--
-                                Inline search (576–1199px) / dropdown search (≤575px).
-                                CSS controls which mode is active via breakpoint rules.
-                            -->
                             <form id="blogar-mobile-search" role="search" method="get"
                                 class="blog-search large-mobile-blog-search"
                                 action="<?php echo esc_url(home_url('/')); ?>">

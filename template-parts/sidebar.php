@@ -82,7 +82,7 @@ $_nl_status = isset($_GET['newsletter']) ? sanitize_key($_GET['newsletter']) : '
                 <div class="popular-post-inner">
                     <div class="popular-post-thumb">
                         <a href="<?php echo esc_url($pp_url); ?>">
-                            <img loading="lazy" decoding="async" width="110" height="83"
+                            <img loading="lazy" decoding="async" width="104" height="83"
                                 src="<?php echo esc_url($pp_thumb); ?>"
                                 alt="<?php echo esc_attr($pp_alt); ?>">
                         </a>
